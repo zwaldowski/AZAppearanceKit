@@ -15,6 +15,7 @@
 		6CC585A615156B5900B26316 /* RXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CC585A515156B5900B26316 /* RXAppDelegate.m */; };
 		6CC585A915156B5900B26316 /* RXViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CC585A815156B5900B26316 /* RXViewController.m */; };
 		6CC585AC15156B5900B26316 /* RXViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CC585AA15156B5900B26316 /* RXViewController.xib */; };
+		6CC585B815156CC300B26316 /* RXLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CC585B715156CC300B26316 /* RXLabel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,15 +23,17 @@
 		6CC5859515156B5900B26316 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6CC5859715156B5900B26316 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6CC5859915156B5900B26316 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		6CC5859D15156B5900B26316 /* RXLabel-Info.plist */ = {isa = PBXFileReference; path = "RXLabel-Info.plist"; sourceTree = "<group>"; };
+		6CC5859D15156B5900B26316 /* RXLabel-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "RXLabel-Info.plist"; sourceTree = "<group>"; };
 		6CC5859F15156B5900B26316 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6CC585A115156B5900B26316 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		6CC585A315156B5900B26316 /* RXLabel-Prefix.pch */ = {isa = PBXFileReference; path = "RXLabel-Prefix.pch"; sourceTree = "<group>"; };
-		6CC585A415156B5900B26316 /* RXAppDelegate.h */ = {isa = PBXFileReference; path = RXAppDelegate.h; sourceTree = "<group>"; };
+		6CC585A315156B5900B26316 /* RXLabel-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RXLabel-Prefix.pch"; sourceTree = "<group>"; };
+		6CC585A415156B5900B26316 /* RXAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RXAppDelegate.h; sourceTree = "<group>"; };
 		6CC585A515156B5900B26316 /* RXAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RXAppDelegate.m; sourceTree = "<group>"; };
-		6CC585A715156B5900B26316 /* RXViewController.h */ = {isa = PBXFileReference; path = RXViewController.h; sourceTree = "<group>"; };
+		6CC585A715156B5900B26316 /* RXViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RXViewController.h; sourceTree = "<group>"; };
 		6CC585A815156B5900B26316 /* RXViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RXViewController.m; sourceTree = "<group>"; };
 		6CC585AB15156B5900B26316 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/RXViewController.xib; sourceTree = "<group>"; };
+		6CC585B615156CC300B26316 /* RXLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXLabel.h; sourceTree = "<group>"; };
+		6CC585B715156CC300B26316 /* RXLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXLabel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +85,8 @@
 				6CC585A715156B5900B26316 /* RXViewController.h */,
 				6CC585A815156B5900B26316 /* RXViewController.m */,
 				6CC585AA15156B5900B26316 /* RXViewController.xib */,
+				6CC585B615156CC300B26316 /* RXLabel.h */,
+				6CC585B715156CC300B26316 /* RXLabel.m */,
 				6CC5859C15156B5900B26316 /* Supporting Files */,
 			);
 			path = RXLabel;
@@ -165,6 +170,7 @@
 				6CC585A215156B5900B26316 /* main.m in Sources */,
 				6CC585A615156B5900B26316 /* RXAppDelegate.m in Sources */,
 				6CC585A915156B5900B26316 /* RXViewController.m in Sources */,
+				6CC585B815156CC300B26316 /* RXLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,6 +250,7 @@
 				GCC_PREFIX_HEADER = "RXLabel/RXLabel-Prefix.pch";
 				INFOPLIST_FILE = "RXLabel/RXLabel-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -255,6 +262,7 @@
 				GCC_PREFIX_HEADER = "RXLabel/RXLabel-Prefix.pch";
 				INFOPLIST_FILE = "RXLabel/RXLabel-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -8,27 +8,45 @@
 
 #import "RXViewController.h"
 
-@interface RXViewController ()
-
-@end
-
 @implementation RXViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+	
+	self.label.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:0.75];
+	self.label.shadowOffset = CGSizeMake(0, 1);
+	self.label.shadowBlur = 0.0f;
+	
+	self.label.innerShadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+	self.label.innerShadowOffset = CGSizeMake(0, 1);
+	self.label.innerShadowBlur = 2.0f;
+	
+	self.label.gradientColors = @[ (__bridge id)[UIColor colorWithRed:0.33 green:0.38 blue:0.47 alpha:1.0].CGColor,
+	(__bridge id)[UIColor colorWithRed:0.41 green:0.47 blue:0.59 alpha:1.0].CGColor];
+	self.label.gradientDirection = RXLabelGradientDirectionVerical;
+	
+	self.label2.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:0.75];
+	self.label2.shadowOffset = CGSizeMake(0, 1);
+	self.label2.shadowBlur = 0.0f;
+	
+	self.label2.innerShadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
+	self.label2.innerShadowOffset = CGSizeMake(0, 1);
+	self.label2.innerShadowBlur = 2.0f;
+	
+	self.label2.gradientColors = @[ (__bridge id)[UIColor colorWithRed:0.33 green:0.38 blue:0.47 alpha:1.0].CGColor,
+	(__bridge id)[UIColor colorWithRed:0.41 green:0.47 blue:0.59 alpha:1.0].CGColor];
+	self.label2.gradientDirection = RXLabelGradientDirectionVerical;
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+	return (toInterfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-	return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+- (void)viewDidUnload {
+	[self setLabel:nil];
+	[self setLabel2:nil];
+	[super viewDidUnload];
 }
 
 @end

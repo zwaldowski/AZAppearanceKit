@@ -6,8 +6,11 @@
 //  Copyright (c) 2012 Dizzy Technology. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "RXLabel.h"
 
 @interface RXViewController : UIViewController
+
+@property (weak, nonatomic) IBOutlet RXLabel *label;
+@property (weak, nonatomic) IBOutlet RXLabel *label2;
 
 @end
