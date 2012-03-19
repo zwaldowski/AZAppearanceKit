@@ -33,7 +33,7 @@
 	} else {
 		locations[0] = 0.0f;
 		locations[colorCount-1] = 1.0f;
-		CGFloat delta = floorf( 1.0f / (CGFloat)colorCount );
+		CGFloat delta = 1.0f / (CGFloat)colorCount;
 		for (int i = 1; i < colorCount-1; i++) {
 			locations[i] = delta * i;
 		}
