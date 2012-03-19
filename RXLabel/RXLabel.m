@@ -38,8 +38,15 @@
 			locations[i] = delta * i;
 		}
 	}
-
-	_gradient = CGGradientCreateWithColors(NULL, (__bridge CFArrayRef)self.gradientColors, locations);
+	
+	NSMutableArray *colors = [NSMutableArray arrayWithCapacity: colorCount];
+	if ([self.gradientColors.lastObject isKindOfClass:[UIColor class]]) {
+		[self.gradientColors enumerateObjectsUsingBlock:^(UIColor *color, NSUInteger idx, BOOL *stop) {
+			[colors addObject: (__bridge id)color.CGColor];
+		}];
+	}
+	
+	_gradient = CGGradientCreateWithColors(NULL, (__bridge CFArrayRef)colors, locations);
 	
 	free(locations);
 }
