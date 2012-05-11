@@ -72,21 +72,37 @@
 	CGRect innerRect = (CGRect){ CGPointZero, rect.size };
 	BOOL needsMask = (self.innerShadowColor != nil || self.gradientColors.count > 1);
 	
-	CGImageRef alphaMask = NULL;
+	CGImageRef alphaMask = NULL, invertedMask = NULL;
 	
 	if (needsMask) {
-		//draw mask
         CGContextSaveGState(context);
+		
+		[[UIColor blackColor] setFill];
+		
         [self.text drawInRect:rect withFont:self.font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
-        CGContextRestoreGState(context);
         
         // Create an image mask from what we've drawn so far
         alphaMask = CGBitmapContextCreateImage(context);
-        
+		
         //clear the context
         CGContextClearRect(context, rect);
+		
+		if (self.innerShadowColor) {
+			CGContextFillRect(context, innerRect);
+			CGContextSetBlendMode(context, kCGBlendModeSourceOut);	//	R = S*(1 - Da)
+			
+			[[UIColor whiteColor] setFill];
+			[self.text drawInRect:rect withFont:self.font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
+			
+			// Create an image mask from what we've drawn so far
+			invertedMask = CGBitmapContextCreateImage(context);
+			
+			//clear the context
+			CGContextClearRect(context, rect);
+			
+			CGContextRestoreGState(context);
+		}
 	}
-	
 	
 	CGContextSaveGState(context);
 	
@@ -95,7 +111,7 @@
         CGContextSetShadowWithColor(context, self.shadowOffset, self.shadowBlur, self.shadowColor.CGColor);
         [needsMask ? [self.shadowColor colorWithAlphaComponent:textAlpha] : self.textColor setFill];
 	} else {
-		[self.textColor setFill];
+		[self.gradientColors.count ? [self.gradientColors objectAtIndex: 0] : self.textColor setFill];
 		CGContextSetShadowWithColor(context, CGSizeZero, 0.0, NULL);
 	}
 	
@@ -108,7 +124,7 @@
 		CGContextTranslateCTM(context, 0, rect.size.height);
 		CGContextScaleCTM(context, 1.0, -1.0);
 		CGContextClipToMask(context, rect, alphaMask);
-		
+				
 		if (self.gradientColors.count > 1) {
 			if (!_gradient)
 				[self rx_resetGradient];
@@ -116,26 +132,15 @@
 			CGPoint startPoint = rect.origin;
 			CGPoint endPoint = CGPointMake(CGRectGetMinX(rect), self.gradientDirection == RXLabelGradientDirectionHorizontal ? CGRectGetMaxX(rect) : CGRectGetMaxY(rect));
 			CGContextDrawLinearGradient(context, _gradient, startPoint, endPoint, 0);
-		} else {
-			CGContextFillRect(context, rect);
 		}
 		
 		if (self.innerShadowColor) {
-			// inverted mask
-			UIGraphicsBeginImageContextWithOptions(rect.size, NO, self.window.screen.scale);
-			CGContextRef invertedTextContext = UIGraphicsGetCurrentContext();
-			CGContextSetFillColorWithColor(invertedTextContext, [UIColor blackColor].CGColor);
-			CGContextFillRect(invertedTextContext, innerRect);
-			CGContextSetBlendMode(invertedTextContext, kCGBlendModeSourceOut);	//	R = S*(1 - Da)
-			[self.textColor setFill];
-			[self.text drawInRect:innerRect withFont:self.font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
-			CGImageRef invertedTextMask = UIGraphicsGetImageFromCurrentImageContext().CGImage;
-			UIGraphicsEndImageContext();
-			
 			CGContextSetShadowWithColor(context, self.innerShadowOffset, self.innerShadowBlur, self.innerShadowColor.CGColor);
-			CGContextDrawImage(context, rect, invertedTextMask);
+			CGContextDrawImage(context, rect, invertedMask);
 		}
+		
 		CGContextRestoreGState(context);
+		CGImageRelease(invertedMask);
 		CGImageRelease(alphaMask);
 	}
 }
