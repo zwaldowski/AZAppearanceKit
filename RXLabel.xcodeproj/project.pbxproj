@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00CD763A157E6AF400ABECC8 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00CD7639157E6AF400ABECC8 /* CoreText.framework */; };
 		6CC5859615156B5900B26316 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CC5859515156B5900B26316 /* UIKit.framework */; };
 		6CC5859815156B5900B26316 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CC5859715156B5900B26316 /* Foundation.framework */; };
 		6CC5859A15156B5900B26316 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CC5859915156B5900B26316 /* CoreGraphics.framework */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		00CD7639157E6AF400ABECC8 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		6CC5859115156B5900B26316 /* RXLabel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RXLabel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CC5859515156B5900B26316 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6CC5859715156B5900B26316 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -41,9 +43,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6CC5859615156B5900B26316 /* UIKit.framework in Frameworks */,
-				6CC5859815156B5900B26316 /* Foundation.framework in Frameworks */,
 				6CC5859A15156B5900B26316 /* CoreGraphics.framework in Frameworks */,
+				00CD763A157E6AF400ABECC8 /* CoreText.framework in Frameworks */,
+				6CC5859815156B5900B26316 /* Foundation.framework in Frameworks */,
+				6CC5859615156B5900B26316 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -70,9 +73,10 @@
 		6CC5859415156B5900B26316 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				6CC5859515156B5900B26316 /* UIKit.framework */,
-				6CC5859715156B5900B26316 /* Foundation.framework */,
 				6CC5859915156B5900B26316 /* CoreGraphics.framework */,
+				00CD7639157E6AF400ABECC8 /* CoreText.framework */,
+				6CC5859715156B5900B26316 /* Foundation.framework */,
+				6CC5859515156B5900B26316 /* UIKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -286,6 +290,7 @@
 				6CC585B115156B5900B26316 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
