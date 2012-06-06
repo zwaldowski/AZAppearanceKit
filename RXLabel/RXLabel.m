@@ -42,8 +42,6 @@
 	
 	CTFontRef font = CTFontCreateWithName((__bridge CFStringRef) self.font.fontName, self.font.pointSize, NULL);
 	
-	// 	[self.text drawInRect: self.bounds withFont: self.font lineBreakMode: self.lineBreakMode alignment: self.textAlignment];
-
 	CTTextAlignment textAlignment;
 	switch (self.textAlignment)
 	{
@@ -108,7 +106,6 @@
 								nil];
 	NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString: self.text attributes: attributes];
 	
-	
 	CTLineRef line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef) attributedString);
 	CFArrayRef runArray = CTLineGetGlyphRuns(line);
 	
@@ -166,60 +163,41 @@
 	}
 	
 	CGPoint origin = path.bounds.origin;
-	
-	CGAffineTransform transform = CGAffineTransformMakeTranslation(xOffset - origin.x, floor((self.bounds.size.height - path.bounds.size.height) / 2.0 - origin.y));
-	CGAffineTransformTranslate(transform, 0, self.bounds.size.height);
-	CGAffineTransformScale(transform, 1, -1);
-
-	[path applyTransform: transform];
+	[path applyTransform: CGAffineTransformMakeTranslation(xOffset - origin.x, floor((self.bounds.size.height - path.bounds.size.height) / 2.0 - origin.y))];
 	
 	return path;
 }
-- (void) didChangeValueForKey: (NSString *) key
-{
-	[super didChangeValueForKey: key];
-	
-	if ([[@"gradientDirection, innerShadowBlur, innerShadowColor, innerShadowOffset, shadowBlur" componentsSeparatedByString: @", "] containsObject: key])
-	{
-		[self setNeedsDisplay];
-	}
-	else if ([[@"gradientColors, gradientLocations" componentsSeparatedByString: @", "] containsObject: key])
-	{
-		[self rx_resetGradient];
-		[self setNeedsDisplay];
-	}
-}
+
 - (void) drawTextInRect: (CGRect) rect
 {
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	
-	CGContextSetTextMatrix(ctx, CGAffineTransformIdentity);
-	CGContextTranslateCTM(ctx, 0, self.bounds.size.height);
+	CGContextTranslateCTM(ctx, 0, rect.size.height);
 	CGContextScaleCTM(ctx, 1, -1);
 
+	UIBezierPath* textPath = [self textPath];
 	CGContextSaveGState(ctx);
 	{
 		CGContextSetShadowWithColor(ctx, self.shadowOffset, self.shadowBlur, self.shadowColor.CGColor);
 		CGContextBeginTransparencyLayer(ctx, NULL);
-		
-		UIBezierPath *textPath = [self textPath];
-		[textPath addClip];
-		
-		if (!_gradient) [self rx_resetGradient];
-
-		CGPoint startPoint = rect.origin;
-		CGPoint endPoint = CGPointMake(CGRectGetMinX(rect), self.gradientDirection == RXLabelGradientDirectionHorizontal ? CGRectGetMaxX(rect) : CGRectGetMaxY(rect));
-		CGContextDrawLinearGradient(ctx, _gradient, startPoint, endPoint, 0);
+		{
+			[textPath addClip];
+			
+			if (!_gradient) [self rx_resetGradient];
+			
+			CGPoint startPoint = rect.origin;
+			CGPoint endPoint = CGPointMake(CGRectGetMinX(rect), self.gradientDirection == RXLabelGradientDirectionHorizontal ? CGRectGetMaxX(rect) : CGRectGetMaxY(rect));
+			CGContextDrawLinearGradient(ctx, _gradient, startPoint, endPoint, 0);
+		}
 		CGContextEndTransparencyLayer(ctx);
 		
-		// Inner Shadow
 		CGRect textBorderRect = CGRectInset([textPath bounds], -self.innerShadowBlur, -self.innerShadowBlur);
 		textBorderRect = CGRectOffset(textBorderRect, -self.innerShadowOffset.width, -self.innerShadowOffset.height);
 		textBorderRect = CGRectInset(CGRectUnion(textBorderRect, [textPath bounds]), -1, -1);
 		
 		UIBezierPath *textNegativePath = [UIBezierPath bezierPathWithRect: textBorderRect];
 		[textNegativePath appendPath: textPath];
-		textPath.usesEvenOddFillRule = YES;
+		textNegativePath.usesEvenOddFillRule = YES;
 		
 		CGContextSaveGState(ctx);
 		{
@@ -238,84 +216,6 @@
 		CGContextRestoreGState(ctx);
 	}
 	CGContextRestoreGState(ctx);
-
-#pragma mark - Old Code
-	
-//	CGContextRef context = UIGraphicsGetCurrentContext();
-//	CGRect innerRect = (CGRect){ CGPointZero, rect.size };
-//	BOOL needsMask = (self.innerShadowColor != nil || self.gradientColors.count > 1);
-//	
-//	CGImageRef alphaMask = NULL, invertedMask = NULL;
-//	
-//	if (needsMask) {
-//        CGContextSaveGState(context);
-//		
-//		[[UIColor blackColor] setFill];
-//		
-//        [self.text drawInRect:rect withFont:self.font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
-//        
-//        // Create an image mask from what we've drawn so far
-//        alphaMask = CGBitmapContextCreateImage(context);
-//		
-//        //clear the context
-//        CGContextClearRect(context, rect);
-//		
-//		if (self.innerShadowColor) {
-//			CGContextFillRect(context, innerRect);
-//			CGContextSetBlendMode(context, kCGBlendModeSourceOut);	//	R = S*(1 - Da)
-//			
-//			[[UIColor whiteColor] setFill];
-//			[self.text drawInRect:rect withFont:self.font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
-//			
-//			// Create an image mask from what we've drawn so far
-//			invertedMask = CGBitmapContextCreateImage(context);
-//			
-//			//clear the context
-//			CGContextClearRect(context, rect);
-//			
-//			CGContextRestoreGState(context);
-//		}
-//	}
-//	
-//	CGContextSaveGState(context);
-//	
-//	if (self.shadowColor) {
-//		CGFloat textAlpha = CGColorGetAlpha(self.textColor.CGColor);
-//        CGContextSetShadowWithColor(context, self.shadowOffset, self.shadowBlur, self.shadowColor.CGColor);
-//        [needsMask ? [self.shadowColor colorWithAlphaComponent:textAlpha] : self.textColor setFill];
-//	} else {
-//		[self.gradientColors.count ? [self.gradientColors objectAtIndex: 0] : self.textColor setFill];
-//		CGContextSetShadowWithColor(context, CGSizeZero, 0.0, NULL);
-//	}
-//	
-//	[self.text drawInRect:rect withFont:self.font lineBreakMode:self.lineBreakMode alignment:self.textAlignment];
-//	
-//	CGContextRestoreGState(context);
-//	
-//	if (needsMask) {
-//		CGContextSaveGState(context);
-//		CGContextTranslateCTM(context, 0, rect.size.height);
-//		CGContextScaleCTM(context, 1.0, -1.0);
-//		CGContextClipToMask(context, rect, alphaMask);
-//		
-//		if (self.gradientColors.count > 1) {
-//			if (!_gradient)
-//				[self rx_resetGradient];
-//			
-//			CGPoint startPoint = rect.origin;
-//			CGPoint endPoint = CGPointMake(CGRectGetMinX(rect), self.gradientDirection == RXLabelGradientDirectionHorizontal ? CGRectGetMaxX(rect) : CGRectGetMaxY(rect));
-//			CGContextDrawLinearGradient(context, _gradient, startPoint, endPoint, 0);
-//		}
-//		
-//		if (self.innerShadowColor) {
-//			CGContextSetShadowWithColor(context, self.innerShadowOffset, self.innerShadowBlur, self.innerShadowColor.CGColor);
-//			CGContextDrawImage(context, rect, invertedMask);
-//		}
-//		
-//		CGContextRestoreGState(context);
-//		CGImageRelease(invertedMask);
-//		CGImageRelease(alphaMask);
-//	}
 }
 - (void) rx_resetGradient
 {
@@ -356,6 +256,43 @@
 	
 	_gradient = CGGradientCreateWithColors(NULL, (__bridge CFArrayRef) colors, locations);
 	free(locations);
+}
+- (void) setGradientDirection: (RXLabelGradientDirection) gradientDirection
+{
+	_gradientDirection = gradientDirection;
+	[self setNeedsDisplay];
+}
+- (void) setInnerShadowBlur: (CGFloat) innerShadowBlur
+{
+	_innerShadowBlur = innerShadowBlur;
+	[self setNeedsDisplay];
+}
+- (void) setInnerShadowColor: (UIColor *) innerShadowColor
+{
+	_innerShadowColor = innerShadowColor;
+	[self setNeedsDisplay];
+}
+- (void) setInnerShadowOffset: (CGSize) innerShadowOffset
+{
+	_innerShadowOffset = innerShadowOffset;
+	[self setNeedsDisplay];
+}
+- (void) setShadowBlur: (CGFloat) shadowBlur
+{
+	_rx_shadowBlur = shadowBlur;
+	[self setNeedsDisplay];
+}
+- (void) setGradientColors: (NSArray *) gradientColors
+{
+	_gradientColors = [gradientColors copy];
+	[self rx_resetGradient];
+	[self setNeedsDisplay];
+}
+- (void) setGradientLocations: (NSArray *) gradientLocations
+{
+	_gradientLocations = [gradientLocations copy];
+	[self rx_resetGradient];
+	[self setNeedsDisplay];
 }
 
 @end
