@@ -183,11 +183,19 @@
 		{
 			[textPath addClip];
 			
-			if (!_gradient) [self rx_resetGradient];
-			
-			CGPoint startPoint = rect.origin;
-			CGPoint endPoint = CGPointMake(CGRectGetMinX(rect), self.gradientDirection == RXLabelGradientDirectionHorizontal ? CGRectGetMaxX(rect) : CGRectGetMaxY(rect));
-			CGContextDrawLinearGradient(ctx, _gradient, startPoint, endPoint, 0);
+			if (self.gradientColors.count)
+			{
+				if (!_gradient) [self rx_resetGradient];
+				
+				CGPoint startPoint = rect.origin;
+				CGPoint endPoint = CGPointMake(CGRectGetMinX(rect), self.gradientDirection == RXLabelGradientDirectionHorizontal ? CGRectGetMaxX(rect) : CGRectGetMaxY(rect));
+				CGContextDrawLinearGradient(ctx, _gradient, startPoint, endPoint, 0);
+			}
+			else
+			{
+				CGContextSetFillColorWithColor(ctx, self.textColor.CGColor);
+				CGContextFillRect(ctx, textPath.bounds);
+			}
 		}
 		CGContextEndTransparencyLayer(ctx);
 		
