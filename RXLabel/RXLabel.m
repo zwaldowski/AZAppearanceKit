@@ -107,6 +107,7 @@
 	NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString: self.text attributes: attributes];
 	
 	CTLineRef line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef) attributedString);
+	
 	CFArrayRef runArray = CTLineGetGlyphRuns(line);
 	
 	// For each RUN
@@ -138,8 +139,6 @@
 		}
 	}
 	
-	CFRelease(line);
-	
 	UIBezierPath *path = [UIBezierPath bezierPath];
 	[path moveToPoint: CGPointZero];
 	[path appendPath: [UIBezierPath bezierPathWithCGPath: letters]];
@@ -151,19 +150,18 @@
 	switch (self.textAlignment)
 	{
 		case UITextAlignmentCenter:
-			xOffset = round((self.bounds.size.width - path.bounds.size.width) / 2.0);
+			xOffset = 0.5 * (self.bounds.size.width - path.bounds.size.width);
 			break;
 			
 		case UITextAlignmentRight:
-			xOffset = round(self.bounds.size.width - path.bounds.size.width);
+			xOffset = self.bounds.size.width - path.bounds.size.width + path.bounds.origin.x;
 			break;
 			
 		default:
 			break;
 	}
 	
-	CGPoint origin = path.bounds.origin;
-	[path applyTransform: CGAffineTransformMakeTranslation(xOffset - origin.x, floor((self.bounds.size.height - path.bounds.size.height) / 2.0 - origin.y))];
+	[path applyTransform: CGAffineTransformMakeTranslation(xOffset, 0.5 * (self.bounds.size.height - path.bounds.size.height - MIN(path.bounds.origin.y, 0)))];
 	
 	return path;
 }
