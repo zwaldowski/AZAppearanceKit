@@ -14,7 +14,7 @@
 	CGGradientRef _gradient;
 }
 
-- (UIBezierPath *) textPath;
+- (UIBezierPath *) textPathInRect: (CGRect) rect;
 
 - (void) rx_resetGradient;
 
@@ -29,8 +29,9 @@
 @synthesize innerShadowColor = _innerShadowColor;
 @synthesize innerShadowOffset = _innerShadowOffset;
 @synthesize shadowBlur = _rx_shadowBlur;
+@synthesize textEdgeInsets = _textEdgeInsets;
 
-- (UIBezierPath *) textPath
+- (UIBezierPath *) textPathInRect: (CGRect) rect
 {
 	// Create path from text
     // See: http://www.codeproject.com/KB/iPhone/Glyph.aspx
@@ -140,40 +141,42 @@
 	}
 	
 	UIBezierPath *path = [UIBezierPath bezierPath];
-	[path moveToPoint: CGPointZero];
+	[path moveToPoint: rect.origin];
 	[path appendPath: [UIBezierPath bezierPathWithCGPath: letters]];
 	[path closePath];
 	
 	CGPathRelease(letters);
 	
-	CGFloat xOffset = 0;
+	CGFloat xOffset = rect.origin.x;
 	switch (self.textAlignment)
 	{
 		case UITextAlignmentCenter:
-			xOffset = 0.5 * (self.bounds.size.width - path.bounds.size.width);
+			xOffset = rect.origin.x + 0.5 * (rect.size.width - path.bounds.size.width);
 			break;
 			
 		case UITextAlignmentRight:
-			xOffset = self.bounds.size.width - path.bounds.size.width + path.bounds.origin.x;
+			xOffset = rect.origin.x + rect.size.width - path.bounds.size.width + path.bounds.origin.x;
 			break;
 			
 		default:
 			break;
 	}
 	
-	[path applyTransform: CGAffineTransformMakeTranslation(xOffset, 0.5 * (self.bounds.size.height - path.bounds.size.height - MIN(path.bounds.origin.y, 0)))];
+	[path applyTransform: CGAffineTransformMakeTranslation(xOffset, 0.5 * (rect.size.height - path.bounds.size.height - MIN(path.bounds.origin.y, 0)))];
 	
 	return path;
 }
 
 - (void) drawTextInRect: (CGRect) rect
 {
+	rect = UIEdgeInsetsInsetRect(rect, _textEdgeInsets);
+	
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	
 	CGContextTranslateCTM(ctx, 0, rect.size.height);
 	CGContextScaleCTM(ctx, 1, -1);
 
-	UIBezierPath* textPath = [self textPath];
+	UIBezierPath* textPath = [self textPathInRect: rect];
 	CGContextSaveGState(ctx);
 	{
 		CGContextSetShadowWithColor(ctx, self.shadowOffset, self.shadowBlur, self.shadowColor.CGColor);
@@ -299,6 +302,11 @@
 	_gradientLocations = [gradientLocations copy];
 	[self rx_resetGradient];
 	[self setNeedsDisplay];
+}
+- (void) setTextEdgeInsets: (UIEdgeInsets) textEdgeInsets
+{
+	_textEdgeInsets = textEdgeInsets;
+	[self setNeedsLayout];
 }
 
 @end

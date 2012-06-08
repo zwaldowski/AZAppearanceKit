@@ -23,4 +23,6 @@ typedef enum {
 @property (nonatomic, copy) NSArray *gradientLocations;
 @property (nonatomic) RXLabelGradientDirection gradientDirection;
 
+@property (nonatomic) UIEdgeInsets textEdgeInsets;
+
 @end
