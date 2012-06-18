@@ -167,6 +167,11 @@
 	return path;
 }
 
+- (void) setHighlighted: (BOOL) highlighted
+{
+	[super setHighlighted: highlighted];
+	[self setNeedsDisplay];
+}
 - (void) drawTextInRect: (CGRect) rect
 {
 	rect = UIEdgeInsetsInsetRect(rect, _textEdgeInsets);
@@ -194,7 +199,11 @@
 			}
 			else
 			{
-				CGContextSetFillColorWithColor(ctx, self.textColor.CGColor);
+				if (self.highlighted)
+					CGContextSetFillColorWithColor(ctx, self.highlightedTextColor.CGColor);
+				else
+					CGContextSetFillColorWithColor(ctx, self.textColor.CGColor);
+				
 				CGContextFillRect(ctx, textPath.bounds);
 			}
 		}
