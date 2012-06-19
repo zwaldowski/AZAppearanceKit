@@ -8,7 +8,7 @@
 
 typedef enum {
 	RXLabelGradientDirectionHorizontal,
-	RXLabelGradientDirectionVerical
+	RXLabelGradientDirectionVertical
 } RXLabelGradientDirection;
 
 @interface RXLabel : UILabel
