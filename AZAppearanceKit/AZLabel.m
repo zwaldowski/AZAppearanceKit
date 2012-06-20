@@ -12,26 +12,26 @@
 
 @interface AZLabel ()
 
-+ (UIFont *)rx_defaultFont;
-- (void) rx_sharedInit;
++ (UIFont *)az_defaultFont;
+- (void) az_sharedInit;
 
 @property (nonatomic, strong) NSMutableDictionary *appearanceStorage;
 @property (nonatomic, strong, readwrite) UIBezierPath *textPath;
 
-- (id)rx_valueForAppearanceKeyForCurrentState:(NSString *)key;
-- (id)rx_valueForAppearanceKey:(NSString *)key forState:(UIControlState)state;
-- (void)rx_setValue:(id)value forAppearanceKey:(NSString *)key forState:(UIControlState)state;
+- (id)az_valueForAppearanceKeyForCurrentState:(NSString *)key;
+- (id)az_valueForAppearanceKey:(NSString *)key forState:(UIControlState)state;
+- (void)az_setValue:(id)value forAppearanceKey:(NSString *)key forState:(UIControlState)state;
 
-@property (nonatomic, readonly, getter = rx_textColorForCurrentState) UIColor *textColorForCurrentState;
-@property (nonatomic, readonly, getter = rx_shadowOffsetForCurrentState) CGSize shadowOffsetForCurrentState;
-@property (nonatomic, readonly, getter = rx_shadowBlurForCurrentState) CGFloat shadowBlurForCurrentState;
-@property (nonatomic, readonly, getter = rx_shadowColorForCurrentState) UIColor *shadowColorForCurrentState;
-@property (nonatomic, readonly, getter = rx_innerShadowOffsetForCurrentState) CGSize innerShadowOffsetForCurrentState;
-@property (nonatomic, readonly, getter = rx_innerShadowBlurForCurrentState) CGFloat innerShadowBlurForCurrentState;
-@property (nonatomic, readonly, getter = rx_innerShadowColorForCurrentState) UIColor *innerShadowColorForCurrentState;
-@property (nonatomic, readonly, getter = rx_shouldUseGradientForCurrentState) BOOL shouldUseGradientForCurrentState;
-@property (nonatomic, readonly, getter = rx_gradientForCurrentState) AZGradient *gradientForCurrentState;
-@property (nonatomic, readonly, getter = rx_gradientDirectionForCurrentState) AZGradientDirection gradientDirectionForCurrentState;
+@property (nonatomic, readonly, getter = az_textColorForCurrentState) UIColor *textColorForCurrentState;
+@property (nonatomic, readonly, getter = az_shadowOffsetForCurrentState) CGSize shadowOffsetForCurrentState;
+@property (nonatomic, readonly, getter = az_shadowBlurForCurrentState) CGFloat shadowBlurForCurrentState;
+@property (nonatomic, readonly, getter = az_shadowColorForCurrentState) UIColor *shadowColorForCurrentState;
+@property (nonatomic, readonly, getter = az_innerShadowOffsetForCurrentState) CGSize innerShadowOffsetForCurrentState;
+@property (nonatomic, readonly, getter = az_innerShadowBlurForCurrentState) CGFloat innerShadowBlurForCurrentState;
+@property (nonatomic, readonly, getter = az_innerShadowColorForCurrentState) UIColor *innerShadowColorForCurrentState;
+@property (nonatomic, readonly, getter = az_shouldUseGradientForCurrentState) BOOL shouldUseGradientForCurrentState;
+@property (nonatomic, readonly, getter = az_gradientForCurrentState) AZGradient *gradientForCurrentState;
+@property (nonatomic, readonly, getter = az_gradientDirectionForCurrentState) AZGradientDirection gradientDirectionForCurrentState;
 
 @end
 
@@ -88,26 +88,26 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 @synthesize lineBreakMode = _lineBreakMode;
 @synthesize textEdgeInsets = _textEdgeInsets;
 
-+ (UIFont *)rx_defaultFont {
++ (UIFont *)az_defaultFont {
 	return [UIFont systemFontOfSize: 17];
 }
 
-- (void)rx_sharedInit {
-	self.font = [[self class] rx_defaultFont];
+- (void)az_sharedInit {
+	self.font = [[self class] az_defaultFont];
 	self.backgroundColor = [UIColor whiteColor];
 	[self setTextColor: [UIColor blackColor] forState: UIControlStateNormal];
 }
 
 - (id)init {
 	if ((self = [super init])) {
-		[self rx_sharedInit];
+		[self az_sharedInit];
 	}
 	return self;
 }
 
 - (id)initWithFrame:(CGRect)frame {
 	if ((self = [super initWithFrame: frame])) {
-		[self rx_sharedInit];
+		[self az_sharedInit];
 	}
 	return self;
 }
@@ -115,7 +115,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 - (id)initWithCoder:(NSCoder *)aDecoder {
 	if ((self = [super initWithCoder: aDecoder])) {
 		self.text = [aDecoder decodeObjectForKey: @"UIText"];
-		self.font = [aDecoder decodeObjectForKey: @"UIFont"] ?: [[self class] rx_defaultFont];
+		self.font = [aDecoder decodeObjectForKey: @"UIFont"] ?: [[self class] az_defaultFont];
 		[self setTextColor: [aDecoder decodeObjectForKey: @"UITextColor"] ?: [UIColor blackColor] forState: UIControlStateNormal];
 		[self setTextColor: [aDecoder decodeObjectForKey: @"UIHighlightedColor"] forState: UIControlStateHighlighted];
 		if ([aDecoder containsValueForKey: @"UIShadowOffset"])
@@ -138,7 +138,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return self;
 }
 
-- (void)rx_recalculateTextPath {
+- (void)az_recalculateTextPath {
 	// Create path from text
     // See: http://www.codeproject.com/KB/iPhone/Glyph.aspx
     // License: The Code Project Open License (CPOL) 1.02 http://www.codeproject.com/info/cpol10.aspx
@@ -263,7 +263,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	CGContextScaleCTM(ctx, 1, -1);
 	
 	if (!self.textPath && self.text.length)
-		[self rx_recalculateTextPath];
+		[self az_recalculateTextPath];
 	
 	CGContextSaveGState(ctx);
 	{
@@ -323,7 +323,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 
 - (void)setText:(NSString *)text {
 	_text = [text copy];
-	[self rx_recalculateTextPath];
+	[self az_recalculateTextPath];
 	if (self.superview) {
 		[self setNeedsDisplay];
 	}
@@ -331,7 +331,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 
 - (void)setFont:(UIFont *)font {
 	_font = font;
-	[self rx_recalculateTextPath];
+	[self az_recalculateTextPath];
 	if (self.superview) {
 		[self setNeedsDisplay];
 	}
@@ -339,17 +339,17 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 
 - (void)layoutSubviews {
 	[super layoutSubviews];
-	[self rx_recalculateTextPath];
+	[self az_recalculateTextPath];
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
 	[super willMoveToSuperview: newSuperview];
-	[self rx_recalculateTextPath];
+	[self az_recalculateTextPath];
 }
 
 - (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode {
 	_lineBreakMode = lineBreakMode;
-	[self rx_recalculateTextPath];
+	[self az_recalculateTextPath];
 	if (self.superview) {
 		[self setNeedsDisplay];
 	}
@@ -357,7 +357,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 
 - (void)setContentHorizontalAlignment:(UIControlContentHorizontalAlignment)contentHorizontalAlignment {
 	[super setContentHorizontalAlignment:contentHorizontalAlignment];
-	[self rx_recalculateTextPath];
+	[self az_recalculateTextPath];
 	if (self.superview) {
 		[self setNeedsDisplay];
 	}
@@ -365,7 +365,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 
 - (void)setContentVerticalAlignment:(UIControlContentVerticalAlignment)contentVerticalAlignment {
 	[super setContentVerticalAlignment: contentVerticalAlignment];
-	[self rx_recalculateTextPath];
+	[self az_recalculateTextPath];
 	if (self.superview) {
 		[self setNeedsDisplay];
 	}
@@ -373,31 +373,31 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 
 #pragma mark - State value getters
 
-- (id)rx_valueForAppearanceKeyForCurrentState:(NSString *)key {
+- (id)az_valueForAppearanceKeyForCurrentState:(NSString *)key {
 	if (!self.appearanceStorage)
 		return nil;
 	
 	UIControlState currentState = self.state;
-	id value = [self rx_valueForAppearanceKey: key forState: currentState];
+	id value = [self az_valueForAppearanceKey: key forState: currentState];
 	
 	if (!value && currentState == UIControlStateHighlighted) {
 		currentState = UIControlStateSelected;
-		value = [self rx_valueForAppearanceKey: key forState: currentState];
+		value = [self az_valueForAppearanceKey: key forState: currentState];
 	}
 	
 	if (!value && currentState == UIControlStateSelected) {
 		currentState = UIControlStateHighlighted;
-		value = [self rx_valueForAppearanceKey: key forState: currentState];
+		value = [self az_valueForAppearanceKey: key forState: currentState];
 	}
 	
 	if (!value) {
-		value = [self rx_valueForAppearanceKey: key forState: UIControlStateNormal];
+		value = [self az_valueForAppearanceKey: key forState: UIControlStateNormal];
 	}
 	
 	return value;
 }
 
-- (id)rx_valueForAppearanceKey:(NSString *)key forState:(UIControlState)state {
+- (id)az_valueForAppearanceKey:(NSString *)key forState:(UIControlState)state {
 	if (!self.appearanceStorage)
 		return nil;
 	
@@ -407,7 +407,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return [stateStorage objectForKey: key];
 }
 
-- (void)rx_setValue:(id)value forAppearanceKey:(NSString *)key forState:(UIControlState)state {
+- (void)az_setValue:(id)value forAppearanceKey:(NSString *)key forState:(UIControlState)state {
 	if (!self.appearanceStorage)
 		self.appearanceStorage = [NSMutableDictionary dictionary];
 	
@@ -433,11 +433,11 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 }
 
 - (void)setTextColor:(UIColor *)color forState:(UIControlState)state {
-	return [self rx_setValue: color forAppearanceKey: @"textColor" forState: state];
+	return [self az_setValue: color forAppearanceKey: @"textColor" forState: state];
 }
 
 - (UIColor *)textColorForState:(UIControlState)state {
-	return [self rx_valueForAppearanceKey: @"textColor" forState: state];
+	return [self az_valueForAppearanceKey: @"textColor" forState: state];
 }
 
 - (CGSize)shadowOffset {
@@ -453,21 +453,21 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 }
 
 - (void)setShadowOffset:(CGSize)shadowOffset blur:(CGFloat)shadowBlur color:(UIColor *)shadowColor forState:(UIControlState)controlState {
-	[self rx_setValue: [NSValue valueWithCGSize: shadowOffset] forAppearanceKey: @"shadowOffset" forState: controlState];
-	[self rx_setValue: [NSNumber numberWithDouble: shadowBlur] forAppearanceKey: @"shadowBlur" forState: controlState];
-	[self rx_setValue: shadowColor forAppearanceKey: @"shadowColor" forState: controlState];
+	[self az_setValue: [NSValue valueWithCGSize: shadowOffset] forAppearanceKey: @"shadowOffset" forState: controlState];
+	[self az_setValue: [NSNumber numberWithDouble: shadowBlur] forAppearanceKey: @"shadowBlur" forState: controlState];
+	[self az_setValue: shadowColor forAppearanceKey: @"shadowColor" forState: controlState];
 }
 
 - (CGSize)shadowOffsetForState:(UIControlState)controlState {
-	return [[self rx_valueForAppearanceKey: @"shadowOffset" forState: controlState] CGSizeValue];
+	return [[self az_valueForAppearanceKey: @"shadowOffset" forState: controlState] CGSizeValue];
 }
 
 - (CGFloat)shadowBlurForState:(UIControlState)controlState {
-	return [[self rx_valueForAppearanceKey: @"shadowBlur" forState: controlState] doubleValue];
+	return [[self az_valueForAppearanceKey: @"shadowBlur" forState: controlState] doubleValue];
 }
 
 - (UIColor *)shadowColorForState:(UIControlState)controlState {
-	return [self rx_valueForAppearanceKey: @"shadowColor" forState: controlState];
+	return [self az_valueForAppearanceKey: @"shadowColor" forState: controlState];
 }
 
 - (CGSize)innerShadowOffset {
@@ -483,21 +483,21 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 }
 
 - (void)setInnerShadowOffset:(CGSize)innerShadowOffset blur:(CGFloat)innerShadowBlur color:(UIColor *)innerShadowColor forState:(UIControlState)controlState {
-	[self rx_setValue: [NSValue valueWithCGSize: innerShadowOffset] forAppearanceKey: @"innerShadowOffset" forState: controlState];
-	[self rx_setValue: [NSNumber numberWithDouble: innerShadowBlur] forAppearanceKey: @"innerShadowBlur" forState: controlState];
-	[self rx_setValue: innerShadowColor forAppearanceKey: @"innerShadowColor" forState: controlState];
+	[self az_setValue: [NSValue valueWithCGSize: innerShadowOffset] forAppearanceKey: @"innerShadowOffset" forState: controlState];
+	[self az_setValue: [NSNumber numberWithDouble: innerShadowBlur] forAppearanceKey: @"innerShadowBlur" forState: controlState];
+	[self az_setValue: innerShadowColor forAppearanceKey: @"innerShadowColor" forState: controlState];
 }
 
 - (CGSize)innerShadowOffsetForState:(UIControlState)controlState {
-	return [[self rx_valueForAppearanceKey: @"innerShadowOffset" forState: controlState] CGSizeValue];
+	return [[self az_valueForAppearanceKey: @"innerShadowOffset" forState: controlState] CGSizeValue];
 }
 
 - (CGFloat)innerShadowBlurForState:(UIControlState)controlState {
-	return [[self rx_valueForAppearanceKey: @"innerShadowBlur" forState: controlState] doubleValue];
+	return [[self az_valueForAppearanceKey: @"innerShadowBlur" forState: controlState] doubleValue];
 }
 
 - (UIColor *)innerShadowColorForState:(UIControlState)controlState {
-	return [self rx_valueForAppearanceKey: @"innerShadowColor" forState: controlState];
+	return [self az_valueForAppearanceKey: @"innerShadowColor" forState: controlState];
 }
 
 - (AZGradient *)gradient {
@@ -509,55 +509,55 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 }
 
 - (void)setGradient:(AZGradient *)gradient direction:(AZGradientDirection)gradientDirection forState:(UIControlState)controlState {
-	[self rx_setValue: gradient forAppearanceKey: @"gradient" forState: controlState];
-	[self rx_setValue: [NSNumber numberWithInteger: gradientDirection] forAppearanceKey: @"gradientDirection" forState: controlState];
+	[self az_setValue: gradient forAppearanceKey: @"gradient" forState: controlState];
+	[self az_setValue: [NSNumber numberWithInteger: gradientDirection] forAppearanceKey: @"gradientDirection" forState: controlState];
 }
 
 - (AZGradient *)gradientForState:(UIControlState)controlState {
-	return [self rx_valueForAppearanceKey: @"gradient" forState: controlState];
+	return [self az_valueForAppearanceKey: @"gradient" forState: controlState];
 }
 
 - (AZGradientDirection)gradientDirectionForState:(UIControlState)controlState {
-	return [[self rx_valueForAppearanceKey: @"shadowBlur" forState: controlState] integerValue];
+	return [[self az_valueForAppearanceKey: @"shadowBlur" forState: controlState] integerValue];
 }
 
 #pragma mark - Internal state getters
 
-- (UIColor *)rx_textColorForCurrentState {
-	return [self rx_valueForAppearanceKeyForCurrentState: @"textColor"];
+- (UIColor *)az_textColorForCurrentState {
+	return [self az_valueForAppearanceKeyForCurrentState: @"textColor"];
 }
 
-- (CGSize)rx_shadowOffsetForCurrentState {
-	return [[self rx_valueForAppearanceKeyForCurrentState: @"shadowOffset"] CGSizeValue];
+- (CGSize)az_shadowOffsetForCurrentState {
+	return [[self az_valueForAppearanceKeyForCurrentState: @"shadowOffset"] CGSizeValue];
 }
 
-- (CGFloat)rx_shadowBlurForCurrentState {
-	return [[self rx_valueForAppearanceKeyForCurrentState: @"shadowBlur"] doubleValue];
+- (CGFloat)az_shadowBlurForCurrentState {
+	return [[self az_valueForAppearanceKeyForCurrentState: @"shadowBlur"] doubleValue];
 }
 
-- (UIColor *)rx_shadowColorForCurrentState {
-	return [self rx_valueForAppearanceKeyForCurrentState: @"shadowColor"];
+- (UIColor *)az_shadowColorForCurrentState {
+	return [self az_valueForAppearanceKeyForCurrentState: @"shadowColor"];
 }
 
-- (CGSize)rx_innerShadowOffsetForCurrentState {
-	return [[self rx_valueForAppearanceKeyForCurrentState: @"innerShadowOffset"] CGSizeValue];
+- (CGSize)az_innerShadowOffsetForCurrentState {
+	return [[self az_valueForAppearanceKeyForCurrentState: @"innerShadowOffset"] CGSizeValue];
 }
 
-- (CGFloat)rx_innerShadowBlurForCurrentState {
-	return [[self rx_valueForAppearanceKeyForCurrentState: @"innerShadowBlur"] doubleValue];
+- (CGFloat)az_innerShadowBlurForCurrentState {
+	return [[self az_valueForAppearanceKeyForCurrentState: @"innerShadowBlur"] doubleValue];
 }
 
-- (UIColor *)rx_innerShadowColorForCurrentState {
-	return [self rx_valueForAppearanceKeyForCurrentState: @"innerShadowColor"];
+- (UIColor *)az_innerShadowColorForCurrentState {
+	return [self az_valueForAppearanceKeyForCurrentState: @"innerShadowColor"];
 }
 
-- (BOOL)rx_shouldUseGradientForCurrentState {
+- (BOOL)az_shouldUseGradientForCurrentState {
 	if (!self.appearanceStorage)
 		return NO;
 	
 	UIControlState currentState = self.state;
-	id gradient = [self rx_valueForAppearanceKey: @"gradient" forState: currentState];
-	id color = [self rx_valueForAppearanceKey: @"textColor" forState: currentState];
+	id gradient = [self az_valueForAppearanceKey: @"gradient" forState: currentState];
+	id color = [self az_valueForAppearanceKey: @"textColor" forState: currentState];
 	
 	if (gradient)
 		return YES;
@@ -567,8 +567,8 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	
 	if (currentState == UIControlStateHighlighted) {
 		currentState = UIControlStateSelected;
-		gradient = [self rx_valueForAppearanceKey: @"gradient" forState: currentState];
-		color = [self rx_valueForAppearanceKey: @"textColor" forState: currentState];
+		gradient = [self az_valueForAppearanceKey: @"gradient" forState: currentState];
+		color = [self az_valueForAppearanceKey: @"textColor" forState: currentState];
 	}
 	
 	if (gradient)
@@ -579,8 +579,8 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	
 	if (currentState == UIControlStateSelected) {
 		currentState = UIControlStateHighlighted;
-		gradient = [self rx_valueForAppearanceKey: @"gradient" forState: currentState];
-		color = [self rx_valueForAppearanceKey: @"textColor" forState: currentState];
+		gradient = [self az_valueForAppearanceKey: @"gradient" forState: currentState];
+		color = [self az_valueForAppearanceKey: @"textColor" forState: currentState];
 	}
 	
 	if (gradient)
@@ -589,12 +589,12 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return NO;
 }
 
-- (AZGradient *)rx_gradientForCurrentState {
-	return [self rx_valueForAppearanceKeyForCurrentState: @"gradient"];
+- (AZGradient *)az_gradientForCurrentState {
+	return [self az_valueForAppearanceKeyForCurrentState: @"gradient"];
 }
 
-- (AZGradientDirection)rx_gradientDirectionForCurrentState {
-	return [[self rx_valueForAppearanceKeyForCurrentState: @"gradientDirection"] integerValue];
+- (AZGradientDirection)az_gradientDirectionForCurrentState {
+	return [[self az_valueForAppearanceKeyForCurrentState: @"gradientDirection"] integerValue];
 }
 
 
