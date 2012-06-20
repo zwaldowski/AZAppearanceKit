@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+
+#import <UIKit/UIKit.h>
 
 /** `AZGradient` defines a transition between colors.  The transition
  is defined over a range from 0.0 to 1.0 inclusive.  A gradient typically
@@ -73,6 +73,8 @@
 @end
 
 #elif defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
+
+#import <AppKit/AppKit.h>
 
 @compatibility_alias AZGradient NSGradient;
 
