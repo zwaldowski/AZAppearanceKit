@@ -14,39 +14,19 @@
 {
     [super viewDidLoad];
 	
-	self.label.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:0.75];
-	self.label.shadowOffset = CGSizeMake(0, 1);
-	self.label.shadowBlur = 0.0f;
+	[self.label setShadowOffset: CGSizeMake(0, 1) blur: 0 color: [[UIColor whiteColor] colorWithAlphaComponent:0.75] forState: UIControlStateNormal];
+	[self.label setInnerShadowOffset: CGSizeMake(0, 1) blur: 2.0f color: [[UIColor blackColor] colorWithAlphaComponent:0.5] forState: UIControlStateNormal];
+	RXGradient *label1Gradient = [[RXGradient alloc] initWithColors: @[[UIColor colorWithRed:0.33 green:0.38 blue:0.47 alpha:1.0], [UIColor colorWithRed:0.41 green:0.47 blue:0.59 alpha:1.0]]];
+	[self.label setGradient: label1Gradient direction: RXGradientDirectionVertical forState: UIControlStateNormal];
 	
-	self.label.innerShadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-	self.label.innerShadowOffset = CGSizeMake(0, 1);
-	self.label.innerShadowBlur = 2.0f;
-	
-	self.label.gradientColors = @[[UIColor colorWithRed:0.33 green:0.38 blue:0.47 alpha:1.0],
-	[UIColor colorWithRed:0.41 green:0.47 blue:0.59 alpha:1.0]];
-	self.label.gradientDirection = RXLabelGradientDirectionVertical;
-	
-	self.label2.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:0.75];
-	self.label2.shadowOffset = CGSizeMake(0, 1);
-	self.label2.shadowBlur = 0.0f;
-	
-	self.label2.innerShadowColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
-	self.label2.innerShadowOffset = CGSizeMake(0, 1);
-	self.label2.innerShadowBlur = 2.0f;
-	
-	self.label2.gradientColors = @[[UIColor colorWithRed:0.33 green:0.38 blue:0.47 alpha:1.0],
-	[UIColor colorWithRed:0.41 green:0.47 blue:0.59 alpha:1.0]];
-	self.label2.gradientDirection = RXLabelGradientDirectionVertical;
+	[self.label2 setShadowOffset: CGSizeMake(0, 1) blur: 0 color: [[UIColor whiteColor] colorWithAlphaComponent:0.75] forState: UIControlStateNormal];
+	[self.label2 setInnerShadowOffset: CGSizeMake(0, 1) blur: 2.0f color: [[UIColor blackColor] colorWithAlphaComponent:0.5] forState: UIControlStateNormal];
+	RXGradient *label2Gradient = [[RXGradient alloc] initWithColors: @[[UIColor colorWithRed:0.33 green:0.38 blue:0.47 alpha:1.0], [UIColor colorWithRed:0.41 green:0.47 blue:0.59 alpha:1.0]]];
+	[self.label2 setGradient: label2Gradient direction: RXGradientDirectionVertical forState: UIControlStateNormal];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
 	return (toInterfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-}
-
-- (void)viewDidUnload {
-	[self setLabel:nil];
-	[self setLabel2:nil];
-	[super viewDidUnload];
 }
 
 @end

@@ -17,6 +17,7 @@
 		6CC585A915156B5900B26316 /* RXViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CC585A815156B5900B26316 /* RXViewController.m */; };
 		6CC585AC15156B5900B26316 /* RXViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CC585AA15156B5900B26316 /* RXViewController.xib */; };
 		6CC585B815156CC300B26316 /* RXLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CC585B715156CC300B26316 /* RXLabel.m */; };
+		6CCEB18D15914FE7001266F3 /* RXGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCEB18C15914FE7001266F3 /* RXGradient.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,8 @@
 		6CC585AB15156B5900B26316 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/RXViewController.xib; sourceTree = "<group>"; };
 		6CC585B615156CC300B26316 /* RXLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXLabel.h; sourceTree = "<group>"; };
 		6CC585B715156CC300B26316 /* RXLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXLabel.m; sourceTree = "<group>"; };
+		6CCEB18B15914FE7001266F3 /* RXGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; path = RXGradient.h; sourceTree = "<group>"; };
+		6CCEB18C15914FE7001266F3 /* RXGradient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXGradient.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +94,8 @@
 				6CC585AA15156B5900B26316 /* RXViewController.xib */,
 				6CC585B615156CC300B26316 /* RXLabel.h */,
 				6CC585B715156CC300B26316 /* RXLabel.m */,
+				6CCEB18B15914FE7001266F3 /* RXGradient.h */,
+				6CCEB18C15914FE7001266F3 /* RXGradient.m */,
 				6CC5859C15156B5900B26316 /* Supporting Files */,
 			);
 			path = RXLabel;
@@ -175,6 +180,7 @@
 				6CC585A615156B5900B26316 /* RXAppDelegate.m in Sources */,
 				6CC585A915156B5900B26316 /* RXViewController.m in Sources */,
 				6CC585B815156CC300B26316 /* RXLabel.m in Sources */,
+				6CCEB18D15914FE7001266F3 /* RXGradient.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
