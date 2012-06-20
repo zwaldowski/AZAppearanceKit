@@ -96,6 +96,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	self.font = [[self class] az_defaultFont];
 	self.backgroundColor = [UIColor whiteColor];
 	self.userInteractionEnabled = NO;
+	self.contentMode = UIViewContentModeRedraw;
 	[self setTextColor: [UIColor blackColor] forState: UIControlStateNormal];
 }
 
@@ -315,8 +316,8 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 - (CGSize) sizeThatFits: (CGSize) size
 {
 	size = [self.text sizeWithFont: self.font];
-	size.height += copysign(self.shadowOffsetForCurrentState.height, 0.1);
-	size.width += copysign(self.shadowOffsetForCurrentState.width, 0.1);
+	size.height += fabs(self.shadowOffsetForCurrentState.height);
+	size.width += fabs(self.shadowOffsetForCurrentState.width);
 	return size;
 }
 
