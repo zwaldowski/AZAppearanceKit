@@ -7,10 +7,12 @@ Pod::Spec.new do |s|
   s.authors      = { 'Zachary Waldowski' => 'zwaldowski@gmail.com',
                      'Alexsander Akers' => 'a2@pandamonia.us' }
   s.source       = { :git => 'https://github.com/zwaldowski/AZAppearanceKit.git', :commit => 'origin/master' }
-  s.source_files = 'AZAppearanceKit/*.{h,m}'
   s.frameworks   = 'CoreGraphics', 'CoreText'
   s.requires_arc = true
   
+  s.ios.source_files = 'AZAppearanceKit/AZGradient.{h,m}', 'AZAppearanceKit/AZLabel.{h,m}'
+  s.osx.source_files = 'AZAppearanceKit/AZGradient.{h,m}'
+
   s.subspec 'AZGradient' do |ss|
     ss.ios.deployment_target = '4.0'
     ss.osx.deployment_target = '10.6'
