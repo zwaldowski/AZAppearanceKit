@@ -95,6 +95,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 - (void)az_sharedInit {
 	self.font = [[self class] az_defaultFont];
 	self.backgroundColor = [UIColor whiteColor];
+	self.userInteractionEnabled = NO;
 	[self setTextColor: [UIColor blackColor] forState: UIControlStateNormal];
 }
 
@@ -119,7 +120,9 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 		[self setTextColor: [aDecoder decodeObjectForKey: @"UITextColor"] ?: [UIColor blackColor] forState: UIControlStateNormal];
 		[self setTextColor: [aDecoder decodeObjectForKey: @"UIHighlightedColor"] forState: UIControlStateHighlighted];
 		if ([aDecoder containsValueForKey: @"UIShadowOffset"])
-			[self setShadowOffset: [aDecoder decodeCGSizeForKey: @"UIShadowOffset"] blur: 0.0 color: [aDecoder decodeObjectForKey: @"UIShadowColor"] forState: UIControlStateNormal];
+			[self setShadowOffset: [aDecoder decodeCGSizeForKey: @"UIShadowOffset"] forState: UIControlStateNormal];
+		if ([aDecoder containsValueForKey: @"UIShadowColor"])
+			[self setShadowColor: [aDecoder decodeObjectForKey: @"UIShadowColor"] forState: UIControlStateNormal];
 		if ([aDecoder containsValueForKey: @"UILineBreakMode"])
 			self.lineBreakMode = [aDecoder decodeIntegerForKey: @"UILineBreakMode"];
 		if ([aDecoder containsValueForKey: @"UITextAlignment"])
@@ -146,7 +149,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	// See: https://github.com/ole/Animated-Paths/blob/0347e90738cedf4f543c2cb9ab97d18780d461e2/Classes/AnimatedPathViewController.m#L86
 	CGRect rect = self.bounds;
 	
-	if (!self.font)
+	if (!self.font || !self.text)
 		return;
 	
 	CGMutablePathRef letters = CGPathCreateMutable();
@@ -247,7 +250,6 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	CGPathRelease(mutablePath);
 }
 
-
 - (void) setHighlighted: (BOOL) highlighted
 {
 	[super setHighlighted: highlighted];
@@ -270,7 +272,6 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 		CGContextSetShadowWithColor(ctx, self.shadowOffsetForCurrentState, self.shadowBlurForCurrentState, self.shadowColorForCurrentState.CGColor);
 		CGContextBeginTransparencyLayer(ctx, NULL);
 		{
-			
 			if (self.shouldUseGradientForCurrentState)
 			{
 				[self.gradientForCurrentState drawInBezierPath: self.textPath direction: self.gradientDirectionForCurrentState];
@@ -309,6 +310,14 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 		CGContextRestoreGState(ctx);
 	}
 	CGContextRestoreGState(ctx);
+}
+
+- (CGSize) sizeThatFits: (CGSize) size
+{
+	size = [self.text sizeWithFont: self.font];
+	size.height += copysign(self.shadowOffsetForCurrentState.height, 0.1);
+	size.width += copysign(self.shadowOffsetForCurrentState.width, 0.1);
+	return size;
 }
 
 #pragma mark - Properties that affect display
@@ -452,9 +461,15 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return [self shadowColorForState: UIControlStateNormal];
 }
 
-- (void)setShadowOffset:(CGSize)shadowOffset blur:(CGFloat)shadowBlur color:(UIColor *)shadowColor forState:(UIControlState)controlState {
+- (void)setShadowOffset:(CGSize)shadowOffset forState:(UIControlState)controlState {
 	[self az_setValue: [NSValue valueWithCGSize: shadowOffset] forAppearanceKey: @"shadowOffset" forState: controlState];
+}
+
+- (void)setShadowBlur:(CGFloat)shadowBlur forState:(UIControlState)controlState {
 	[self az_setValue: [NSNumber numberWithDouble: shadowBlur] forAppearanceKey: @"shadowBlur" forState: controlState];
+}
+
+- (void)setShadowColor:(UIColor *)shadowColor forState:(UIControlState)controlState {
 	[self az_setValue: shadowColor forAppearanceKey: @"shadowColor" forState: controlState];
 }
 
@@ -482,9 +497,15 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return [self innerShadowColorForState: UIControlStateNormal];
 }
 
-- (void)setInnerShadowOffset:(CGSize)innerShadowOffset blur:(CGFloat)innerShadowBlur color:(UIColor *)innerShadowColor forState:(UIControlState)controlState {
+- (void)setInnerShadowOffset:(CGSize)innerShadowOffset forState:(UIControlState)controlState {
 	[self az_setValue: [NSValue valueWithCGSize: innerShadowOffset] forAppearanceKey: @"innerShadowOffset" forState: controlState];
+}
+
+- (void)setInnerShadowBlur:(CGFloat)innerShadowBlur forState:(UIControlState)controlState {
 	[self az_setValue: [NSNumber numberWithDouble: innerShadowBlur] forAppearanceKey: @"innerShadowBlur" forState: controlState];
+}
+
+- (void)setInnerShadowColor:(UIColor *)innerShadowColor forState:(UIControlState)controlState {
 	[self az_setValue: innerShadowColor forAppearanceKey: @"innerShadowColor" forState: controlState];
 }
 
@@ -508,8 +529,11 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return [self gradientDirectionForState: UIControlStateNormal];
 }
 
-- (void)setGradient:(AZGradient *)gradient direction:(AZGradientDirection)gradientDirection forState:(UIControlState)controlState {
+- (void)setGradient:(AZGradient *)gradient forState:(UIControlState)controlState {
 	[self az_setValue: gradient forAppearanceKey: @"gradient" forState: controlState];
+}
+
+- (void)setGradientDirection:(AZGradientDirection)gradientDirection forState:(UIControlState)controlState {
 	[self az_setValue: [NSNumber numberWithInteger: gradientDirection] forAppearanceKey: @"gradientDirection" forState: controlState];
 }
 

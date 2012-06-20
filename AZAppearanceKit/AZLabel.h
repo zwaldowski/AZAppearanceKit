@@ -21,25 +21,35 @@
 - (UIColor *)textColorForState:(UIControlState)state;
 
 @property (nonatomic, readonly) CGSize shadowOffset;
-@property (nonatomic, readonly) CGFloat shadowBlur;
-@property (nonatomic, readonly) UIColor *shadowColor;
-- (void)setShadowOffset:(CGSize)shadowOffset blur:(CGFloat)shadowBlur color:(UIColor *)shadowColor forState:(UIControlState)controlState;
+- (void)setShadowOffset:(CGSize)shadowOffset forState:(UIControlState)controlState;
 - (CGSize)shadowOffsetForState:(UIControlState)controlState;
+
+@property (nonatomic, readonly) CGFloat shadowBlur;
+- (void)setShadowBlur:(CGFloat)shadowBlur forState:(UIControlState)controlState;
 - (CGFloat)shadowBlurForState:(UIControlState)controlState;
+
+@property (nonatomic, readonly) UIColor *shadowColor;
+- (void)setShadowColor:(UIColor *)shadowColor forState:(UIControlState)controlState;
 - (UIColor *)shadowColorForState:(UIControlState)controlState;
 
 @property (nonatomic, readonly) CGSize innerShadowOffset;
-@property (nonatomic, readonly) CGFloat innerShadowBlur;
-@property (nonatomic, readonly) UIColor *innerShadowColor;
-- (void)setInnerShadowOffset:(CGSize)innerShadowOffset blur:(CGFloat)innerShadowBlur color:(UIColor *)innerShadowColor forState:(UIControlState)controlState;
+- (void)setInnerShadowOffset:(CGSize)innerShadowOffset forState:(UIControlState)controlState;
 - (CGSize)innerShadowOffsetForState:(UIControlState)controlState;
+
+@property (nonatomic, readonly) CGFloat innerShadowBlur;
+- (void)setInnerShadowBlur:(CGFloat)innerShadowBlur forState:(UIControlState)controlState;
 - (CGFloat)innerShadowBlurForState:(UIControlState)controlState;
+
+@property (nonatomic, readonly) UIColor *innerShadowColor;
+- (void)setInnerShadowColor:(UIColor *)innerShadowColor forState:(UIControlState)controlState;
 - (UIColor *)innerShadowColorForState:(UIControlState)controlState;
 
 @property (nonatomic, readonly) AZGradient *gradient;
-@property (nonatomic, readonly) AZGradientDirection gradientDirection;
-- (void)setGradient:(AZGradient *)gradient direction:(AZGradientDirection)gradientDirection forState:(UIControlState)controlState;
+- (void)setGradient:(AZGradient *)gradient forState:(UIControlState)controlState;
 - (AZGradient *)gradientForState:(UIControlState)controlState;
+
+@property (nonatomic, readonly) AZGradientDirection gradientDirection;
+- (void)setGradientDirection:(AZGradientDirection)gradientDirection forState:(UIControlState)controlState;
 - (AZGradientDirection)gradientDirectionForState:(UIControlState)controlState;
 
 @property (nonatomic, strong, readonly) UIBezierPath *textPath;
