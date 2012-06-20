@@ -88,6 +88,6 @@ typedef enum _AZGradientDirection {
 - (id)gradientByReversingGradient;
 
 - (void)drawInRect:(CGRect)rect direction:(AZGradientDirection)direction;
-- (void)drawInBezierPath:(UIBezierPath *)path direction:(AZGradientDirection)direction;
+- (void)drawInBezierPath:(id)path direction:(AZGradientDirection)direction;
 
 @end

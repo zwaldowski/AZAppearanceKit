@@ -352,7 +352,7 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 	[self drawInRect: rect angle: direction == AZGradientDirectionVertical ? 90 : 0];
 }
 
-- (void)drawInBezierPath:(UIBezierPath *)path direction:(AZGradientDirection)direction {
+- (void)drawInBezierPath:(id)path direction:(AZGradientDirection)direction {
 	[self drawInBezierPath: path angle: direction == AZGradientDirectionVertical ? 90 : 0];
 }
 
