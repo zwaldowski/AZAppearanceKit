@@ -1,0 +1,318 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6CCEB1AD15916BCA001266F3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1AC15916BCA001266F3 /* UIKit.framework */; };
+		6CCEB1AF15916BCA001266F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1AE15916BCA001266F3 /* Foundation.framework */; };
+		6CCEB1B115916BCA001266F3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1B015916BCA001266F3 /* CoreGraphics.framework */; };
+		6CCEB1B715916BCA001266F3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6CCEB1B515916BCA001266F3 /* InfoPlist.strings */; };
+		6CCEB1B915916BCA001266F3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCEB1B815916BCA001266F3 /* main.m */; };
+		6CCEB1BD15916BCA001266F3 /* AZAppearanceKitDemoAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCEB1BC15916BCA001266F3 /* AZAppearanceKitDemoAppDelegate.m */; };
+		6CCEB1C015916BCA001266F3 /* AZLabelDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCEB1BF15916BCA001266F3 /* AZLabelDemoViewController.m */; };
+		6CCEB1C215916BCA001266F3 /* AZLabelDemoViewController.png in Resources */ = {isa = PBXBuildFile; fileRef = 6CCEB1C115916BCA001266F3 /* AZLabelDemoViewController.png */; };
+		6CCEB1C415916BCA001266F3 /* AZLabelDemoViewController@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6CCEB1C315916BCA001266F3 /* AZLabelDemoViewController@2x.png */; };
+		6CCEB1CE15916BCA001266F3 /* AZLabelDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CCEB1CC15916BCA001266F3 /* AZLabelDemoViewController.xib */; };
+		6CCEB1E015917128001266F3 /* AZGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCEB1DD15917128001266F3 /* AZGradient.m */; };
+		6CCEB1E415917137001266F3 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1E315917137001266F3 /* CoreText.framework */; };
+		6CCEB1EB159171F6001266F3 /* AZLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCEB1EA159171F6001266F3 /* AZLabel.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6CCEB1A815916BCA001266F3 /* AZAppearanceKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AZAppearanceKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6CCEB1AC15916BCA001266F3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		6CCEB1AE15916BCA001266F3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6CCEB1B015916BCA001266F3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		6CCEB1B415916BCA001266F3 /* AZAppearanceKitDemo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AZAppearanceKitDemo-Info.plist"; sourceTree = "<group>"; };
+		6CCEB1B615916BCA001266F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6CCEB1B815916BCA001266F3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6CCEB1BA15916BCA001266F3 /* AZAppearanceKitDemo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AZAppearanceKitDemo-Prefix.pch"; sourceTree = "<group>"; };
+		6CCEB1BB15916BCA001266F3 /* AZAppearanceKitDemoAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AZAppearanceKitDemoAppDelegate.h; sourceTree = "<group>"; };
+		6CCEB1BC15916BCA001266F3 /* AZAppearanceKitDemoAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AZAppearanceKitDemoAppDelegate.m; sourceTree = "<group>"; };
+		6CCEB1BE15916BCA001266F3 /* AZLabelDemoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AZLabelDemoViewController.h; sourceTree = "<group>"; };
+		6CCEB1BF15916BCA001266F3 /* AZLabelDemoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AZLabelDemoViewController.m; sourceTree = "<group>"; };
+		6CCEB1C115916BCA001266F3 /* AZLabelDemoViewController.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZLabelDemoViewController.png; sourceTree = "<group>"; };
+		6CCEB1C315916BCA001266F3 /* AZLabelDemoViewController@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZLabelDemoViewController@2x.png"; sourceTree = "<group>"; };
+		6CCEB1CD15916BCA001266F3 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/AZLabelDemoViewController.xib; sourceTree = "<group>"; };
+		6CCEB1DC15917128001266F3 /* AZGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZGradient.h; sourceTree = "<group>"; };
+		6CCEB1DD15917128001266F3 /* AZGradient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZGradient.m; sourceTree = "<group>"; };
+		6CCEB1DE15917128001266F3 /* AZLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZLabel.h; sourceTree = "<group>"; };
+		6CCEB1E315917137001266F3 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		6CCEB1EA159171F6001266F3 /* AZLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZLabel.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6CCEB1A515916BCA001266F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6CCEB1E415917137001266F3 /* CoreText.framework in Frameworks */,
+				6CCEB1AD15916BCA001266F3 /* UIKit.framework in Frameworks */,
+				6CCEB1AF15916BCA001266F3 /* Foundation.framework in Frameworks */,
+				6CCEB1B115916BCA001266F3 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6CCEB19D15916BCA001266F3 = {
+			isa = PBXGroup;
+			children = (
+				6CCEB1DB15917128001266F3 /* AZAppearanceKit */,
+				6CCEB1B215916BCA001266F3 /* AZAppearanceKitDemo */,
+				6CCEB1AB15916BCA001266F3 /* Frameworks */,
+				6CCEB1A915916BCA001266F3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6CCEB1A915916BCA001266F3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6CCEB1A815916BCA001266F3 /* AZAppearanceKitDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6CCEB1AB15916BCA001266F3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6CCEB1E315917137001266F3 /* CoreText.framework */,
+				6CCEB1AC15916BCA001266F3 /* UIKit.framework */,
+				6CCEB1AE15916BCA001266F3 /* Foundation.framework */,
+				6CCEB1B015916BCA001266F3 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6CCEB1B215916BCA001266F3 /* AZAppearanceKitDemo */ = {
+			isa = PBXGroup;
+			children = (
+				6CCEB1BB15916BCA001266F3 /* AZAppearanceKitDemoAppDelegate.h */,
+				6CCEB1BC15916BCA001266F3 /* AZAppearanceKitDemoAppDelegate.m */,
+				6CCEB1BE15916BCA001266F3 /* AZLabelDemoViewController.h */,
+				6CCEB1BF15916BCA001266F3 /* AZLabelDemoViewController.m */,
+				6CCEB1CC15916BCA001266F3 /* AZLabelDemoViewController.xib */,
+				6CCEB1C115916BCA001266F3 /* AZLabelDemoViewController.png */,
+				6CCEB1C315916BCA001266F3 /* AZLabelDemoViewController@2x.png */,
+				6CCEB1B315916BCA001266F3 /* Supporting Files */,
+			);
+			path = AZAppearanceKitDemo;
+			sourceTree = "<group>";
+		};
+		6CCEB1B315916BCA001266F3 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6CCEB1B415916BCA001266F3 /* AZAppearanceKitDemo-Info.plist */,
+				6CCEB1B515916BCA001266F3 /* InfoPlist.strings */,
+				6CCEB1B815916BCA001266F3 /* main.m */,
+				6CCEB1BA15916BCA001266F3 /* AZAppearanceKitDemo-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6CCEB1DB15917128001266F3 /* AZAppearanceKit */ = {
+			isa = PBXGroup;
+			children = (
+				6CCEB1DC15917128001266F3 /* AZGradient.h */,
+				6CCEB1DD15917128001266F3 /* AZGradient.m */,
+				6CCEB1DE15917128001266F3 /* AZLabel.h */,
+				6CCEB1EA159171F6001266F3 /* AZLabel.m */,
+			);
+			path = AZAppearanceKit;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6CCEB1A715916BCA001266F3 /* AZAppearanceKitDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6CCEB1D415916BCA001266F3 /* Build configuration list for PBXNativeTarget "AZAppearanceKitDemo" */;
+			buildPhases = (
+				6CCEB1A415916BCA001266F3 /* Sources */,
+				6CCEB1A515916BCA001266F3 /* Frameworks */,
+				6CCEB1A615916BCA001266F3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AZAppearanceKitDemo;
+			productName = AZAppearanceKitDemo;
+			productReference = 6CCEB1A815916BCA001266F3 /* AZAppearanceKitDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6CCEB19F15916BCA001266F3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = AZ;
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Alexsander Akers & Zachary Waldowski";
+			};
+			buildConfigurationList = 6CCEB1A215916BCA001266F3 /* Build configuration list for PBXProject "AZAppearanceKitDemo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6CCEB19D15916BCA001266F3;
+			productRefGroup = 6CCEB1A915916BCA001266F3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6CCEB1A715916BCA001266F3 /* AZAppearanceKitDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6CCEB1A615916BCA001266F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6CCEB1B715916BCA001266F3 /* InfoPlist.strings in Resources */,
+				6CCEB1C215916BCA001266F3 /* AZLabelDemoViewController.png in Resources */,
+				6CCEB1C415916BCA001266F3 /* AZLabelDemoViewController@2x.png in Resources */,
+				6CCEB1CE15916BCA001266F3 /* AZLabelDemoViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6CCEB1A415916BCA001266F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6CCEB1B915916BCA001266F3 /* main.m in Sources */,
+				6CCEB1BD15916BCA001266F3 /* AZAppearanceKitDemoAppDelegate.m in Sources */,
+				6CCEB1C015916BCA001266F3 /* AZLabelDemoViewController.m in Sources */,
+				6CCEB1E015917128001266F3 /* AZGradient.m in Sources */,
+				6CCEB1EB159171F6001266F3 /* AZLabel.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6CCEB1B515916BCA001266F3 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6CCEB1B615916BCA001266F3 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		6CCEB1CC15916BCA001266F3 /* AZLabelDemoViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6CCEB1CD15916BCA001266F3 /* en */,
+			);
+			name = AZLabelDemoViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6CCEB1D215916BCA001266F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		6CCEB1D315916BCA001266F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6CCEB1D515916BCA001266F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AZAppearanceKitDemo/AZAppearanceKitDemo-Prefix.pch";
+				INFOPLIST_FILE = "AZAppearanceKitDemo/AZAppearanceKitDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		6CCEB1D615916BCA001266F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AZAppearanceKitDemo/AZAppearanceKitDemo-Prefix.pch";
+				INFOPLIST_FILE = "AZAppearanceKitDemo/AZAppearanceKitDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6CCEB1A215916BCA001266F3 /* Build configuration list for PBXProject "AZAppearanceKitDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6CCEB1D215916BCA001266F3 /* Debug */,
+				6CCEB1D315916BCA001266F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6CCEB1D415916BCA001266F3 /* Build configuration list for PBXNativeTarget "AZAppearanceKitDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6CCEB1D515916BCA001266F3 /* Debug */,
+				6CCEB1D615916BCA001266F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6CCEB19F15916BCA001266F3 /* Project object */;
+}

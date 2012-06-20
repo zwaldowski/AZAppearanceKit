@@ -1,16 +1,16 @@
 //
-//  RXLabel.m
-//  RXLabel
+//  AZLabel.m
+//  AZAppearanceKit
 //
 //  Created by Zachary Waldowski on 3/17/12.
-//  Copyright (c) 2012 Dizzy Technology. All rights reserved.
+//  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
 #import <CoreText/CoreText.h>
-#import "RXLabel.h"
-#import "RXGradient.h"
+#import "AZLabel.h"
+#import "AZGradient.h"
 
-@interface RXLabel ()
+@interface AZLabel ()
 
 + (UIFont *)rx_defaultFont;
 - (void) rx_sharedInit;
@@ -30,8 +30,8 @@
 @property (nonatomic, readonly, getter = rx_innerShadowBlurForCurrentState) CGFloat innerShadowBlurForCurrentState;
 @property (nonatomic, readonly, getter = rx_innerShadowColorForCurrentState) UIColor *innerShadowColorForCurrentState;
 @property (nonatomic, readonly, getter = rx_shouldUseGradientForCurrentState) BOOL shouldUseGradientForCurrentState;
-@property (nonatomic, readonly, getter = rx_gradientForCurrentState) RXGradient *gradientForCurrentState;
-@property (nonatomic, readonly, getter = rx_gradientDirectionForCurrentState) RXGradientDirection gradientDirectionForCurrentState;
+@property (nonatomic, readonly, getter = rx_gradientForCurrentState) AZGradient *gradientForCurrentState;
+@property (nonatomic, readonly, getter = rx_gradientDirectionForCurrentState) AZGradientDirection gradientDirectionForCurrentState;
 
 @end
 
@@ -78,7 +78,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	}
 }
 
-@implementation RXLabel
+@implementation AZLabel
 
 @synthesize appearanceStorage = _appearanceStorage;
 @synthesize textPath = _textPath;
@@ -500,24 +500,24 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return [self rx_valueForAppearanceKey: @"innerShadowColor" forState: controlState];
 }
 
-- (RXGradient *)gradient {
+- (AZGradient *)gradient {
 	return [self gradientForState: UIControlStateNormal];
 }
 
-- (RXGradientDirection)gradientDirection {
+- (AZGradientDirection)gradientDirection {
 	return [self gradientDirectionForState: UIControlStateNormal];
 }
 
-- (void)setGradient:(RXGradient *)gradient direction:(RXGradientDirection)gradientDirection forState:(UIControlState)controlState {
+- (void)setGradient:(AZGradient *)gradient direction:(AZGradientDirection)gradientDirection forState:(UIControlState)controlState {
 	[self rx_setValue: gradient forAppearanceKey: @"gradient" forState: controlState];
 	[self rx_setValue: [NSNumber numberWithInteger: gradientDirection] forAppearanceKey: @"gradientDirection" forState: controlState];
 }
 
-- (RXGradient *)gradientForState:(UIControlState)controlState {
+- (AZGradient *)gradientForState:(UIControlState)controlState {
 	return [self rx_valueForAppearanceKey: @"gradient" forState: controlState];
 }
 
-- (RXGradientDirection)gradientDirectionForState:(UIControlState)controlState {
+- (AZGradientDirection)gradientDirectionForState:(UIControlState)controlState {
 	return [[self rx_valueForAppearanceKey: @"shadowBlur" forState: controlState] integerValue];
 }
 
@@ -589,12 +589,11 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return NO;
 }
 
-- (RXGradient *)rx_gradientForCurrentState {
+- (AZGradient *)rx_gradientForCurrentState {
 	return [self rx_valueForAppearanceKeyForCurrentState: @"gradient"];
-	return nil;
 }
 
-- (RXGradientDirection)rx_gradientDirectionForCurrentState {
+- (AZGradientDirection)rx_gradientDirectionForCurrentState {
 	return [[self rx_valueForAppearanceKeyForCurrentState: @"gradientDirection"] integerValue];
 }
 

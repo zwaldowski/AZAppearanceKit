@@ -1,16 +1,16 @@
 //
-//  RXGradient.m
-//  RXLabel
+//  AZGradient.m
+//  AZAppearanceKit
 //
 //  Created by Zachary Waldowski on 5/8/12.
-//  Copyright (c) 2012 Dizzy Technology. All rights reserved.
+//  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
-#import "RXGradient.h"
+#import "AZGradient.h"
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
-static UIColor *RXGradientColorToRGBA(UIColor *colorToConvert)
+static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 {
     CGFloat red;
     CGFloat green;
@@ -38,7 +38,7 @@ static UIColor *RXGradientColorToRGBA(UIColor *colorToConvert)
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
-@implementation RXGradient {
+@implementation AZGradient {
 	NSDictionary *_colors;
 	CGColorSpaceRef _colorSpace;
 	CGGradientRef _gradient;
@@ -118,6 +118,7 @@ static UIColor *RXGradientColorToRGBA(UIColor *colorToConvert)
 - (id)initWithColors:(NSArray *)colorArray atLocations:(const CGFloat *)locations colorSpace:(CGColorSpaceRef)colorSpace {
 	NSParameterAssert(colorArray);
 	NSParameterAssert(locations);
+	NSParameterAssert(colorSpace);
 	
 	if ((self = [super init])) {
 		NSMutableArray *convertedColorArray = [NSMutableArray arrayWithCapacity: colorArray.count];
@@ -137,7 +138,7 @@ static UIColor *RXGradientColorToRGBA(UIColor *colorToConvert)
 		}];
 		
 		_colors = [NSDictionary dictionaryWithObjects: colorArray forKeys: locationArray];
-		_colorSpace = CGColorSpaceCreateDeviceRGB();
+		_colorSpace = CGColorSpaceRetain(colorSpace);
 		_gradient = CGGradientCreateWithColors(_colorSpace, (__bridge CFArrayRef)convertedColorArray, locations);
 		_numberOfColorStops = _colors.count;
 	}
@@ -293,8 +294,8 @@ static UIColor *RXGradientColorToRGBA(UIColor *colorToConvert)
 	
 	// Convert to common RGBA colorspace if needed
 	if (CGColorGetColorSpace(firstColor.CGColor) != CGColorGetColorSpace(secondColor.CGColor)) {
-		firstColor = RXGradientColorToRGBA(firstColor);
-		secondColor = RXGradientColorToRGBA(secondColor);
+		firstColor = AZGradientColorToRGBA(firstColor);
+		secondColor = AZGradientColorToRGBA(secondColor);
 	}
 	
 	// Grab color components
@@ -325,7 +326,7 @@ static UIColor *RXGradientColorToRGBA(UIColor *colorToConvert)
 
 #endif
 
-@implementation RXGradient (RXGradientFeatures)
+@implementation AZGradient (AZGradientFeatures)
 
 - (id)gradientByReversingGradient {
     NSInteger stops = self.numberOfColorStops;
@@ -340,19 +341,19 @@ static UIColor *RXGradientColorToRGBA(UIColor *colorToConvert)
         locations[i] = location;
     }
     
-    RXGradient *ret = [[RXGradient alloc] initWithColors: colors atLocations: locations colorSpace: self.colorSpace];
+    AZGradient *ret = [[AZGradient alloc] initWithColors: colors atLocations: locations colorSpace: self.colorSpace];
     
     free(locations);
     
     return ret;
 }
 
-- (void)drawInRect:(CGRect)rect direction:(RXGradientDirection)direction {
-	[self drawInRect: rect angle: direction == RXGradientDirectionVertical ? 90 : 0];
+- (void)drawInRect:(CGRect)rect direction:(AZGradientDirection)direction {
+	[self drawInRect: rect angle: direction == AZGradientDirectionVertical ? 90 : 0];
 }
 
-- (void)drawInBezierPath:(UIBezierPath *)path direction:(RXGradientDirection)direction {
-	[self drawInBezierPath: path angle: direction == RXGradientDirectionVertical ? 90 : 0];
+- (void)drawInBezierPath:(UIBezierPath *)path direction:(AZGradientDirection)direction {
+	[self drawInBezierPath: path angle: direction == AZGradientDirectionVertical ? 90 : 0];
 }
 
 @end

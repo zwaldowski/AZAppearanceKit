@@ -1,26 +1,23 @@
 //
-//  RXAppDelegate.m
-//  RXLabel
+//  AZAppDelegate.m
+//  AZAppearanceKitDemo
 //
-//  Created by Zachary Waldowski on 3/17/12.
-//  Copyright (c) 2012 Dizzy Technology. All rights reserved.
+//  Created by Zachary Waldowski on 6/19/12.
+//  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
-#import "RXAppDelegate.h"
+#import "AZAppearanceKitDemoAppDelegate.h"
+#import "AZLabelDemoViewController.h"
 
-#import "RXViewController.h"
-
-@implementation RXAppDelegate
-
-@synthesize window = _window;
-@synthesize viewController = _viewController;
+@implementation AZAppearanceKitDemoAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-	self.viewController = [[RXViewController alloc] initWithNibName:@"RXViewController" bundle:nil];
-	self.window.rootViewController = self.viewController;
+	self.tabBarController = [UITabBarController new];
+	UIViewController *viewController1 = [[AZLabelDemoViewController alloc] initWithNibName: nil bundle:nil];
+	self.tabBarController.viewControllers = [NSArray arrayWithObjects: viewController1, nil];
+	self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     return YES;
 }
@@ -51,5 +48,19 @@
 {
 	// Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+
+/*
+// Optional UITabBarControllerDelegate method.
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+}
+*/
+
+/*
+// Optional UITabBarControllerDelegate method.
+- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
+{
+}
+*/
 
 @end

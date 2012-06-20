@@ -1,14 +1,15 @@
 //
-//  RXLabel.h
-//  RXLabel
+//  AZLabel.h
+//  AZAppearanceKit
 //
 //  Created by Zachary Waldowski on 3/17/12.
-//  Copyright (c) 2012 Dizzy Technology. All rights reserved.
+//  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
-#import "RXGradient.h"
+#import <UIKit/UIKit.h>
+#import "AZGradient.h"
 
-@interface RXLabel : UIControl <UIAppearance>
+@interface AZLabel : UIControl <UIAppearance>
 
 @property (nonatomic, copy) NSString             *text;				// default is nil
 @property (nonatomic, strong) UIFont             *font;				// default is nil (system font 17 plain)
@@ -35,11 +36,11 @@
 - (CGFloat)innerShadowBlurForState:(UIControlState)controlState;
 - (UIColor *)innerShadowColorForState:(UIControlState)controlState;
 
-@property (nonatomic, readonly) RXGradient *gradient;
-@property (nonatomic, readonly) RXGradientDirection gradientDirection;
-- (void)setGradient:(RXGradient *)gradient direction:(RXGradientDirection)gradientDirection forState:(UIControlState)controlState;
-- (RXGradient *)gradientForState:(UIControlState)controlState;
-- (RXGradientDirection)gradientDirectionForState:(UIControlState)controlState;
+@property (nonatomic, readonly) AZGradient *gradient;
+@property (nonatomic, readonly) AZGradientDirection gradientDirection;
+- (void)setGradient:(AZGradient *)gradient direction:(AZGradientDirection)gradientDirection forState:(UIControlState)controlState;
+- (AZGradient *)gradientForState:(UIControlState)controlState;
+- (AZGradientDirection)gradientDirectionForState:(UIControlState)controlState;
 
 @property (nonatomic, strong, readonly) UIBezierPath *textPath;
 
@@ -47,7 +48,6 @@
 @property(nonatomic) BOOL adjustsFontSizeToFitWidth;				// default is NO
 @property(nonatomic) UIBaselineAdjustment baselineAdjustment;		// default is UIBaselineAdjustmentAlignBaselines
 @property(nonatomic) CGFloat minimumFontSize;					// default is 0.0
- - (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines;
- */
+ - (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines;*/
 
 @end

@@ -1,26 +1,26 @@
 //
-//  RXGradient.h
-//  RXLabel
+//  AZGradient.h
+//  AZAppearanceKit
 //
 //  Created by Zachary Waldowski on 5/8/12.
-//  Copyright (c) 2012 Dizzy Technology. All rights reserved.
+//  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
-/** `RXGradient` defines a transition between colors.  The transition
+/** `AZGradient` defines a transition between colors.  The transition
  is defined over a range from 0.0 to 1.0 inclusive.  A gradient typically
  contains a color at location 0.0, and one at location 1.0 with additional
  colors assigned to locations between 0.0 and 1.0.
  
- `RXGradient` is a drawing primitive that can draw itself as a linear
+ `AZGradient` is a drawing primitive that can draw itself as a linear
  or radial gradient.  The color value at location 0.0 is considered the
  starting color, the color value at location 1.0 is considered the ending
  color.
  */
-@interface RXGradient : NSObject <NSCoding, NSCopying>
+@interface AZGradient : NSObject <NSCoding, NSCopying>
 
 /** Initializes a gradient with a starting color at location 0.0 and ending color at location 1.0, using a generic RGB color space. */
 - (id)initWithStartingColor:(UIColor *)startingColor endingColor:(UIColor *)endingColor;
@@ -74,20 +74,20 @@
 
 #elif defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
 
-@compatibility_alias RXGradient NSGradient;
+@compatibility_alias AZGradient NSGradient;
 
 #endif
 
-typedef enum _RXGradientDirection {
-	RXGradientDirectionVertical,
-	RXGradientDirectionHorizontal
-} RXGradientDirection;
+typedef enum _AZGradientDirection {
+	AZGradientDirectionVertical,
+	AZGradientDirectionHorizontal
+} AZGradientDirection;
 
-@interface RXGradient (RXGradientFeatures)
+@interface AZGradient (AZGradientFeatures)
 
 - (id)gradientByReversingGradient;
 
-- (void)drawInRect:(CGRect)rect direction:(RXGradientDirection)direction;
-- (void)drawInBezierPath:(UIBezierPath *)path direction:(RXGradientDirection)direction;
+- (void)drawInRect:(CGRect)rect direction:(AZGradientDirection)direction;
+- (void)drawInBezierPath:(UIBezierPath *)path direction:(AZGradientDirection)direction;
 
 @end
