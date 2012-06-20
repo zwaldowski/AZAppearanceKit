@@ -74,7 +74,7 @@
 
 #elif defined(__MAC_OS_X_VERSION_MIN_REQUIRED)
 
-#import <AppKit/AppKit.h>
+#import <Cocoa/Cocoa.h>
 
 @compatibility_alias AZGradient NSGradient;
 
