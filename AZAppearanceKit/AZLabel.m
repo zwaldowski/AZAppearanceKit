@@ -622,5 +622,21 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return [[self az_valueForAppearanceKeyForCurrentState: @"gradientDirection"] integerValue];
 }
 
+#pragma mark - Accessibility
+
+- (BOOL)isAccessibilityElement
+{
+	return YES;
+}
+
+- (NSString *)accessibilityLabel
+{
+	return self.text;
+}
+
+- (UIAccessibilityTraits)accessibilityTraits
+{
+	return UIAccessibilityTraitStaticText;
+}
 
 @end
