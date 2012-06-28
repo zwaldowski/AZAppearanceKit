@@ -33,6 +33,11 @@
 	self.tableView.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+	return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+
 #pragma mark - Table view delegates
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -47,13 +52,13 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *const CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (!cell)
 		cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
 	
 	cell.contentView.backgroundColor = [UIColor whiteColor];
-    cell.textLabel.text = @"Text";
+    cell.textLabel.text = [NSString stringWithFormat:@"Cell %i", indexPath.row];
     cell.textLabel.backgroundColor = [UIColor clearColor];
     
     return cell;
