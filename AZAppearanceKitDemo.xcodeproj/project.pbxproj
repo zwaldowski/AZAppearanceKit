@@ -10,8 +10,6 @@
 		6C272F28159B723B00C97FC7 /* AZShadowedTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C272F27159B723B00C97FC7 /* AZShadowedTableView.m */; };
 		6C272F34159B75AB00C97FC7 /* AZShadowedTableDemoViewController.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C272F32159B75AB00C97FC7 /* AZShadowedTableDemoViewController.png */; };
 		6C272F35159B75AB00C97FC7 /* AZShadowedTableDemoViewController@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C272F33159B75AB00C97FC7 /* AZShadowedTableDemoViewController@2x.png */; };
-		6C272F4D159B7ED300C97FC7 /* AZShadowedTableDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6C272F4A159B7ED200C97FC7 /* AZShadowedTableDemoViewController.xib */; };
-		6C272F4E159B7ED300C97FC7 /* AZShadowedTableDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C272F4B159B7ED200C97FC7 /* AZShadowedTableDemoViewController.m */; };
 		6C272F90159D8AC900C97FC7 /* AZTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C272F8F159D8AC900C97FC7 /* AZTableViewCell.m */; };
 		6C272F98159D8B2F00C97FC7 /* AZDrawingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C272F97159D8B2F00C97FC7 /* AZDrawingFunctions.m */; };
 		6CCEB1AD15916BCA001266F3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1AC15916BCA001266F3 /* UIKit.framework */; };
@@ -27,6 +25,9 @@
 		6CCEB1E015917128001266F3 /* AZGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCEB1DD15917128001266F3 /* AZGradient.m */; };
 		6CCEB1E415917137001266F3 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1E315917137001266F3 /* CoreText.framework */; };
 		6CCEB1EB159171F6001266F3 /* AZLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCEB1EA159171F6001266F3 /* AZLabel.m */; };
+		6CD291D3159DF2E700736631 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CD291D2159DF2E700736631 /* QuartzCore.framework */; };
+		6CD291DD159DF33200736631 /* AZShadowedTableDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CD291DB159DF33100736631 /* AZShadowedTableDemoViewController.m */; };
+		6CD291DE159DF33200736631 /* AZShadowedTableDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CD291DC159DF33100736631 /* AZShadowedTableDemoViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,9 +35,6 @@
 		6C272F27159B723B00C97FC7 /* AZShadowedTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZShadowedTableView.m; sourceTree = "<group>"; };
 		6C272F32159B75AB00C97FC7 /* AZShadowedTableDemoViewController.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZShadowedTableDemoViewController.png; sourceTree = "<group>"; };
 		6C272F33159B75AB00C97FC7 /* AZShadowedTableDemoViewController@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZShadowedTableDemoViewController@2x.png"; sourceTree = "<group>"; };
-		6C272F4A159B7ED200C97FC7 /* AZShadowedTableDemoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AZShadowedTableDemoViewController.xib; sourceTree = "<group>"; };
-		6C272F4B159B7ED200C97FC7 /* AZShadowedTableDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZShadowedTableDemoViewController.m; sourceTree = "<group>"; };
-		6C272F4C159B7ED200C97FC7 /* AZShadowedTableDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZShadowedTableDemoViewController.h; sourceTree = "<group>"; };
 		6C272F8E159D8AC900C97FC7 /* AZTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZTableViewCell.h; sourceTree = "<group>"; };
 		6C272F8F159D8AC900C97FC7 /* AZTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZTableViewCell.m; sourceTree = "<group>"; };
 		6C272F96159D8B2F00C97FC7 /* AZDrawingFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZDrawingFunctions.h; sourceTree = "<group>"; };
@@ -61,6 +59,10 @@
 		6CCEB1DE15917128001266F3 /* AZLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZLabel.h; sourceTree = "<group>"; };
 		6CCEB1E315917137001266F3 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		6CCEB1EA159171F6001266F3 /* AZLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZLabel.m; sourceTree = "<group>"; };
+		6CD291D2159DF2E700736631 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		6CD291DA159DF33100736631 /* AZShadowedTableDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZShadowedTableDemoViewController.h; sourceTree = "<group>"; };
+		6CD291DB159DF33100736631 /* AZShadowedTableDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZShadowedTableDemoViewController.m; sourceTree = "<group>"; };
+		6CD291DC159DF33100736631 /* AZShadowedTableDemoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AZShadowedTableDemoViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6CD291D3159DF2E700736631 /* QuartzCore.framework in Frameworks */,
 				6CCEB1E415917137001266F3 /* CoreText.framework in Frameworks */,
 				6CCEB1AD15916BCA001266F3 /* UIKit.framework in Frameworks */,
 				6CCEB1AF15916BCA001266F3 /* Foundation.framework in Frameworks */,
@@ -99,6 +102,7 @@
 		6CCEB1AB15916BCA001266F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6CD291D2159DF2E700736631 /* QuartzCore.framework */,
 				6CCEB1E315917137001266F3 /* CoreText.framework */,
 				6CCEB1AC15916BCA001266F3 /* UIKit.framework */,
 				6CCEB1AE15916BCA001266F3 /* Foundation.framework */,
@@ -117,9 +121,9 @@
 				6CCEB1CC15916BCA001266F3 /* AZLabelDemoViewController.xib */,
 				6CCEB1C115916BCA001266F3 /* AZLabelDemoViewController.png */,
 				6CCEB1C315916BCA001266F3 /* AZLabelDemoViewController@2x.png */,
-				6C272F4C159B7ED200C97FC7 /* AZShadowedTableDemoViewController.h */,
-				6C272F4B159B7ED200C97FC7 /* AZShadowedTableDemoViewController.m */,
-				6C272F4A159B7ED200C97FC7 /* AZShadowedTableDemoViewController.xib */,
+				6CD291DA159DF33100736631 /* AZShadowedTableDemoViewController.h */,
+				6CD291DB159DF33100736631 /* AZShadowedTableDemoViewController.m */,
+				6CD291DC159DF33100736631 /* AZShadowedTableDemoViewController.xib */,
 				6C272F32159B75AB00C97FC7 /* AZShadowedTableDemoViewController.png */,
 				6C272F33159B75AB00C97FC7 /* AZShadowedTableDemoViewController@2x.png */,
 				6CCEB1B315916BCA001266F3 /* Supporting Files */,
@@ -213,7 +217,7 @@
 				6CCEB1CE15916BCA001266F3 /* AZLabelDemoViewController.xib in Resources */,
 				6C272F34159B75AB00C97FC7 /* AZShadowedTableDemoViewController.png in Resources */,
 				6C272F35159B75AB00C97FC7 /* AZShadowedTableDemoViewController@2x.png in Resources */,
-				6C272F4D159B7ED300C97FC7 /* AZShadowedTableDemoViewController.xib in Resources */,
+				6CD291DE159DF33200736631 /* AZShadowedTableDemoViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,9 +234,9 @@
 				6CCEB1E015917128001266F3 /* AZGradient.m in Sources */,
 				6CCEB1EB159171F6001266F3 /* AZLabel.m in Sources */,
 				6C272F28159B723B00C97FC7 /* AZShadowedTableView.m in Sources */,
-				6C272F4E159B7ED300C97FC7 /* AZShadowedTableDemoViewController.m in Sources */,
 				6C272F90159D8AC900C97FC7 /* AZTableViewCell.m in Sources */,
 				6C272F98159D8B2F00C97FC7 /* AZDrawingFunctions.m in Sources */,
+				6CD291DD159DF33200736631 /* AZShadowedTableDemoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
