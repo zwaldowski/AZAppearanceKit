@@ -51,16 +51,60 @@
 
 @property (nonatomic, weak) UIView *topShadow;
 @property (nonatomic, weak) UIView *bottomShadow;
+@property (nonatomic, weak) UIView *originShadow;
+@property (nonatomic, weak) UIView *maximumShadow;
 
 @end
 
 @implementation AZShadowedTableView
 
-@synthesize topShadow = _topShadow, bottomShadow = _bottomShadow;
+@synthesize topShadow = _topShadow, bottomShadow = _bottomShadow, originShadow = _originShadow, maximumShadow = _maximumShadow;
 
 - (void)layoutSubviews
 {
 	[super layoutSubviews];
+	
+	if (!self.tableFooterView) {
+		UIView *v = [[UIView alloc] initWithFrame: CGRectZero];
+		v.backgroundColor = [UIColor clearColor];
+		self.tableFooterView = v;
+	}
+		
+	if (!self.originShadow) {
+		AZShadowedTableShadowView *top = [[AZShadowedTableShadowView alloc] initWithFrame: CGRectMake(self.contentOffset.x, self.contentOffset.y, self.frame.size.width, 25) top: NO];
+		top.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		if (self.backgroundView)
+			[self insertSubview: top aboveSubview: self.backgroundView];
+		else
+			[self insertSubview: top atIndex: 0];
+		self.originShadow = top;
+	} else if (self.backgroundView) {
+		[self insertSubview: self.originShadow aboveSubview: self.backgroundView];
+	} else if ([self.subviews indexOfObjectIdenticalTo: self.originShadow] != 0) {
+		[self insertSubview: self.originShadow atIndex: 0];
+	}
+	
+	CGRect originShadowFrame = self.originShadow.frame;
+	originShadowFrame.origin.y = self.contentOffset.y;
+	self.originShadow.frame = originShadowFrame;
+	
+	if (!self.maximumShadow) {
+		AZShadowedTableShadowView *top = [[AZShadowedTableShadowView alloc] initWithFrame: CGRectMake(self.contentOffset.x, self.contentOffset.y + self.frame.size.height - 25, self.frame.size.width, 25) top: YES];
+		top.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		if (self.backgroundView)
+			[self insertSubview: top aboveSubview: self.backgroundView];
+		else
+			[self insertSubview: top atIndex: 0];
+		self.maximumShadow = top;
+	} else if (self.backgroundView) {
+		[self insertSubview: self.maximumShadow aboveSubview: self.backgroundView];
+	} else if ([self.subviews indexOfObjectIdenticalTo: self.originShadow] != 0) {
+		[self insertSubview: self.maximumShadow atIndex: 0];
+	}
+	
+	CGRect maximumShadowFrame = self.maximumShadow.frame;
+	maximumShadowFrame.origin.y = self.contentOffset.y + self.frame.size.height - maximumShadowFrame.size.height;
+	self.maximumShadow.frame = maximumShadowFrame;
 	
 	NSArray *indexPathsForVisibleRows = self.indexPathsForVisibleRows;
 	if (indexPathsForVisibleRows.count) {
@@ -109,31 +153,6 @@
 		[self.topShadow removeFromSuperview];
 		[self.bottomShadow removeFromSuperview];
 	}
-}
-
-- (void)drawRect:(CGRect)rect {
-	[super drawRect:rect];
-	
-	CGContextRef context = UIGraphicsGetCurrentContext();
-	
-	CGContextSaveGState(context);
-	
-	CGContextSetShadowWithColor(context, CGSizeMake(0, 0), 20, [UIColor colorWithWhite: 0.0 alpha: 1.0].CGColor);
-    
-    CGContextMoveToPoint(context, CGRectGetMinX(rect), CGRectGetMinY(rect) - 5);
-    CGContextAddLineToPoint(context, CGRectGetMaxX(rect), CGRectGetMinY(rect) - 5);
-    
-    CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
-    CGContextSetLineWidth(context, 5);
-    
-    CGContextStrokePath(context);
-    
-    CGContextMoveToPoint(context, CGRectGetMinX(rect), CGRectGetMaxY(rect) + 5);
-    CGContextAddLineToPoint(context, CGRectGetMaxX(rect), CGRectGetMaxY(rect) + 5);
-    
-    CGContextStrokePath(context);
-	
-	CGContextRestoreGState(context);
 }
 
 @end
