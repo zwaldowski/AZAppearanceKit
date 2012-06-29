@@ -46,7 +46,7 @@
  - cell's separator.
  - cell's selection gradient. 
  */
-@interface AZTableViewCell : UITableViewCell
+@interface AZTableViewCell : UITableViewCell <UIAppearance>
 
 /** @name Customizing appearance */
 
