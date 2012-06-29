@@ -231,7 +231,7 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 
 - (float) cornerRadius
 {
-	return self.tableViewIsGrouped ? self.cornerRadius : 0;
+	return self.tableViewIsGrouped ? _cornerRadius : 0;
 }
 
 - (UITableViewCellSelectionStyle)selectionStyle
