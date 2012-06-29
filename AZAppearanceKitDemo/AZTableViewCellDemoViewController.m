@@ -25,11 +25,6 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
 	return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
@@ -45,11 +40,11 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 	if (section == 0) {
-		return 3;
+		return 6;
 	} else if (section == 1) {
 		return 1;
 	} else if (section == 2) {
-		return 5;
+		return 10;
 	}
     return 0;
 }
@@ -65,7 +60,8 @@
     return cell;
 }
 
-- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     return tableView.rowHeight + [AZTableViewCell tableView:tableView neededHeightForIndexPath:indexPath];
 }
 
