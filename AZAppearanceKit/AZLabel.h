@@ -9,55 +9,283 @@
 #import <UIKit/UIKit.h>
 #import "AZGradient.h"
 
+// UILabel
+
 @interface AZLabel : UIControl <UIAppearance>
 
-@property (nonatomic, copy) NSString             *text;				// default is nil
-@property (nonatomic, strong) UIFont             *font;				// default is nil (system font 17 plain)
-@property (nonatomic) NSLineBreakMode            lineBreakMode;		// default is NSLineBreakByTruncatingTail. used for single and multiple lines of text
-@property (nonatomic) UIEdgeInsets				 textEdgeInsets;
+/** The text displayed by the label.
+ 
+ This string is nil by default.
+*/
+@property (nonatomic, copy) NSString *text;
 
-@property (nonatomic, readonly) UIColor *textColor;					// default is black; returns text color for default mode
+/** The font of the text.
+ 
+ The default value for this property is the system font at a size
+ of 17 points (using the `systemFontOfSize:` class method of `UIFont`).
+ The value for the property can only be set to a non-nil value;
+ setting this property to nil raises an exception.
+ 
+ */
+@property (nonatomic, strong) UIFont *font;
+
+/** The technique to use for wrapping and truncating the label’s text.
+ 
+ This property is set to NSLineBreakByTruncatingTail by default.
+ 
+ */
+@property (nonatomic) NSLineBreakMode lineBreakMode;
+
+/** The inset or outset margins for the rectangle surrounding all of the label's text content.
+ 
+ Use this property to resize and reposition the effective drawing rectangle for the label's
+ text content. You can specify a different value for each of the four insets (top, left,
+ bottom, and right). A positive value shrinks, or insets, that edge, thereby moving it 
+ loser to the center of the button. A negative value expands that edge. Use UIEdgeInsetsMake
+ to construct a value for this property. The default value is UIEdgeInsetsZero.
+ 
+ */
+@property (nonatomic) UIEdgeInsets textEdgeInsets;
+
+/** Returns the text color used for the default control state.
+ 
+ The default value for this property is a black color.
+ 
+ This property is ignored if a gradient is not nil.
+ 
+ @see gradient;
+ */
+@property (nonatomic, readonly) UIColor *textColor;
+
+/** Sets the color of the text to use for a specified control state.
+ 
+ In general, if a property is not specified for a state, the default
+ is to use the UIControlStateNormal value. If the UIControlStateNormal
+ value is not set, then the property defaults to a system value.
+ Therefore, at a minimum, you should set the value for the normal state.
+ 
+ @param color The color of the text to use for the specified state.
+ @param state The state that uses the specified color.
+ The possible values are described in UIControlState.
+ 
+ */
 - (void)setTextColor:(UIColor *)color forState:(UIControlState)state;
+
+/** Returns the text color used for a state.
+ 
+ @param state The state that uses the text color. The possible values are described in UIControlState.
+ @return The color of the text for the specified state.
+
+ */
 - (UIColor *)textColorForState:(UIControlState)state;
 
+/** Returns the shadow offset for the text used for the default control state.
+ 
+ The shadow color must be non-nil for this property to have any effect.
+ The default offset size is (0, -1), which indicates a shadow one point
+ above the text.
+ 
+ */
 @property (nonatomic, readonly) CGSize shadowOffset;
+
+/** Sets the shadow offset to use on the text in a specified control state.
+ 
+ @param shadowOffset The shadow offset for the text to use for the specified state.
+ @param state The state that uses the specified offset.
+ 
+ */
 - (void)setShadowOffset:(CGSize)shadowOffset forState:(UIControlState)controlState;
+
+/** Returns the shadow offset used for a state.
+ 
+ @param state The state that uses the shadow offset.
+ @return The shadow offset of the text for the specified state.
+ 
+ */
 - (CGSize)shadowOffsetForState:(UIControlState)controlState;
 
+/** Returns the shadow blur for the text used for the default control state.
+ 
+ The shadow color must be non-nil for this property to have any effect.
+ The default blur is 0, which indicates a solid, undiffused shadow.
+ 
+ */
 @property (nonatomic, readonly) CGFloat shadowBlur;
+
+/** Sets the shadow blur to use on the text in a specified control state.
+ 
+ @param shadowBlur The shadow blur for the text to use for the specified state.
+ @param state The state that uses the specified blur.
+ 
+ */
 - (void)setShadowBlur:(CGFloat)shadowBlur forState:(UIControlState)controlState;
+
+/** Returns the shadow blur used for a state.
+ 
+ @param state The state that uses the shadow blur.
+ @return The shadow blur of the text for the specified state.
+ 
+ */
 - (CGFloat)shadowBlurForState:(UIControlState)controlState;
 
+/** Returns the shadow color of the text used for the default control state.
+ 
+ The default value for this property is nil, which indicates that no
+ shadow is drawn.
+ 
+ */
 @property (nonatomic, readonly) UIColor *shadowColor;
+
+/** Sets the shadow color of the text used for a specified control state.
+ 
+ @param shadowColor The shadow color for the text to use for the specified state.
+ @param state The state that uses the specified color.
+ 
+ */
 - (void)setShadowColor:(UIColor *)shadowColor forState:(UIControlState)controlState;
+
+/** Returns the shadow color used for a state.
+ 
+ @param state The state that uses the shadow color.
+ @return The shadow color of the text for the specified state.
+ 
+ */
 - (UIColor *)shadowColorForState:(UIControlState)controlState;
 
+/** Returns the inner shadow offset for the text used for the default control state.
+ 
+ The inner shadow color must be non-nil for this property to have any effect.
+ 
+ */
 @property (nonatomic, readonly) CGSize innerShadowOffset;
+
+/** Sets the inner shadow offset to use on the text in a specified control state.
+ 
+ @param innerShadowOffset The inner shadow offset for the text to use for the specified state.
+ @param state The state that uses the specified offset.
+ 
+ */
 - (void)setInnerShadowOffset:(CGSize)innerShadowOffset forState:(UIControlState)controlState;
+
+/** Returns the inner shadow offset used for a state.
+ 
+ @param state The state that uses the inner shadow offset.
+ @return The inner shadow offset of the text for the specified state.
+ 
+ */
 - (CGSize)innerShadowOffsetForState:(UIControlState)controlState;
 
+/** Returns the inner shadow blur for the text used for the default control state.
+ 
+ The inner shadow color must be non-nil for this property to have any effect.
+ The default blur is 0, which indicates a solid, undiffused shadow.
+ 
+ */
 @property (nonatomic, readonly) CGFloat innerShadowBlur;
+
+/** Sets the inner shadow blur to use on the text in a specified control state.
+ 
+ @param innerShadowBlur The inner shadow blur for the text to use for the specified state.
+ @param state The state that uses the specified blur.
+ 
+ */
 - (void)setInnerShadowBlur:(CGFloat)innerShadowBlur forState:(UIControlState)controlState;
+
+/** Returns the inner shadow blur used for a state.
+ 
+ @param state The state that uses the inner shadow blur.
+ @return The inner shadow blur of the text for the specified state.
+ 
+ */
 - (CGFloat)innerShadowBlurForState:(UIControlState)controlState;
 
+/** Returns the inner shadow color of the text used for the default
+ control state.
+ 
+ The default value for this property is nil, which indicates that no
+ inner shadow is drawn.
+ 
+ */
 @property (nonatomic, readonly) UIColor *innerShadowColor;
+
+/** Sets the inner shadow color of the text used for a specified control state.
+ 
+ @param innerShadowColor The inner shadow color for the text to use for the specified state.
+ @param state The state that uses the specified color.
+ 
+ */
 - (void)setInnerShadowColor:(UIColor *)innerShadowColor forState:(UIControlState)controlState;
+
+/** Returns the inner shadow color used for a state.
+ 
+ @param state The state that uses the inner shadow color.
+ @return The inner shadow color of the text for the specified state.
+ 
+ */
 - (UIColor *)innerShadowColorForState:(UIControlState)controlState;
 
+/** Returns the gradient used to color in the text for
+ the default control state.
+ 
+ The default value for this property is nil, which means
+ textColor is used instead.
+ 
+ @see textColor;
+ @see gradientDirection;
+ */
 @property (nonatomic, readonly) AZGradient *gradient;
+
+/** Sets the gradient to use to fill the text in a specified control state.
+ 
+ @param gradient The gradient for the text to use for the specified state.
+ @param state The state that uses the specified gradient.
+ 
+ */
 - (void)setGradient:(AZGradient *)gradient forState:(UIControlState)controlState;
+
+/** Returns the gradient used to fill the text for a state.
+ 
+ @param state The state that uses the gradient.
+ @return The gradient used to fill the text for the specified state.
+ 
+ */
 - (AZGradient *)gradientForState:(UIControlState)controlState;
 
+/** Returns the gradient direction used to color in the text for
+ the default control state.
+ 
+ The default value for this property is AZGradientDirectionVertical,
+ which means the gradient will be draw from the top of the text
+ to the bottom of the text.
+ 
+ @see gradient;
+ 
+ */
 @property (nonatomic, readonly) AZGradientDirection gradientDirection;
+
+/** Sets the direction for the gradient used to fill the text in a
+ specified control state.
+ 
+ @param gradient The gradient direction for the text to use for the
+ specified state.
+ @param state The state that uses the specified direction.
+ 
+ */
 - (void)setGradientDirection:(AZGradientDirection)gradientDirection forState:(UIControlState)controlState;
+
+/** Returns the gradient direction used to fill the text for a state.
+ 
+ @param state The state that uses the gradient direction.
+ @return The direction used for the gradient that fills the text
+ for the specified state.
+ 
+ */
 - (AZGradientDirection)gradientDirectionForState:(UIControlState)controlState;
 
+/** Returns a bezier path calculated with respect to the text, size,
+ line break mode, and alignment properties of the label. It is
+ recalculated whenever these properties or the frame of the label
+ changes. */
 @property (nonatomic, strong, readonly) UIBezierPath *textPath;
-
-/*@property(nonatomic) NSInteger numberOfLines;
-@property(nonatomic) BOOL adjustsFontSizeToFitWidth;				// default is NO
-@property(nonatomic) UIBaselineAdjustment baselineAdjustment;		// default is UIBaselineAdjustmentAlignBaselines
-@property(nonatomic) CGFloat minimumFontSize;					// default is 0.0
- - (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines;*/
 
 @end
