@@ -26,8 +26,11 @@
 		6CCEB1E415917137001266F3 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1E315917137001266F3 /* CoreText.framework */; };
 		6CCEB1EB159171F6001266F3 /* AZLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCEB1EA159171F6001266F3 /* AZLabel.m */; };
 		6CD291D3159DF2E700736631 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CD291D2159DF2E700736631 /* QuartzCore.framework */; };
+		6CD291D8159DF31100736631 /* AZTableViewCellDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CD291D6159DF31100736631 /* AZTableViewCellDemoViewController.m */; };
 		6CD291DD159DF33200736631 /* AZShadowedTableDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CD291DB159DF33100736631 /* AZShadowedTableDemoViewController.m */; };
 		6CD291DE159DF33200736631 /* AZShadowedTableDemoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6CD291DC159DF33100736631 /* AZShadowedTableDemoViewController.xib */; };
+		6CD291E5159DFC7100736631 /* AZTableViewCellDemoViewController@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6CD291E3159DFC7100736631 /* AZTableViewCellDemoViewController@2x.png */; };
+		6CD291E6159DFC7100736631 /* AZTableViewCellDemoViewController.png in Resources */ = {isa = PBXBuildFile; fileRef = 6CD291E4159DFC7100736631 /* AZTableViewCellDemoViewController.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,9 +63,13 @@
 		6CCEB1E315917137001266F3 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		6CCEB1EA159171F6001266F3 /* AZLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZLabel.m; sourceTree = "<group>"; };
 		6CD291D2159DF2E700736631 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		6CD291D5159DF31100736631 /* AZTableViewCellDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZTableViewCellDemoViewController.h; sourceTree = "<group>"; };
+		6CD291D6159DF31100736631 /* AZTableViewCellDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZTableViewCellDemoViewController.m; sourceTree = "<group>"; };
 		6CD291DA159DF33100736631 /* AZShadowedTableDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZShadowedTableDemoViewController.h; sourceTree = "<group>"; };
 		6CD291DB159DF33100736631 /* AZShadowedTableDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZShadowedTableDemoViewController.m; sourceTree = "<group>"; };
 		6CD291DC159DF33100736631 /* AZShadowedTableDemoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AZShadowedTableDemoViewController.xib; sourceTree = "<group>"; };
+		6CD291E3159DFC7100736631 /* AZTableViewCellDemoViewController@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AZTableViewCellDemoViewController@2x.png"; path = "../../../../../Desktop/AZTableViewCellDemoViewController@2x.png"; sourceTree = "<group>"; };
+		6CD291E4159DFC7100736631 /* AZTableViewCellDemoViewController.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AZTableViewCellDemoViewController.png; path = ../../../../../Desktop/AZTableViewCellDemoViewController.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +133,10 @@
 				6CD291DC159DF33100736631 /* AZShadowedTableDemoViewController.xib */,
 				6C272F32159B75AB00C97FC7 /* AZShadowedTableDemoViewController.png */,
 				6C272F33159B75AB00C97FC7 /* AZShadowedTableDemoViewController@2x.png */,
+				6CD291D5159DF31100736631 /* AZTableViewCellDemoViewController.h */,
+				6CD291D6159DF31100736631 /* AZTableViewCellDemoViewController.m */,
+				6CD291E4159DFC7100736631 /* AZTableViewCellDemoViewController.png */,
+				6CD291E3159DFC7100736631 /* AZTableViewCellDemoViewController@2x.png */,
 				6CCEB1B315916BCA001266F3 /* Supporting Files */,
 			);
 			path = AZAppearanceKitDemo;
@@ -218,6 +229,8 @@
 				6C272F34159B75AB00C97FC7 /* AZShadowedTableDemoViewController.png in Resources */,
 				6C272F35159B75AB00C97FC7 /* AZShadowedTableDemoViewController@2x.png in Resources */,
 				6CD291DE159DF33200736631 /* AZShadowedTableDemoViewController.xib in Resources */,
+				6CD291E5159DFC7100736631 /* AZTableViewCellDemoViewController@2x.png in Resources */,
+				6CD291E6159DFC7100736631 /* AZTableViewCellDemoViewController.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +249,7 @@
 				6C272F28159B723B00C97FC7 /* AZShadowedTableView.m in Sources */,
 				6C272F90159D8AC900C97FC7 /* AZTableViewCell.m in Sources */,
 				6C272F98159D8B2F00C97FC7 /* AZDrawingFunctions.m in Sources */,
+				6CD291D8159DF31100736631 /* AZTableViewCellDemoViewController.m in Sources */,
 				6CD291DD159DF33200736631 /* AZShadowedTableDemoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

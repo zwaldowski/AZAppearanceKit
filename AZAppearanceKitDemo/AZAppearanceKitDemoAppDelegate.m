@@ -9,6 +9,7 @@
 #import "AZAppearanceKitDemoAppDelegate.h"
 #import "AZLabelDemoViewController.h"
 #import "AZShadowedTableDemoViewController.h"
+#import "AZTableViewCellDemoViewController.h"
 
 @implementation AZAppearanceKitDemoAppDelegate
 
@@ -16,9 +17,10 @@
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.tabBarController = [UITabBarController new];
-	UIViewController *viewController1 = [[AZLabelDemoViewController alloc] initWithNibName: nil bundle:nil];
+	UIViewController *viewController1 = [[AZLabelDemoViewController alloc] initWithNibName: @"AZLabelDemoViewController" bundle:nil];
 	UIViewController *viewController2 = [[AZShadowedTableDemoViewController alloc] initWithNibName: @"AZShadowedTableDemoViewController" bundle: nil];
-	self.tabBarController.viewControllers = [NSArray arrayWithObjects: viewController1, viewController2, nil];
+	UIViewController *viewController3 = [[AZTableViewCellDemoViewController alloc] initWithStyle: UITableViewStyleGrouped];
+	self.tabBarController.viewControllers = [NSArray arrayWithObjects: viewController1, viewController2, viewController3, nil];
 	self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     return YES;
