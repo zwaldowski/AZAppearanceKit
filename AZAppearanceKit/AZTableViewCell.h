@@ -48,7 +48,6 @@
  */
 @interface AZTableViewCell : UITableViewCell
 
-
 /** @name Customizing appearance */
 
 /** Specifies the color used for the table view cell.
@@ -116,5 +115,14 @@
  
  */
 + (CGFloat) tableView:(UITableView *)tableView neededHeightForIndexPath:(NSIndexPath *)indexPath;
+
+/** In a regular table view cell, this is a subview behind all other
+ views. It is unavailable for use with `AZTableViewCell`. */
+@property (nonatomic, strong) UIView *backgroundView NS_UNAVAILABLE;
+
+/** In a regular table view cell, this is a subview behind all other
+ views used when the cell is selected. It is unavailable for use with
+ `AZTableViewCell`. */
+@property (nonatomic, strong) UIView *selectedBackgroundView NS_UNAVAILABLE;
 
 @end

@@ -22,7 +22,7 @@ typedef enum {
     AZTableViewCellSectionLocationAlone = 4
 } AZTableViewCellSectionLocation;
 
-static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSectionLocation pos) {
+static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSectionLocation pos) {
 	UIRectCorner corners = 0;
 	
 	switch (pos) {
@@ -88,7 +88,7 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 	
 	UIBezierPath *(^roundedPath)(CGRect) = ^UIBezierPath *(CGRect rect){
 		return [UIBezierPath bezierPathWithRoundedRect: rect
-									 byRoundingCorners: UIRectCornerForSectionPosition(self.sectionLocation)
+									 byRoundingCorners: UIRectCornerForSectionLocation(self.sectionLocation)
 										   cornerRadii: CGSizeMake(radius, radius)];
 	};
 	
@@ -164,8 +164,8 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 
         [self.contentView addObserver:self forKeyPath:@"frame" options:NSKeyValueObservingOptionOld context:nil];
 		
-        self.backgroundView = [[AZTableViewCellBackground alloc] initWithCell: self selected: NO];
-        self.selectedBackgroundView = [[AZTableViewCellBackground alloc] initWithCell: self selected:YES];
+		[super setBackgroundView: [[AZTableViewCellBackground alloc] initWithCell: self selected: NO]];
+		[super setSelectedBackgroundView: [[AZTableViewCellBackground alloc] initWithCell: self selected:YES]];
 		
 		self.shadowColor = [UIColor colorWithWhite: 0.0 alpha: 0.7];
 		self.borderColor = [UIColor colorWithWhite: 0.737 alpha: 1.0];
@@ -220,13 +220,21 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 		self.customView.backgroundColor = backgroundColor;
 }
 
+- (void)setBackgroundView:(UIView *)backgroundView {
+	[NSException raise: NSInvalidArgumentException format: @"%@ is unavailable on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])];
+}
+
+- (void)setSelectedBackgroundView:(UIView *)selectedBackgroundView {
+	[NSException raise: NSInvalidArgumentException format: @"%@ is unavailable on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])];
+}
+
 #pragma mark - UITableViewCell
 
 - (void) prepareForReuse
 {
     [super prepareForReuse];
-    [self.backgroundView setNeedsDisplay];
-    [self.selectedBackgroundView setNeedsDisplay];
+	[[super backgroundView] setNeedsDisplay];
+	[[super selectedBackgroundView] setNeedsDisplay];
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -247,14 +255,15 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
     if (!self.customView)
 		return;
 	
-	AZTableViewCellSectionLocation position = [(id)[self backgroundView] sectionLocation];
+	AZTableViewCellBackground *backgroundView = (AZTableViewCellBackground *) [super backgroundView];
+	AZTableViewCellSectionLocation location = backgroundView.sectionLocation;
+	CGRect innerFrame = backgroundView.frame;
 	
-	CGRect innerFrame = self.backgroundView.frame;
 	if (self.tableViewIsGrouped) {
 		CGFloat shadowMargin = kShadowMargin;
 		CGFloat topMargin = 0, bottomMargin = 0;
 		
-		switch (position) {
+		switch (location) {
 			case AZTableViewCellSectionLocationTop:
 				topMargin = shadowMargin;
 			case AZTableViewCellSectionLocationMiddle:
@@ -286,7 +295,7 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 	CGFloat radius = self.tableViewIsGrouped ? self.cornerRadius : 0;
 	CGRect maskRect = (CGRect){ CGPointZero, innerFrame.size };
 	UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: maskRect
-												   byRoundingCorners: UIRectCornerForSectionPosition(position)
+												   byRoundingCorners: UIRectCornerForSectionLocation(location)
 														 cornerRadii: CGSizeMake(radius, radius)];
 
 	[(CAShapeLayer *)self.customView.layer.mask setPath: maskPath.CGPath];
@@ -313,7 +322,8 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
         CGFloat shadowMargin = kShadowMargin;
         
         float y = 2.0f;
-        switch ([(id)[self backgroundView] sectionLocation]) {
+		AZTableViewCellBackground *backgroundView = (AZTableViewCellBackground *) [super backgroundView];
+        switch (backgroundView.sectionLocation) {
             case AZTableViewCellSectionLocationTop:
             case AZTableViewCellSectionLocationAlone:
                 y += shadowMargin;
