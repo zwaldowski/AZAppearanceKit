@@ -7,14 +7,12 @@
 //
 
 #import "AZShadowedTableDemoViewController.h"
-#import "AZShadowedTableView.h"
 
 @interface AZShadowedTableDemoViewController ()
 
 @end
 
 @implementation AZShadowedTableDemoViewController
-@synthesize tableView = _tableView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -29,8 +27,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	
-	self.tableView.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
+
+	UIView *view = [UIView new];
+	view.backgroundColor = [UIColor scrollViewTexturedBackgroundColor];
+	self.tableView.backgroundView = view;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

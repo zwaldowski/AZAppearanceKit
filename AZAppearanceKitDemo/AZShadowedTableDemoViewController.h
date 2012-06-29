@@ -8,9 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class AZShadowedTableView;
-
-@interface AZShadowedTableDemoViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
-@property (weak, nonatomic) IBOutlet AZShadowedTableView *tableView;
+@interface AZShadowedTableDemoViewController : UITableViewController
 
 @end
