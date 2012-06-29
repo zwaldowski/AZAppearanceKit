@@ -18,7 +18,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-		self.title = NSLocalizedString(@"Shadowed Table", @"Shadowed Table");
+		self.title = NSLocalizedString(@"Table Shadow", @"Table Shadow");
 		self.tabBarItem.image = [UIImage imageNamed:@"AZShadowedTableDemoViewController"];
     }
     return self;

@@ -8,6 +8,7 @@
 
 #import "AZAppearanceKitDemoAppDelegate.h"
 #import "AZLabelDemoViewController.h"
+#import "AZGradientDemoViewController.h"
 #import "AZShadowedTableDemoViewController.h"
 #import "AZTableViewCellDemoViewController.h"
 
@@ -18,9 +19,10 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 	self.tabBarController = [UITabBarController new];
 	UIViewController *viewController1 = [[AZLabelDemoViewController alloc] initWithNibName: @"AZLabelDemoViewController" bundle:nil];
-	UIViewController *viewController2 = [[AZShadowedTableDemoViewController alloc] initWithNibName: @"AZShadowedTableDemoViewController" bundle: nil];
-	UIViewController *viewController3 = [[AZTableViewCellDemoViewController alloc] initWithStyle: UITableViewStyleGrouped];
-	self.tabBarController.viewControllers = [NSArray arrayWithObjects: viewController1, viewController2, viewController3, nil];
+	UIViewController *viewController2 = [[AZGradientDemoViewController alloc] initWithNibName: @"AZGradientDemoViewController" bundle:nil];
+	UIViewController *viewController3 = [[AZShadowedTableDemoViewController alloc] initWithNibName: @"AZShadowedTableDemoViewController" bundle: nil];
+	UIViewController *viewController4 = [[AZTableViewCellDemoViewController alloc] initWithStyle: UITableViewStyleGrouped];
+	self.tabBarController.viewControllers = [NSArray arrayWithObjects: viewController1, viewController2, viewController3, viewController4, nil];
 	self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     return YES;

@@ -19,7 +19,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-		self.title = NSLocalizedString(@"Decorated Table", @"Decorated Table");
+		self.title = NSLocalizedString(@"Table Cells", @"Table Cells");
 		self.tabBarItem.image = [UIImage imageNamed:@"AZTableViewCellDemoViewController"];
     }
     return self;
