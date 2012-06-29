@@ -12,6 +12,16 @@
 #import "AZGradient.h"
 #import "AZDrawingFunctions.h"
 
+static const CGFloat kShadowMargin = 4.0f;
+
+typedef enum {
+    AZTableViewCellSectionLocationNone = 0,
+    AZTableViewCellSectionLocationMiddle = 1,
+	AZTableViewCellSectionLocationTop = 2,
+    AZTableViewCellSectionLocationBottom = 3,
+    AZTableViewCellSectionLocationAlone = 4
+} AZTableViewCellSectionLocation;
+
 static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSectionLocation pos) {
 	UIRectCorner corners = 0;
 	
@@ -33,7 +43,6 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 
 @interface AZTableViewCell ()
 
-@property (nonatomic, readonly) CGFloat shadowMargin;
 @property (nonatomic, readonly) BOOL tableViewIsGrouped;
 
 @end
@@ -69,7 +78,8 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 
 - (void) drawRect:(CGRect)rect
 {
-	CGFloat shadowMargin = self.cell.shadowMargin;
+	CGFloat shadowMargin = self.cell.tableViewIsGrouped ? kShadowMargin : 0;
+	CGFloat radius = self.cell.tableViewIsGrouped ? self.cell.cornerRadius : 0;
 	
 	rect = CGRectInset(rect, shadowMargin, 0);
 	rect.origin.y += (self.sectionLocation == AZTableViewCellSectionLocationAlone ||
@@ -79,19 +89,17 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 	UIBezierPath *(^roundedPath)(CGRect) = ^UIBezierPath *(CGRect rect){
 		return [UIBezierPath bezierPathWithRoundedRect: rect
 									 byRoundingCorners: UIRectCornerForSectionPosition(self.sectionLocation)
-										   cornerRadii: CGSizeMake(self.cell.cornerRadius, self.cell.cornerRadius)];
+										   cornerRadii: CGSizeMake(radius, radius)];
 	};
 	
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	UIBezierPath *path = roundedPath(rect);
 	
 	void (^drawBorder)(void) = ^{
-		CGContextSaveGState(ctx);
 		UIBezierPath *path = roundedPath(CGRectInset(rect, 0.5, 0.5));
-		[self.cell.borderColor setStroke];
 		path.lineWidth = 1.5f;
+		[self.cell.borderColor setStroke];
 		[path stroke];
-		CGContextRestoreGState(ctx);
 	};
 	
     if (self.cell.tableViewIsGrouped && self.cell.shadowColor) {
@@ -174,44 +182,19 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 
 #pragma mark - Private helpers
 
-
-+ (CGFloat) tableView: (UITableView *) tableView neededHeightForPosition:(AZTableViewCellSectionLocation)position
-{
-    if (tableView.style == UITableViewStylePlain)
-    {
-        return 0;
-    }
-    
-    switch (position)
-    {
-        case AZTableViewCellSectionLocationBottom:
-        case AZTableViewCellSectionLocationTop:
-            return 4;
-        case AZTableViewCellSectionLocationAlone:
-            return 8;
-        default:
-            return 0;
-    }
-}
-
 + (CGFloat) tableView:(UITableView *)tableView neededHeightForIndexPath:(NSIndexPath *)indexPath
 {
-	AZTableViewCellSectionLocation position;
+	
+    if (tableView.style == UITableViewStylePlain)
+        return 0;
+	
 	if ([tableView.dataSource tableView:tableView numberOfRowsInSection:indexPath.section] == 1) {
-        position = AZTableViewCellSectionLocationAlone;
-    } else if (indexPath.row == 0) {
-        position = AZTableViewCellSectionLocationTop;
-    } else if (indexPath.row+1 == [tableView.dataSource tableView:tableView numberOfRowsInSection:indexPath.section]) {
-        position = AZTableViewCellSectionLocationBottom;
+        return kShadowMargin * 2;
+    } else if (indexPath.row == 0 || indexPath.row == [tableView.dataSource tableView:tableView numberOfRowsInSection:indexPath.section] - 1) {
+        return kShadowMargin;
     } else {
-		position = AZTableViewCellSectionLocationMiddle;
+		return 0;
 	}
-    return [AZTableViewCell tableView: tableView neededHeightForPosition: position];
-}
-
-- (float) shadowMargin
-{
-    return self.tableViewIsGrouped ? 4 : 0;
 }
 
 - (AZGradient *)selectionGradient {
@@ -224,21 +207,6 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 }
 
 #pragma mark - Properties
-
-- (void)willMoveToSuperview:(UIView *)newSuperview {
-	[super willMoveToSuperview:newSuperview];
-	
-	if (newSuperview) {
-		_tableViewIsGrouped = (((UITableView *)newSuperview).style == UITableViewStyleGrouped);
-	} else {
-		_tableViewIsGrouped = NO;
-	}
-}
-
-- (float) cornerRadius
-{
-	return self.tableViewIsGrouped ? _cornerRadius : 0;
-}
 
 - (UITableViewCellSelectionStyle)selectionStyle
 {
@@ -261,6 +229,18 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
     [self.selectedBackgroundView setNeedsDisplay];
 }
 
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+	[super willMoveToSuperview:newSuperview];
+	
+	if (newSuperview) {
+		_tableViewIsGrouped = (((UITableView *)newSuperview).style == UITableViewStyleGrouped);
+	} else {
+		_tableViewIsGrouped = NO;
+	}
+	
+	[self setNeedsLayout];
+}
+
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
@@ -270,8 +250,8 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 	AZTableViewCellSectionLocation position = [(id)[self backgroundView] sectionLocation];
 	
 	CGRect innerFrame = self.backgroundView.frame;
-	CGFloat shadowMargin = self.shadowMargin;
 	if (self.tableViewIsGrouped) {
+		CGFloat shadowMargin = kShadowMargin;
 		CGFloat topMargin = 0, bottomMargin = 0;
 		
 		switch (position) {
@@ -303,10 +283,11 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 		self.customView.layer.masksToBounds = YES;
 	}
 	
+	CGFloat radius = self.tableViewIsGrouped ? self.cornerRadius : 0;
 	CGRect maskRect = (CGRect){ CGPointZero, innerFrame.size };
 	UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: maskRect
 												   byRoundingCorners: UIRectCornerForSectionPosition(position)
-														 cornerRadii: CGSizeMake(self.cornerRadius, self.cornerRadius)];
+														 cornerRadii: CGSizeMake(radius, radius)];
 
 	[(CAShapeLayer *)self.customView.layer.mask setPath: maskPath.CGPath];
 	self.customView.layer.mask.frame = maskRect;
@@ -317,19 +298,19 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 
 #pragma mark - Internal
 
-
-
 // Avoids contentView's frame auto-updating. It calculates the best size, taking
 // into account the cell's margin and so.
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([keyPath isEqualToString:@"frame"])
     {
+		if (!self.superview || !self.tableViewIsGrouped)
+			return;
+		
         UIView *contentView = (UIView *) object;
-		AZTableViewCellBackground *backgroundView = (AZTableViewCellBackground *)self.backgroundView;
         CGRect rect = contentView.frame;
 		
-        float shadowMargin = [self shadowMargin];
+        CGFloat shadowMargin = kShadowMargin;
         
         float y = 2.0f;
         switch ([(id)[self backgroundView] sectionLocation]) {
@@ -344,13 +325,11 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
         
         if (y)
         {
-			rect.origin.x += shadowMargin;
-			rect.origin.y += y;
-			rect.size.width -= shadowMargin * 2.0f;
-			rect.size.height -= shadowMargin + [AZTableViewCell tableView: (UITableView *)self.superview neededHeightForPosition: backgroundView.sectionLocation];
-            contentView.frame = rect;
+			contentView.frame = CGRectInset(rect, shadowMargin, y);
         }
+		return;
     }
+	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 @end
