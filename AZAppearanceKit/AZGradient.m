@@ -319,7 +319,7 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 }
 
 - (CGColorSpaceRef)colorSpace {
-	return CGColorGetColorSpace([_colors.allValues.lastObject CGColor]);
+	return _colorSpace ?: CGColorGetColorSpace((__bridge CGColorRef)(_colors.allValues.lastObject));
 }
 
 @end
