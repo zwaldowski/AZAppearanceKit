@@ -10,7 +10,7 @@
 #import "AZTableViewCell.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AZGradient.h"
-#import "PrettyDrawing.h"
+#import "AZDrawingFunctions.h"
 
 static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSectionLocation pos) {
 	UIRectCorner corners = 0;

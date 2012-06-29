@@ -1,0 +1,53 @@
+//
+//  AZDrawingFunctions.m
+//  AZAppearanceKit
+//
+//  Created by Victor Pena Placer on 2/28/12.
+//  Copyright (c) 2012 Victor Pena Placer. All rights reserver.
+//  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
+//
+
+#import "AZDrawingFunctions.h"
+
+void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color) {
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(ctx);
+	
+	CGFloat minX, maxX, minY, maxY;
+	switch (edge) {
+		case CGRectMinXEdge:
+			minX = CGRectGetMinX(rect);
+			minY = CGRectGetMinY(rect);
+			maxX = CGRectGetMinX(rect);
+			maxY = CGRectGetMaxY(rect);
+			break;
+		case CGRectMinYEdge:
+			minX = CGRectGetMinX(rect);
+			minY = CGRectGetMinY(rect);
+			maxX = CGRectGetMaxX(rect);
+			maxY = CGRectGetMinY(rect);
+			break;
+		case CGRectMaxXEdge:
+			minX = CGRectGetMaxX(rect);
+			minY = CGRectGetMinY(rect);
+			maxX = CGRectGetMaxX(rect);
+			maxY = CGRectGetMaxY(rect);
+			break;
+		case CGRectMaxYEdge:
+			minX = CGRectGetMinX(rect);
+			minY = CGRectGetMaxY(rect);
+			maxX = CGRectGetMaxX(rect);
+			maxY = CGRectGetMaxY(rect);
+			break;
+	}
+	
+    CGContextMoveToPoint(ctx, minX, minY);
+    CGContextAddLineToPoint(ctx, maxX, maxY);
+    
+    CGContextSetStrokeColorWithColor(ctx, color.CGColor);
+    CGContextSetLineWidth(ctx, width);
+	
+    CGContextStrokePath(ctx);
+	
+    CGContextRestoreGState(ctx);
+}
