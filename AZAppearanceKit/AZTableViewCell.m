@@ -145,6 +145,7 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 @synthesize separatorColor = _az_separatorColor;
 @synthesize cornerRadius = _cornerRadius;
 @synthesize selectionGradient = _selectionGradient;
+@synthesize tableViewIsGrouped = _tableViewIsGrouped;
 
 #pragma mark - Setup and teardown
 
@@ -208,11 +209,6 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
     return [AZTableViewCell tableView: tableView neededHeightForPosition: position];
 }
 
-- (BOOL) tableViewIsGrouped
-{
-    return ((UITableView *)self.superview).style == UITableViewStyleGrouped;
-}
-
 - (float) shadowMargin
 {
     return self.tableViewIsGrouped ? 4 : 0;
@@ -228,6 +224,16 @@ static inline UIRectCorner UIRectCornerForSectionPosition(AZTableViewCellSection
 }
 
 #pragma mark - Properties
+
+- (void)willMoveToSuperview:(UIView *)newSuperview {
+	[super willMoveToSuperview:newSuperview];
+	
+	if (newSuperview) {
+		_tableViewIsGrouped = (((UITableView *)newSuperview).style == UITableViewStyleGrouped);
+	} else {
+		_tableViewIsGrouped = NO;
+	}
+}
 
 - (float) cornerRadius
 {
