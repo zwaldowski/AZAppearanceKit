@@ -334,17 +334,17 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 - (void)setText:(NSString *)text {
 	_text = [text copy];
 	[self az_recalculateTextPath];
-	if (self.superview) {
+	if (self.superview)
 		[self setNeedsDisplay];
-	}
 }
 
 - (void)setFont:(UIFont *)font {
+	if (!font)
+		[NSException raise: NSInvalidArgumentException format: @"Font cannot be nil"];
 	_font = font;
 	[self az_recalculateTextPath];
-	if (self.superview) {
+	if (self.superview)
 		[self setNeedsDisplay];
-	}
 }
 
 - (void)layoutSubviews {
@@ -443,6 +443,8 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 }
 
 - (void)setTextColor:(UIColor *)color forState:(UIControlState)state {
+	if (!color)
+		[NSException raise: NSInvalidArgumentException format: @"Color cannot be nil"];
 	return [self az_setValue: color forAppearanceKey: @"textColor" forState: state];
 }
 
