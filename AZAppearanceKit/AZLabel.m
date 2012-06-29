@@ -443,8 +443,6 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 }
 
 - (void)setTextColor:(UIColor *)color forState:(UIControlState)state {
-	if (!color)
-		[NSException raise: NSInvalidArgumentException format: @"Color cannot be nil"];
 	return [self az_setValue: color forAppearanceKey: @"textColor" forState: state];
 }
 
