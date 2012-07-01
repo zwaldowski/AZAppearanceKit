@@ -25,6 +25,17 @@ Use of `AZLabel` in a project requires linking against Core Text.
 
 `AZGradient` is a completely compatible port of `NSGradient` to iOS, with the only difference being that we use `UIColor` and `CGColorSpaceRef` over `NSColor` and `NSColorSpace`. If you're creative with `(id)` casts, the class should be usable on either platform with no code changes. `AZGradient` is aliased to `NSGradient` on OS X.
 
+### AZGradientView
+
+`AZGradientView` is a view for displaying a layer-backed gradient, powered by `AZGradient`. A given gradient can be drawn with a settable angle or relative center position in a linear or radial style, respectively. All properties inherently support being animated.
+
+### AZShadowedTableView
+
+`AZShadowedTableView` is a drop-in subclass of `UITableView` that draws shadows at the top and bottom of the view, as well as along the top and bottom of the cells as they scroll. Such a similar effect can be seen in apps like Tweetbot.
+
+### AZTableViewCell
+
+`AZTableViewCell` allows radical appearance customization for both grouped and plain table view cells only without any special methods other than implementing `-tableView:heightForRowAtIndexPath:`. You can change the background colors/gradients, change the border, add a shadow, or alter the corner radius. All changes animate correctly as a cell moves throughout a table view.
 
 How to Use
 ----------
