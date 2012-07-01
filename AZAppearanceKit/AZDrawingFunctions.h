@@ -9,4 +9,5 @@
 
 #import <UIKit/UIKit.h>
 
+extern void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge);
 extern void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color);

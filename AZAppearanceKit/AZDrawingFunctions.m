@@ -9,10 +9,7 @@
 
 #import "AZDrawingFunctions.h"
 
-void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color) {
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSaveGState(ctx);
-	
+void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge) {
 	CGFloat minX, maxX, minY, maxY;
 	switch (edge) {
 		case CGRectMinXEdge:
@@ -43,11 +40,14 @@ void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor 
 	
     CGContextMoveToPoint(ctx, minX, minY);
     CGContextAddLineToPoint(ctx, maxX, maxY);
-    
+	CGContextStrokePath(ctx);
+}
+
+void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color) {
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(ctx);
     CGContextSetStrokeColorWithColor(ctx, color.CGColor);
     CGContextSetLineWidth(ctx, width);
-	
-    CGContextStrokePath(ctx);
-	
+	CGContextStrokeRectEdge(ctx, rect, edge);
     CGContextRestoreGState(ctx);
 }

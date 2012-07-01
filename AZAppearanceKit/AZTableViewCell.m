@@ -76,53 +76,78 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
     return self;
 }
 
-- (void) drawRect:(CGRect)rect
+- (void) drawRect:(CGRect)outerRect
 {
-	CGFloat shadowMargin = self.cell.tableViewIsGrouped ? kShadowMargin : 0;
+	// Get an inner rect
+	float y = 0;
+    float h = 0;
+    CGFloat shadowMargin = self.cell.tableViewIsGrouped ? kShadowMargin : 0;
 	CGFloat radius = self.cell.tableViewIsGrouped ? self.cell.cornerRadius : 0;
 	
-	rect = CGRectInset(rect, shadowMargin, 0);
-	rect.origin.y += (self.sectionLocation == AZTableViewCellSectionLocationAlone ||
-					  self.sectionLocation == AZTableViewCellSectionLocationTop) ? shadowMargin : 0;
-	rect.size.height -= (self.sectionLocation == AZTableViewCellSectionLocationMiddle) ? 0 : (self.sectionLocation == AZTableViewCellSectionLocationAlone ? 2 * shadowMargin : shadowMargin);
+	switch (self.sectionLocation)
+    {
+        case AZTableViewCellSectionLocationAlone:
+			y = shadowMargin;
+            h = 2 * shadowMargin;
+			break;
+        case AZTableViewCellSectionLocationTop:
+            y = shadowMargin;
+            h = shadowMargin;
+            break;
+        case AZTableViewCellSectionLocationBottom:
+            h = shadowMargin;
+            break;
+        default:
+            break;
+    }
 	
 	UIBezierPath *(^roundedPath)(CGRect) = ^UIBezierPath *(CGRect rect){
 		return [UIBezierPath bezierPathWithRoundedRect: rect
 									 byRoundingCorners: UIRectCornerForSectionLocation(self.sectionLocation)
 										   cornerRadii: CGSizeMake(radius, radius)];
 	};
-	
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
+    
+	CGRect rect = CGRectInset(outerRect, shadowMargin, 0);
+	rect.origin.y += y;
+	rect.size.height -= h;
 	UIBezierPath *path = roundedPath(rect);
 	
-	void (^drawBorder)(void) = ^{
-		UIBezierPath *path = roundedPath(CGRectInset(rect, 0.5, 0.5));
-		path.lineWidth = 1.5f;
-		[self.cell.borderColor setStroke];
-		[path stroke];
-	};
+	// Draw the border
+    CGRect innerRect = self.cell.shadowColor ? CGRectInset(rect, 0.5, 0.5) : rect;
+	UIBezierPath *innerPath = roundedPath(innerRect);
+    
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+	CGContextSaveGState(ctx);
+
+    if (self.cell.shadowColor && self.sectionLocation != AZTableViewCellSectionLocationTop && self.sectionLocation != AZTableViewCellSectionLocationAlone) {
+		CGContextSetShadowWithColor(ctx, CGSizeMake(0, -1), 3, self.cell.shadowColor.CGColor);
+		UIRectStrokeWithColor(innerRect, CGRectMinYEdge, 5, self.cell.borderColor);
+    }
+    
+    if (self.cell.shadowColor) {
+        CGContextSetShadowWithColor(ctx, CGSizeMake(0, 1), 3, self.cell.shadowColor.CGColor);
+    }
+	CGContextSetLineWidth(ctx, self.cell.shadowColor ? 1.5 : 2);
+	CGContextSetStrokeColorWithColor(ctx, self.cell.borderColor.CGColor);
+	CGContextAddPath(ctx, [innerPath CGPath]);
+	CGContextStrokePath(ctx);
 	
-    if (self.cell.tableViewIsGrouped && self.cell.shadowColor) {
-		CGContextSaveGState(ctx);
-		CGContextSetShadowWithColor(ctx, CGSizeMake(0, 1), 3, self.cell.shadowColor.CGColor);
-        drawBorder();
-		CGContextRestoreGState(ctx);
-	}
+    CGContextRestoreGState(ctx);
 	
-    if (self.selected && self.cell.selectionStyle != UITableViewCellSelectionStyleNone) {
+	// Draw the background
+	if (self.selected && self.cell.selectionStyle != UITableViewCellSelectionStyleNone) {
 		[self.cell.selectionGradient drawInBezierPath: path direction: AZGradientDirectionVertical];
-    } else if (self.cell.gradient) {
+    } else if (!self.selected && self.cell.gradient) {
 		[self.cell.gradient drawInBezierPath: path direction: AZGradientDirectionVertical];
     } else {
 		[self.cell.backgroundColor setFill];
 		[path fill];
 	}
-    
-    if (self.cell.separatorColor && (self.sectionLocation == AZTableViewCellSectionLocationTop || self.sectionLocation == AZTableViewCellSectionLocationMiddle))
-		UIRectStrokeWithColor(self.cell.shadowColor && self.cell.tableViewIsGrouped ? rect : CGRectInset(rect, 0.5, 0), CGRectMaxYEdge, 1.0f, self.cell.separatorColor);
 	
-    if (!self.cell.shadowColor && self.cell.tableViewIsGrouped)
-        drawBorder();
+	// Draw the separator
+	if (self.cell.separatorColor && self.sectionLocation != AZTableViewCellSectionLocationBottom && self.sectionLocation != AZTableViewCellSectionLocationAlone) {
+		UIRectStrokeWithColor(rect, CGRectMaxYEdge, 1, self.cell.separatorColor);
+    }
 }
 
 - (void)setSectionLocation:(AZTableViewCellSectionLocation)location
@@ -168,7 +193,7 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 		[super setSelectedBackgroundView: [[AZTableViewCellBackground alloc] initWithCell: self selected:YES]];
 		
 		self.shadowColor = [UIColor colorWithWhite: 0.0 alpha: 0.7];
-		self.borderColor = [UIColor colorWithWhite: 0.737 alpha: 1.0];
+		self.borderColor = [UIColor colorWithRed: 0.737 green: 0.737 blue: 0.737 alpha: 1.0];
 		self.separatorColor = [UIColor colorWithWhite: 0.804 alpha: 1.0];
 		self.cornerRadius = 8.0f;
     }
@@ -287,6 +312,9 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 	
 	self.customView.frame = innerFrame;
 	
+	if (![self.customView.superview isEqual: self])
+		[self addSubview:self.customView];
+	
 	if (!self.customView.layer.mask) {
 		self.customView.layer.mask = [[CAShapeLayer alloc] init];
 		self.customView.layer.masksToBounds = YES;
@@ -300,9 +328,6 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 
 	[(CAShapeLayer *)self.customView.layer.mask setPath: maskPath.CGPath];
 	self.customView.layer.mask.frame = maskRect;
-	
-	if (![self.customView.superview isEqual: self])
-		[self addSubview:self.customView];
 }
 
 #pragma mark - Internal
