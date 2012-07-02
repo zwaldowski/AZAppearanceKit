@@ -338,7 +338,7 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
         CGFloat location = 0.0f;
         [self getColor:&color location:&location atIndex:stops - i - 1];
         [colors addObject: color];
-        locations[i] = location;
+        locations[stops - i - 1] = location;
     }
     
     AZGradient *ret = [[AZGradient alloc] initWithColors: colors atLocations: locations colorSpace: self.colorSpace];
