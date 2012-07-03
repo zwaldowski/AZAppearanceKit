@@ -229,7 +229,7 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 - (void)setSectionLocation:(AZTableViewCellSectionLocation)location animated:(BOOL)animated
 {
 	AZTableViewCellBackgroundLayer *shadow = self.shadow;
-	CGFloat topRadius, bottomRadius, radius = self.cell.cornerRadius;
+	CGFloat topRadius = 0, bottomRadius = 0, radius = self.cell.cornerRadius;
 	
 	switch (location)
     {
