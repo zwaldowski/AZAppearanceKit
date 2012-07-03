@@ -106,16 +106,6 @@
  */
 @property (nonatomic, strong) UIView *customView;
 
-/** Returns the needed height for a cell placed in the given index path.
- 
- You should always implement `tableView:heightForRowAtIndexPath:` method of 
- your tableView's delegate. Inside get your cell's normal height, add the 
- result of calling `tableView:neededHeightForIndexPath:` and return the resulting
- value.
- 
- */
-+ (CGFloat) tableView:(UITableView *)tableView neededHeightForIndexPath:(NSIndexPath *)indexPath;
-
 /** In a regular table view cell, this is a subview behind all other
  views. It is unavailable for use with `AZTableViewCell`. */
 @property (nonatomic, strong) UIView *backgroundView NS_UNAVAILABLE;
