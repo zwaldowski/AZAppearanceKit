@@ -96,16 +96,6 @@
  */
 @property (nonatomic, strong) UIColor *separatorColor;
 
-/** Holds a reference to a custom view inside the cell.
- 
- The custom view is layed out above the background view,
- but *not inside the content view*. Its frame will match
- the size of the cell with all shadow insets applied. It
- is also masked to the cell's shape.
- 
- */
-@property (nonatomic, strong) UIView *customView;
-
 /** In a regular table view cell, this is a subview behind all other
  views. It is unavailable for use with `AZTableViewCell`. */
 @property (nonatomic, strong) UIView *backgroundView NS_UNAVAILABLE;

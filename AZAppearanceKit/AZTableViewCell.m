@@ -324,18 +324,6 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 
 #pragma mark - Properties
 
-- (UITableViewCellSelectionStyle)selectionStyle
-{
-	return self.customView ? UITableViewCellSelectionStyleNone : [super selectionStyle];
-}
-
-- (void) setBackgroundColor:(UIColor *)backgroundColor
-{
-    [super setBackgroundColor:backgroundColor];
-	if (self.customView)
-		self.customView.backgroundColor = backgroundColor;
-}
-
 - (void)setBackgroundView:(UIView *)backgroundView {
 	[NSException raise: NSInvalidArgumentException format: @"%@ is unavailable on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])];
 }
@@ -365,60 +353,5 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 	[self setNeedsLayout];
 }
 
-- (void)layoutSubviews {
-	[super layoutSubviews];
-	
-    if (!self.customView)
-		return;
-	
-	/*AZTableViewCellBackground *backgroundView = (AZTableViewCellBackground *) [super backgroundView];
-	AZTableViewCellSectionLocation location = backgroundView.sectionLocation;
-	CGRect innerFrame = backgroundView.frame;
-	
-	if (self.tableViewIsGrouped) {
-		CGFloat shadowMargin = 0;
-		CGFloat topMargin = 0, bottomMargin = 0;
-		
-		switch (location) {
-			case AZTableViewCellSectionLocationTop:
-				topMargin = shadowMargin;
-			case AZTableViewCellSectionLocationMiddle:
-				bottomMargin = self.tableViewIsGrouped ? 1 : 0;
-				break;
-			case AZTableViewCellSectionLocationAlone:
-				topMargin = shadowMargin;
-				bottomMargin = shadowMargin;
-				break;
-			case AZTableViewCellSectionLocationBottom:
-				bottomMargin = shadowMargin;
-				break;
-			default:
-				break;
-		}
-		
-		innerFrame = CGRectInset(innerFrame, shadowMargin/2, 0);
-		innerFrame.origin.y += topMargin;
-		innerFrame.size.height -= topMargin + bottomMargin;
-	}*/
-	
-	/*self.customView.frame = self.contentView.bounds;
-	
-	if (![self.customView.superview isEqual: self])
-		[self.contentView addSubview:self.customView];*/
-	
-	/*if (!self.customView.layer.mask) {
-		self.customView.layer.mask = [[CAShapeLayer alloc] init];
-		self.customView.layer.masksToBounds = YES;
-	}
-	
-	CGFloat radius = self.tableViewIsGrouped ? self.cornerRadius : 0;
-	CGRect maskRect = (CGRect){ CGPointZero, innerFrame.size };
-	UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect: maskRect
-												   byRoundingCorners: UIRectCornerForSectionLocation(location)
-														 cornerRadii: CGSizeMake(radius, radius)];
-
-	[(CAShapeLayer *)self.customView.layer.mask setPath: maskPath.CGPath];
-	self.customView.layer.mask.frame = maskRect;*/
-}
 
 @end
