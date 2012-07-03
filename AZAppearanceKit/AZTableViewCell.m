@@ -12,8 +12,6 @@
 #import "AZGradient.h"
 #import "AZDrawingFunctions.h"
 
-static const CGFloat kShadowMargin = 4.0f;
-
 typedef enum {
     AZTableViewCellSectionLocationNone = 0,
     AZTableViewCellSectionLocationMiddle = 1,
@@ -41,6 +39,8 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 	return corners;
 }
 
+#pragma mark - Background hackery
+
 @interface AZTableViewCell ()
 
 @property (nonatomic, readonly) BOOL tableViewIsGrouped;
@@ -48,6 +48,10 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 @end
 
 @class AZTableViewCellBackground;
+
+@interface AZTableViewCellBackgroundView : UIView
+
+@end
 
 @interface AZTableViewCellBackgroundLayer : CALayer
 
@@ -63,9 +67,28 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 
 @property (nonatomic, readonly, weak) AZTableViewCell *cell;
 @property (nonatomic, readonly, getter = isSelected) BOOL selected;
-@property (nonatomic, weak) AZTableViewCellBackgroundLayer *shadow;
+@property (nonatomic, weak) AZTableViewCellBackgroundView *shadowView;
 
 - (id) initWithCell:(AZTableViewCell *)cell selected:(BOOL)selected;
+
+@end
+
+@implementation AZTableViewCellBackgroundView
+
+- (id)initWithFrame:(CGRect)frame {
+	if ((self = [super initWithFrame:frame])) {
+		self.backgroundColor = [UIColor clearColor];
+		self.layer.contentsScale = [[UIScreen mainScreen] scale];
+		self.contentMode = UIViewContentModeRedraw;
+		self.layer.shouldRasterize = YES;
+		self.layer.rasterizationScale = [[UIScreen mainScreen] scale];
+	}
+	return self;
+}
+
++ (Class)layerClass {
+	return [AZTableViewCellBackgroundLayer class];
+}
 
 @end
 
@@ -99,7 +122,7 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 }
 
 - (AZTableViewCellBackground *)background {
-	return self.delegate ?: self.superlayer.delegate;
+	return (id)[self.delegate superview];
 }
 
 - (void)drawInContext:(CGContextRef)ctx {
@@ -114,7 +137,7 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 	const CGSize kShadowOffset = CGSizeMake(0, 1);
 	const CGFloat shadowMargin = kShadowBlur + MAX(ABS(kShadowOffset.width), ABS(kShadowOffset.height));
 	
-	CGRect rect = CGContextGetClipBoundingBox(ctx);
+	CGRect rect = self.bounds;
 	CGRect innerRect = CGRectInset(rect, shadowMargin, shadowMargin);
 
 	CGRect clippingRect = rect;
@@ -198,7 +221,7 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 
 @synthesize cell = _cell;
 @synthesize selected = _selected;
-@synthesize shadow = _shadow;
+@synthesize shadowView = _shadowView;
 
 - (id) initWithCell:(AZTableViewCell *)cell selected:(BOOL)selected
 {
@@ -208,17 +231,23 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 		_cell = cell;
 		_selected = selected;
 		
-		AZTableViewCellBackgroundLayer *shadow = [AZTableViewCellBackgroundLayer layer];
-		shadow.contentsScale = [[UIScreen mainScreen] scale];
-		self.shadow = shadow;
-		[self.layer addSublayer: shadow];
-		
+		AZTableViewCellBackgroundView *shadowView = [[AZTableViewCellBackgroundView alloc] initWithFrame: CGRectZero];
+		[self addSubview: shadowView];
+		self.shadowView = shadowView;
     }
     return self;
 }
 
-- (void)layoutSublayersOfLayer:(CALayer *)layer {
-	self.shadow.frame = CGRectInset(layer.bounds, -kShadowMargin, -kShadowMargin);
+- (void)layoutSubviews {
+	const CGFloat kShadowBlur = 3.0f;
+	const CGSize kShadowOffset = CGSizeMake(0, 1);
+	const CGFloat shadowMargin = kShadowBlur + MAX(ABS(kShadowOffset.width), ABS(kShadowOffset.height));
+	self.shadowView.frame = CGRectInset(self.bounds, -shadowMargin, -shadowMargin);
+}
+
+-(void) setFrame: (CGRect) frame {
+    [super setFrame: frame];
+	[self setNeedsLayout];
 }
 
 - (void)setSectionLocation:(AZTableViewCellSectionLocation)location
@@ -228,7 +257,8 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 
 - (void)setSectionLocation:(AZTableViewCellSectionLocation)location animated:(BOOL)animated
 {
-	AZTableViewCellBackgroundLayer *shadow = self.shadow;
+	AZTableViewCellBackgroundLayer *shadow = (id)self.shadowView.layer;
+	
 	CGFloat topRadius = 0, bottomRadius = 0, radius = self.cell.cornerRadius;
 	
 	switch (location)
@@ -346,7 +376,7 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 	CGRect innerFrame = backgroundView.frame;
 	
 	if (self.tableViewIsGrouped) {
-		CGFloat shadowMargin = kShadowMargin;
+		CGFloat shadowMargin = 0;
 		CGFloat topMargin = 0, bottomMargin = 0;
 		
 		switch (location) {
