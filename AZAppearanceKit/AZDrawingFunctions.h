@@ -7,8 +7,13 @@
 //  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 extern void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge);
-extern void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color);
 extern void UIGraphicsContextPerformBlock(void (^)(CGContextRef ctx));
+
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+
+extern void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color);
+
+#endif

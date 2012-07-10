@@ -11,7 +11,8 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.subspec 'AZDrawingFunctions' do |ss|
-    ss.platform     = :ios, '4.0'
+    ss.ios.deployment_target = '4.0'
+    ss.osx.deployment_target = '10.6'
     ss.frameworks   = 'CoreGraphics'
     ss.source_files = 'AZAppearanceKit/AZDrawingFunctions.{h,m}'
   end
