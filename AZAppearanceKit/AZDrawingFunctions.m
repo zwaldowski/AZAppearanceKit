@@ -52,7 +52,7 @@ void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor 
     CGContextRestoreGState(ctx);
 }
 
-void UIGraphicsContextPerform(void (^block)(CGContextRef)) {
+void UIGraphicsContextPerformBlock(void (^block)(CGContextRef)) {
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	CGContextSaveGState(ctx);
 	block(ctx);

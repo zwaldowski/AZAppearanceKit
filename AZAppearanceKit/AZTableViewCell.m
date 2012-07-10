@@ -181,7 +181,7 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 	CGPathRef cgPath = roundedPath(innerRect);
 	
 	// stroke the primary shadow
-	UIGraphicsContextPerform(^(CGContextRef ctx) {
+	UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
 		if (self.cell.shadowColor) {
 			CGContextSetShadowWithColor(ctx, kShadowOffset, kShadowBlur, self.cell.shadowColor.CGColor);
 		}
