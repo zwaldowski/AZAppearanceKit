@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.license      = 'MIT'
   s.authors      = { 'Zachary Waldowski' => 'zwaldowski@gmail.com',
                      'Alexsander Akers' => 'a2@pandamonia.us' }
-  s.source       = { :git => 'https://github.com/zwaldowski/AZAppearanceKit.git', :commit => 'origin/master' }
+  s.source       = { :git => 'https://github.com/zwaldowski/AZAppearanceKit.git', :tag => '0.6' }
   s.requires_arc = true
 
   s.subspec 'AZDrawingFunctions' do |ss|
@@ -19,9 +19,9 @@ Pod::Spec.new do |s|
   s.subspec 'AZGradient' do |ss|
     ss.ios.deployment_target = '4.0'
     ss.osx.deployment_target = '10.6'
-    ss.frameworks            = 'CoreGraphics'
-    ss.source_files          = 'AZAppearanceKit/AZGradient.{h,m}'
-    ss.dependency              'AZAppearanceKit/AZDrawingFunctions'
+    ss.frameworks   = 'CoreGraphics'
+    ss.source_files = 'AZAppearanceKit/AZGradient.{h,m}'
+    ss.dependency     'AZAppearanceKit/AZDrawingFunctions'
   end
 
   s.subspec 'AZGradientView' do |ss|
@@ -43,14 +43,14 @@ Pod::Spec.new do |s|
     ss.platform     = :ios, '4.0'
     ss.frameworks   = 'CoreGraphics'
     ss.source_files = 'AZAppearanceKit/AZShadowedTableView.{h,m}'
-    ss.dependency   'AZAppearanceKit/AZDrawingFunctions'
+    ss.dependency     'AZAppearanceKit/AZDrawingFunctions'
   end
   
   s.subspec 'AZTableViewCell' do |ss|
     ss.platform     = :ios, '4.0'
     ss.frameworks   = 'CoreGraphics'
     ss.source_files = 'AZAppearanceKit/AZTableViewCell.{h,m}'
-    ss.dependency   'AZAppearanceKit/AZDrawingFunctions'
-    ss.dependency   'AZAppearanceKit/AZGradient'
+    ss.dependency     'AZAppearanceKit/AZDrawingFunctions'
+    ss.dependency     'AZAppearanceKit/AZGradient'
   end
 end
