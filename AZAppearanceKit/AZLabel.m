@@ -9,6 +9,7 @@
 #import <CoreText/CoreText.h>
 #import "AZLabel.h"
 #import "AZGradient.h"
+#import "AZDrawingFunctions.h"
 
 @interface AZLabel ()
 
@@ -260,17 +261,14 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 - (void)drawRect:(CGRect)rect {
 	rect = UIEdgeInsetsInsetRect(rect, self.textEdgeInsets);
 	
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	
-	CGContextTranslateCTM(ctx, 0, rect.size.height);
-	CGContextScaleCTM(ctx, 1, -1);
-	
 	if (!self.textPath && self.text.length)
 		[self az_recalculateTextPath];
-	
-	CGContextSaveGState(ctx);
-	{
-		CGContextSetShadowWithColor(ctx, self.shadowOffsetForCurrentState, self.shadowBlurForCurrentState, self.shadowColorForCurrentState.CGColor);
+    
+    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+        CGContextTranslateCTM(ctx, 0, rect.size.height);
+        CGContextScaleCTM(ctx, 1, -1);
+        
+        CGContextSetShadowWithColor(ctx, self.shadowOffsetForCurrentState, self.shadowBlurForCurrentState, self.shadowColorForCurrentState.CGColor);
 		CGContextBeginTransparencyLayer(ctx, NULL);
 		{
 			if (self.shouldUseGradientForCurrentState)
@@ -293,9 +291,8 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 		UIBezierPath *textNegativePath = [UIBezierPath bezierPathWithRect: textBorderRect];
 		[textNegativePath appendPath: self.textPath];
 		textNegativePath.usesEvenOddFillRule = YES;
-		
-		CGContextSaveGState(ctx);
-		{
+        
+        UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
 			CGFloat xOffset = self.innerShadowOffsetForCurrentState.width + round(textBorderRect.size.width);
 			CGFloat yOffset = self.innerShadowOffsetForCurrentState.height;
 			CGContextSetShadowWithColor(ctx, CGSizeMake(xOffset + copysign(0.1, xOffset), yOffset + copysign(0.1, yOffset)), self.innerShadowBlurForCurrentState, self.innerShadowColorForCurrentState.CGColor);
@@ -307,10 +304,8 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 			
 			[[UIColor grayColor] setFill];
 			[textNegativePath fill];
-		}
-		CGContextRestoreGState(ctx);
-	}
-	CGContextRestoreGState(ctx);
+        });
+    });
 }
 
 - (CGSize) sizeThatFits: (CGSize) size

@@ -10,6 +10,8 @@
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
+#import "AZDrawingFunctions.h"
+
 static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 {
     CGFloat red;
@@ -168,10 +170,9 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 #pragma mark - Drawing
 
 - (void)drawFromPoint:(CGPoint)startingPoint toPoint:(CGPoint)endingPoint options:(CGGradientDrawingOptions)options {
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	CGContextSaveGState(ctx);
-	CGContextDrawLinearGradient(ctx, _gradient, startingPoint, endingPoint, options);
-	CGContextRestoreGState(ctx);
+    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+        CGContextDrawLinearGradient(ctx, _gradient, startingPoint, endingPoint, options);
+    });
 }
 
 - (void)drawInRect:(CGRect)rect angle:(CGFloat)degrees {	
@@ -207,57 +208,50 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 	CGFloat distanceToEnd = cos(atan2(tan.height,tan.width) - radians) * hypot(CGRectGetWidth(rect), CGRectGetHeight(rect));
 	end.x = cos(radians) * distanceToEnd + start.x;
 	end.y = sin(radians) * distanceToEnd + start.y;
-	
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	CGContextSaveGState(ctx);
-	CGContextClipToRect(ctx, rect);
-	CGContextDrawLinearGradient(ctx, _gradient, start, end, kCGGradientDrawsAfterEndLocation|kCGGradientDrawsBeforeStartLocation);
-	CGContextRestoreGState(ctx);
+    
+    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+        CGContextClipToRect(ctx, rect);
+        CGContextDrawLinearGradient(ctx, _gradient, start, end, kCGGradientDrawsAfterEndLocation|kCGGradientDrawsBeforeStartLocation);
+    });
 }
 
 - (void)drawInBezierPath:(UIBezierPath *)path angle:(CGFloat)angle {
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	CGContextSaveGState(ctx);
-	[path addClip];
-	[self drawInRect: path.bounds angle: angle];
-	CGContextRestoreGState(ctx);
+    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+        [path addClip];
+        [self drawInRect: path.bounds angle: angle];
+    });
 }
 
 - (void)drawFromCenter:(CGPoint)startCenter radius:(CGFloat)startRadius toCenter:(CGPoint)endCenter radius:(CGFloat)endRadius options:(CGGradientDrawingOptions)options {
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	CGContextSaveGState(ctx);
-	CGContextDrawRadialGradient(ctx, _gradient, startCenter, startRadius, endCenter, endRadius, options);
-	CGContextRestoreGState(ctx);
+    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+        CGContextDrawRadialGradient(ctx, _gradient, startCenter, startRadius, endCenter, endRadius, options);
+    });
 }
 
 - (void)drawInRect:(CGRect)rect relativeCenterPosition:(CGPoint)relativeCenterPosition {
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	CGContextSaveGState(ctx);
-	CGContextClipToRect(ctx, rect);
-	
 	CGFloat width = CGRectGetWidth(rect);
 	CGFloat height = CGRectGetHeight(rect);
 	CGFloat radius = sqrtf(powf(width/2, 2)+powf(height/2, 2));
 	CGPoint startCenter = CGPointMake(width/2+(width*relativeCenterPosition.x)/2, height/2+(height*relativeCenterPosition.y)/2);
 	CGPoint endCenter = CGPointMake(width/2, height/2);
-	
-	CGContextDrawRadialGradient(ctx, _gradient, startCenter, 0, endCenter, radius, 0);
-	CGContextRestoreGState(ctx);
+
+    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+        CGContextClipToRect(ctx, rect);
+        CGContextDrawRadialGradient(ctx, _gradient, startCenter, 0, endCenter, radius, 0);
+    });
 }
 
 - (void)drawInBezierPath:(UIBezierPath *)path relativeCenterPosition:(CGPoint)relativeCenterPosition {
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	CGContextSaveGState(ctx);
-	[path addClip];
-	CGRect bounds = path.bounds;
-	CGFloat width = CGRectGetWidth(bounds);
-	CGFloat height = CGRectGetHeight(bounds);
+	CGFloat width = CGRectGetWidth(path.bounds);
+	CGFloat height = CGRectGetHeight(path.bounds);
 	CGFloat radius = sqrtf(powf(width/2, 2)+powf(height/2, 2));
 	CGPoint startCenter = CGPointMake(width/2+(width*relativeCenterPosition.x)/2, height/2+(height*relativeCenterPosition.y)/2);
 	CGPoint endCenter = CGPointMake(width/2, height/2);
-	
-	CGContextDrawRadialGradient(ctx, _gradient, startCenter, 0, endCenter, radius, 0);
-	CGContextRestoreGState(ctx);
+    
+    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+        [path addClip];
+        CGContextDrawRadialGradient(ctx, _gradient, startCenter, 0, endCenter, radius, 0);
+    });
 }
 
 #pragma mark - Utilities
