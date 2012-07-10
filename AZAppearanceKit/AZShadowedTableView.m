@@ -29,18 +29,15 @@
 
 - (void)drawRect:(CGRect)rect
 {
+    rect.size.height += 5;
+    if (!_top)
+        rect.origin.y -= 5;
+    
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-        CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 20, [UIColor colorWithWhite: 0.0 alpha: 1.0].CGColor);
-        
-        CGFloat position = _top ?  CGRectGetMaxY(rect) + 5 : CGRectGetMinY(rect) - 5;
-        
-        CGContextMoveToPoint(ctx, CGRectGetMinX(rect), position);
-        CGContextAddLineToPoint(ctx, CGRectGetMaxX(rect), position);
-        
-        CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
+        CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 20, [[UIColor colorWithWhite: 0.0 alpha: 1.0] CGColor]);
+        CGContextSetStrokeColorWithColor(ctx, [[UIColor whiteColor] CGColor]);
         CGContextSetLineWidth(ctx, 5);
-        
-        CGContextStrokePath(ctx);
+        CGContextStrokeRectEdge(ctx, rect, _top ? CGRectMaxYEdge : CGRectMinYEdge);
     });
 }
 
