@@ -7,7 +7,6 @@ Pod::Spec.new do |s|
   s.authors      = { 'Zachary Waldowski' => 'zwaldowski@gmail.com',
                      'Alexsander Akers' => 'a2@pandamonia.us' }
   s.source       = { :git => 'https://github.com/zwaldowski/AZAppearanceKit.git', :commit => 'origin/master' }
-  s.frameworks   = 'CoreGraphics'
   s.requires_arc = true
 
   s.subspec 'AZDrawingFunctions' do |ss|
