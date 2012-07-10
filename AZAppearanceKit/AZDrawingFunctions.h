@@ -10,10 +10,10 @@
 #import <CoreGraphics/CoreGraphics.h>
 
 extern void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge);
-extern void UIGraphicsContextPerformBlock(void (^)(CGContextRef ctx));
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
+extern void UIGraphicsContextPerformBlock(void (^)(CGContextRef ctx));
 extern void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color);
 
 #endif

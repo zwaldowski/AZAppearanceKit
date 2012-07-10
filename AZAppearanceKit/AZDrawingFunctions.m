@@ -43,14 +43,14 @@ void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge) {
 	CGContextStrokePath(ctx);
 }
 
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+
 void UIGraphicsContextPerformBlock(void (^block)(CGContextRef)) {
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	CGContextSaveGState(ctx);
 	block(ctx);
 	CGContextRestoreGState(ctx);
 }
-
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
 void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color) {
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
