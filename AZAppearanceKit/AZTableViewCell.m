@@ -135,46 +135,37 @@ typedef enum {
 	rect.size.height -= topInset + bottomInset;
     CGContextClipToRect(ctx, rect);
     
-    CGRect innerRect = CGRectInset(rect, shadowMargin, shadowMargin);
-    CGPoint minPoint = innerRect.origin;
-    CGPoint maxPoint = CGPointMake(CGRectGetMaxX(innerRect), CGRectGetMaxY(innerRect));
-    CGFloat topRadius = self.topCornerRadius, bottomRadius = self.bottomCornerRadius;
-    
-    CGMutablePathRef cgPath = CGPathCreateMutable();
-    CGPathMoveToPoint(cgPath, NULL, minPoint.x + topRadius, minPoint.y);
-    CGPathAddArcToPoint(cgPath, NULL, maxPoint.x, minPoint.y, maxPoint.x, minPoint.y + topRadius, topRadius);
-    CGPathAddArcToPoint(cgPath, NULL, maxPoint.x, maxPoint.y, maxPoint.x - bottomRadius, maxPoint.y, bottomRadius);
-    CGPathAddArcToPoint(cgPath, NULL, minPoint.x, maxPoint.y, minPoint.x, maxPoint.y - bottomRadius, bottomRadius);
-    CGPathAddArcToPoint(cgPath, NULL, minPoint.x, minPoint.y, minPoint.x + topRadius, minPoint.y, topRadius);
-    CGPathCloseSubpath(cgPath);
+    CGRect innerRect = CGRectInset(rect, shadowMargin, shadowMargin);    
+    CGPathRef path = CGPathCreateByRoundingCornersInRect(innerRect, self.topCornerRadius, self.topCornerRadius, self.bottomCornerRadius, self.bottomCornerRadius);
     
     // stroke the primary shadow
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
         CGContextSetShadowWithColor(ctx, kShadowOffset, kShadowBlur, self.cell.shadowColor.CGColor);
         CGContextSetStrokeColorWithColor(ctx, self.cell.borderColor.CGColor);
         CGContextSetLineWidth(ctx, self.cell.shadowColor ? 0.5 : 1);
-        CGContextAddPath(ctx, cgPath);
+        CGContextAddPath(ctx, path);
         CGContextStrokePath(ctx);
     });
     
     // draw the cell background
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-        CGContextAddPath(ctx, cgPath);
+        CGContextAddPath(ctx, path);
         CGContextClip(ctx);
         
-        CGPoint maxLeft = CGPointMake(minPoint.x, maxPoint.y);
+        CGPoint start = innerRect.origin;
+        CGPoint end = CGPointMake(start.x, CGRectGetMaxY(innerRect));
         
         if (self.background.selected && self.cell.selectionStyle != UITableViewCellSelectionStyleNone && self.cell.selectionGradient) {
-            CGContextDrawLinearGradient(ctx, self.cell.selectionGradient.gradient, minPoint, maxLeft, 0);
+            CGContextDrawLinearGradient(ctx, self.cell.selectionGradient.gradient, start, end, 0);
         } else if (!self.cell.selected && self.cell.gradient) {
-            CGContextDrawLinearGradient(ctx, self.cell.gradient.gradient, minPoint, maxLeft, 0);
+            CGContextDrawLinearGradient(ctx, self.cell.gradient.gradient, start, end, 0);
         } else {
             CGContextSetFillColorWithColor(ctx, self.cell.backgroundColor.CGColor);
             CGContextFillRect(ctx, innerRect);
         }
     });
     
-    CGPathRelease(cgPath);
+    CGPathRelease(path);
     
     // draw the separator
     if (self.cell.separatorColor && !self.bottomCornerRadius)

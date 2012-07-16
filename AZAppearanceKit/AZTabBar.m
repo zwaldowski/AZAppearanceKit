@@ -48,7 +48,9 @@
 - (void) layoutSubviews {
 	[super layoutSubviews];
 	
-	self.layer.shadowPath = [UIBezierPath bezierPathWithRect: self.bounds].CGPath;
+    CGPathRef path = CGPathCreateWithRect(self.bounds, NULL);
+	self.layer.shadowPath = path;
+    CGPathRelease(path);
 }
 
 - (void) drawRect:(CGRect)rect {

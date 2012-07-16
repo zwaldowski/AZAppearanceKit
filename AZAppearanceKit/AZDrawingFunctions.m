@@ -43,6 +43,24 @@ void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge) {
 	CGContextStrokePath(ctx);
 }
 
+extern CGPathRef CGPathCreateWithRoundedRect(CGRect rect, CGFloat cornerRadius) {
+    return CGPathCreateByRoundingCornersInRect(rect, cornerRadius, cornerRadius, cornerRadius, cornerRadius);
+}
+
+extern CGPathRef CGPathCreateByRoundingCornersInRect(CGRect rect, CGFloat topLeftRadius, CGFloat topRightRadius, CGFloat bottomLeftRadius, CGFloat bottomRightRadius) {
+    CGPoint minPoint = rect.origin;
+    CGPoint maxPoint = CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
+
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathMoveToPoint(path, NULL, minPoint.x + topLeftRadius, minPoint.y);
+    CGPathAddArcToPoint(path, NULL, maxPoint.x, minPoint.y, maxPoint.x, minPoint.y + topRightRadius, topRightRadius);
+    CGPathAddArcToPoint(path, NULL, maxPoint.x, maxPoint.y, maxPoint.x - bottomRightRadius, maxPoint.y, bottomRightRadius);
+    CGPathAddArcToPoint(path, NULL, minPoint.x, maxPoint.y, minPoint.x, maxPoint.y - bottomLeftRadius, bottomLeftRadius);
+    CGPathAddArcToPoint(path, NULL, minPoint.x, minPoint.y, minPoint.x + topLeftRadius, minPoint.y, topLeftRadius);
+    CGPathCloseSubpath(path);
+    return path;
+}
+
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
 void UIGraphicsContextPerformBlock(void (^block)(CGContextRef)) {
