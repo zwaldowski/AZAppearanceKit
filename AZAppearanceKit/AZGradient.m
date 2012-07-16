@@ -43,9 +43,9 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 @implementation AZGradient {
 	NSDictionary *_colors;
 	CGColorSpaceRef _colorSpace;
-	CGGradientRef _gradient;
 }
 
+@synthesize gradient = _gradient;
 @synthesize numberOfColorStops = _numberOfColorStops;
 
 #pragma mark - Initializers
@@ -148,6 +148,7 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 }
 
 - (void)dealloc {
+    CGGradientRelease(_gradient);
 	CGColorSpaceRelease(_colorSpace);
 }
 

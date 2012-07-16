@@ -68,6 +68,8 @@
 /** The number of color stops in the color gradient. */
 @property (nonatomic, readonly) NSInteger numberOfColorStops;
 
+@property (nonatomic, readonly) CGGradientRef gradient;
+
 - (CGColorSpaceRef)colorSpace;
 
 @end
