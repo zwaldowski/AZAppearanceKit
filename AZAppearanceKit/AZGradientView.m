@@ -68,29 +68,22 @@
 	return [AZGradientLayer class];
 }
 
-- (void)az_initialize {
+- (void)az_sharedInit {
 	self.contentMode = UIViewContentModeRedraw;
 	self.layer.contentsScale = [[UIScreen mainScreen] scale];
 	[self.layer setNeedsDisplay];
 }
 
-- (id)init {
-	if ((self = [super init])) {
-		[self az_initialize];
-    }
-    return self;
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if ((self = [super initWithCoder: aDecoder])) {
-		[self az_initialize];
+		[self az_sharedInit];
     }
     return self;
 }
 
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
-		[self az_initialize];
+		[self az_sharedInit];
     }
     return self;
 }
@@ -98,7 +91,7 @@
 - (id)initWithGradient:(AZGradient *)gradient {
 	if ((self = [super initWithFrame: CGRectZero])) {
 		self.gradient = gradient;
-		[self az_initialize];
+		[self az_sharedInit];
 	}
 	return self;
 }

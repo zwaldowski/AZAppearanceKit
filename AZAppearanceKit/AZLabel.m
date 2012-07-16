@@ -81,13 +81,8 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 
 @implementation AZLabel
 
-@synthesize appearanceStorage = _appearanceStorage;
-@synthesize textPath = _textPath;
-
-@synthesize text = _text;
-@synthesize font = _font;
-@synthesize lineBreakMode = _lineBreakMode;
-@synthesize textEdgeInsets = _textEdgeInsets;
+@synthesize appearanceStorage = _appearanceStorage, textPath = _textPath;
+@synthesize text = _text, font = _font, lineBreakMode = _lineBreakMode, textEdgeInsets = _textEdgeInsets;
 
 + (UIFont *)az_defaultFont {
 	return [UIFont systemFontOfSize: 17];
@@ -99,13 +94,6 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	self.userInteractionEnabled = NO;
 	self.contentMode = UIViewContentModeRedraw;
 	[self setTextColor: [UIColor blackColor] forState: UIControlStateNormal];
-}
-
-- (id)init {
-	if ((self = [super init])) {
-		[self az_sharedInit];
-	}
-	return self;
 }
 
 - (id)initWithFrame:(CGRect)frame {

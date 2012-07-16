@@ -6,8 +6,6 @@
 //  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
 @interface AZTableViewCellDemoViewController : UITableViewController
 
 @end

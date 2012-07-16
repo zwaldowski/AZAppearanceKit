@@ -3,7 +3,7 @@
 //  AZAppearanceKit
 //
 //  Created by Victor Pena Placer on 2/28/12.
-//  Copyright (c) 2012 Victor Pena Placer. All rights reserver.
+//  Copyright (c) 2012 Victor Pena Placer. All rights reserved.
 //  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
@@ -187,9 +187,7 @@ typedef enum {
 
 @implementation AZTableViewCellBackground
 
-@synthesize cell = _cell;
-@synthesize selected = _selected;
-@synthesize shadowView = _shadowView;
+@synthesize cell = _cell, selected = _selected, shadowView = _shadowView;
 
 - (id) initWithCell:(AZTableViewCell *)cell selected:(BOOL)selected
 {
@@ -213,7 +211,7 @@ typedef enum {
 	self.shadowView.frame = CGRectInset(self.bounds, -shadowMargin, -shadowMargin);
 }
 
--(void) setFrame: (CGRect) frame {
+- (void) setFrame: (CGRect) frame {
     [super setFrame: frame];
 	[self setNeedsLayout];
 }
@@ -265,27 +263,34 @@ typedef enum {
 
 @implementation AZTableViewCell
 
-@synthesize shadowColor = _shadowColor;
-@synthesize borderColor = _borderColor;
-@synthesize separatorColor = _az_separatorColor;
-@synthesize cornerRadius = _cornerRadius;
-@synthesize selectionGradient = _selectionGradient;
-@synthesize tableViewIsGrouped = _tableViewIsGrouped;
+@synthesize shadowColor = _shadowColor, borderColor = _borderColor, separatorColor = _az_separatorColor, cornerRadius = _cornerRadius, selectionGradient = _selectionGradient, tableViewIsGrouped = _tableViewIsGrouped;
 
 #pragma mark - Setup and teardown
 
+- (void)az_sharedInit
+{
+    [super setBackgroundView: [[AZTableViewCellBackground alloc] initWithCell: self selected: NO]];
+    [super setSelectedBackgroundView: [[AZTableViewCellBackground alloc] initWithCell: self selected:YES]];
+    
+    self.shadowColor = [UIColor colorWithWhite: 0.0 alpha: 0.7];
+    self.borderColor = [UIColor colorWithRed: 0.737 green: 0.737 blue: 0.737 alpha: 1.0];
+    self.separatorColor = [UIColor colorWithWhite: 0.804 alpha: 1.0];
+    self.selectionGradient = [[AZGradient alloc] initWithStartingColor: [UIColor colorWithRed: 0 green: 0.537 blue: 0.976 alpha: 1] endingColor: [UIColor colorWithRed: 0 green: 0.329 blue: 0.918 alpha: 1]];
+    self.cornerRadius = 8.0f;
+}
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {		
-		[super setBackgroundView: [[AZTableViewCellBackground alloc] initWithCell: self selected: NO]];
-		[super setSelectedBackgroundView: [[AZTableViewCellBackground alloc] initWithCell: self selected:YES]];
-		
-		self.shadowColor = [UIColor colorWithWhite: 0.0 alpha: 0.7];
-		self.borderColor = [UIColor colorWithRed: 0.737 green: 0.737 blue: 0.737 alpha: 1.0];
-		self.separatorColor = [UIColor colorWithWhite: 0.804 alpha: 1.0];
-		self.selectionGradient = [[AZGradient alloc] initWithStartingColor: [UIColor colorWithRed: 0 green: 0.537 blue: 0.976 alpha: 1] endingColor: [UIColor colorWithRed: 0 green: 0.329 blue: 0.918 alpha: 1]];
-		self.cornerRadius = 8.0f;
+    if ((self = [super initWithStyle:style reuseIdentifier:reuseIdentifier])) {
+        [self az_sharedInit];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if ((self = [super initWithCoder: aDecoder])) {
+		[self az_sharedInit];
     }
     return self;
 }

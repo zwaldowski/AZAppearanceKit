@@ -14,10 +14,7 @@
 
 static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 {
-    CGFloat red;
-    CGFloat green;
-    CGFloat blue;
-    CGFloat alpha;
+    CGFloat red, green, blue, alpha;
     
     // Convert color to RGBA with a CGContext. UIColor's getRed:green:blue:alpha: doesn't work across color spaces. Adapted from http://stackoverflow.com/a/4700259
 	

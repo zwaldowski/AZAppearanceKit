@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
-#import "AZLabel.h"
+@class AZLabel;
 
 @interface AZLabelDemoViewController : UIViewController
 
