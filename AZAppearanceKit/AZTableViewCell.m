@@ -20,25 +20,6 @@ typedef enum {
     AZTableViewCellSectionLocationAlone = 4
 } AZTableViewCellSectionLocation;
 
-static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSectionLocation pos) {
-	UIRectCorner corners = 0;
-	
-	switch (pos) {
-		case AZTableViewCellSectionLocationTop:
-			corners = UIRectCornerTopLeft | UIRectCornerTopRight;
-			break;
-		case AZTableViewCellSectionLocationAlone:
-			corners = UIRectCornerAllCorners;
-			break;
-		case AZTableViewCellSectionLocationBottom:
-			corners = UIRectCornerBottomLeft | UIRectCornerBottomRight;
-			break;
-		default:break;
-	}
-	
-	return corners;
-}
-
 #pragma mark - Background hackery
 
 @interface AZTableViewCell ()
@@ -79,7 +60,6 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 	if ((self = [super initWithFrame:frame])) {
 		self.backgroundColor = [UIColor clearColor];
 		self.layer.contentsScale = [[UIScreen mainScreen] scale];
-		self.contentMode = UIViewContentModeRedraw;
 		self.layer.shouldRasterize = YES;
 		self.layer.rasterizationScale = [[UIScreen mainScreen] scale];
 	}
@@ -126,21 +106,16 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
 }
 
 - (void)drawInContext:(CGContextRef)ctx {
-	[super drawInContext:ctx];
-	
 	if (!self.cell.tableViewIsGrouped)
 		return;
-	
+
 	UIGraphicsPushContext(ctx);
 	
 	const CGFloat kShadowBlur = 3.0f;
 	const CGSize kShadowOffset = CGSizeMake(0, 1);
 	const CGFloat shadowMargin = kShadowBlur + MAX(ABS(kShadowOffset.width), ABS(kShadowOffset.height));
 	
-	CGRect rect = self.bounds;
-	CGRect innerRect = CGRectInset(rect, shadowMargin, shadowMargin);
-
-	CGRect clippingRect = rect;
+	CGRect rect = CGContextGetClipBoundingBox(ctx);
 	CGFloat topInset = 0, bottomInset = 0;
 	switch (self.sectionLocation) {
         case AZTableViewCellSectionLocationTop:
@@ -156,56 +131,54 @@ static inline UIRectCorner UIRectCornerForSectionLocation(AZTableViewCellSection
         default:
 			break;
 	}
-	clippingRect.origin.y += topInset;
-	clippingRect.size.height -= topInset + bottomInset;
-	
-	CGFloat topRadius = self.topCornerRadius, bottomRadius = self.bottomCornerRadius;
+	rect.origin.y += topInset;
+	rect.size.height -= topInset + bottomInset;
+    CGContextClipToRect(ctx, rect);
     
-    CGPathRef(^roundedPath)(CGRect) = ^CGPathRef(CGRect rect){
-        CGPoint minPoint = rect.origin;
-        CGPoint maxPoint = CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
-        CGMutablePathRef path = CGPathCreateMutable();
-        CGPathMoveToPoint(path, NULL, minPoint.x + topRadius, minPoint.y);
-        CGPathAddArcToPoint(path, NULL, maxPoint.x, minPoint.y, maxPoint.x, minPoint.y + topRadius, topRadius);
-        CGPathAddArcToPoint(path, NULL, maxPoint.x, maxPoint.y, maxPoint.x - bottomRadius, maxPoint.y, bottomRadius);
-        CGPathAddArcToPoint(path, NULL, minPoint.x, maxPoint.y, minPoint.x, maxPoint.y - bottomRadius, bottomRadius);
-        CGPathAddArcToPoint(path, NULL, minPoint.x, minPoint.y, minPoint.x + topRadius, minPoint.y, topRadius);
-        CGPathCloseSubpath(path);
-        return path;
-    };
+    CGRect innerRect = CGRectInset(rect, shadowMargin, shadowMargin);
+    CGPoint minPoint = innerRect.origin;
+    CGPoint maxPoint = CGPointMake(CGRectGetMaxX(innerRect), CGRectGetMaxY(innerRect));
+    CGFloat topRadius = self.topCornerRadius, bottomRadius = self.bottomCornerRadius;
     
-    CGPathRef cgPath = roundedPath(innerRect);
-    UIBezierPath *path = [UIBezierPath bezierPathWithCGPath: cgPath];
+    CGMutablePathRef cgPath = CGPathCreateMutable();
+    CGPathMoveToPoint(cgPath, NULL, minPoint.x + topRadius, minPoint.y);
+    CGPathAddArcToPoint(cgPath, NULL, maxPoint.x, minPoint.y, maxPoint.x, minPoint.y + topRadius, topRadius);
+    CGPathAddArcToPoint(cgPath, NULL, maxPoint.x, maxPoint.y, maxPoint.x - bottomRadius, maxPoint.y, bottomRadius);
+    CGPathAddArcToPoint(cgPath, NULL, minPoint.x, maxPoint.y, minPoint.x, maxPoint.y - bottomRadius, bottomRadius);
+    CGPathAddArcToPoint(cgPath, NULL, minPoint.x, minPoint.y, minPoint.x + topRadius, minPoint.y, topRadius);
+    CGPathCloseSubpath(cgPath);
     
+    // stroke the primary shadow
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-        CGContextClipToRect(ctx, clippingRect);
+        CGContextSetShadowWithColor(ctx, kShadowOffset, kShadowBlur, self.cell.shadowColor.CGColor);
+        CGContextSetStrokeColorWithColor(ctx, self.cell.borderColor.CGColor);
+        CGContextSetLineWidth(ctx, self.cell.shadowColor ? 0.5 : 1);
+        CGContextAddPath(ctx, cgPath);
+        CGContextStrokePath(ctx);
+    });
+    
+    // draw the cell background
+    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+        CGContextAddPath(ctx, cgPath);
+        CGContextClip(ctx);
         
-        // stroke the primary shadow
-        UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-            CGContextSetShadowWithColor(ctx, kShadowOffset, kShadowBlur, self.cell.shadowColor.CGColor);
-            CGContextSetStrokeColorWithColor(ctx, self.cell.borderColor.CGColor);
-            CGContextSetLineWidth(ctx, self.cell.shadowColor ? 0.5 : 1);
-            CGContextAddPath(ctx, cgPath);
-            CGContextStrokePath(ctx);
-        });
-        
-        // draw the cell background
+        CGPoint maxLeft = CGPointMake(minPoint.x, maxPoint.y);
         
         if (self.background.selected && self.cell.selectionStyle != UITableViewCellSelectionStyleNone && self.cell.selectionGradient) {
-            [self.cell.selectionGradient drawInBezierPath: path direction: AZGradientDirectionVertical];
+            CGContextDrawLinearGradient(ctx, self.cell.selectionGradient.gradient, minPoint, maxLeft, 0);
         } else if (!self.cell.selected && self.cell.gradient) {
-            [self.cell.gradient drawInBezierPath: path direction: AZGradientDirectionVertical];
+            CGContextDrawLinearGradient(ctx, self.cell.gradient.gradient, minPoint, maxLeft, 0);
         } else {
-            [self.cell.backgroundColor setFill];
-            [path fill];
+            CGContextSetFillColorWithColor(ctx, self.cell.backgroundColor.CGColor);
+            CGContextFillRect(ctx, innerRect);
         }
-        
-        // draw the separator
-        if (self.cell.separatorColor && !self.bottomCornerRadius)
-            UIRectStrokeWithColor(innerRect, CGRectMaxYEdge, 1, self.cell.separatorColor);
     });
     
     CGPathRelease(cgPath);
+    
+    // draw the separator
+    if (self.cell.separatorColor && !self.bottomCornerRadius)
+        UIRectStrokeWithColor(innerRect, CGRectMaxYEdge, 1, self.cell.separatorColor);
 
 	UIGraphicsPopContext();
 }
