@@ -352,7 +352,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	[self az_recalculateTextPath];
 }
 
-- (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode {
+- (void)setLineBreakMode:(UILineBreakMode)lineBreakMode {
 	_lineBreakMode = lineBreakMode;
 	[self az_recalculateTextPath];
 	if (self.superview) {

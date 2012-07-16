@@ -34,7 +34,7 @@
  This property is set to NSLineBreakByTruncatingTail by default.
  
  */
-@property (nonatomic) NSLineBreakMode lineBreakMode;
+@property (nonatomic) UILineBreakMode lineBreakMode;
 
 /** The inset or outset margins for the rectangle surrounding all of the label's text content.
  
