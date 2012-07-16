@@ -11,6 +11,7 @@
 #import "AZGradientDemoViewController.h"
 #import "AZShadowedTableDemoViewController.h"
 #import "AZTableViewCellDemoViewController.h"
+#import "AZBarDemoViewController.h"
 
 @implementation AZAppearanceKitDemoAppDelegate
 
@@ -22,7 +23,8 @@
 	UIViewController *viewController2 = [[AZGradientDemoViewController alloc] initWithNibName: @"AZGradientDemoViewController" bundle:nil];
 	UIViewController *viewController3 = [[AZShadowedTableDemoViewController alloc] initWithNibName: @"AZShadowedTableDemoViewController" bundle: nil];
 	UIViewController *viewController4 = [[AZTableViewCellDemoViewController alloc] initWithStyle: UITableViewStyleGrouped];
-	self.tabBarController.viewControllers = [NSArray arrayWithObjects: viewController1, viewController2, viewController3, viewController4, nil];
+	UIViewController *viewController5 = [[AZBarDemoViewController alloc] initWithNibName: @"AZBarDemoViewController" bundle: nil];
+	self.tabBarController.viewControllers = [NSArray arrayWithObjects: viewController1, viewController2, viewController3, viewController4,  viewController5, nil];
 	self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     return YES;
