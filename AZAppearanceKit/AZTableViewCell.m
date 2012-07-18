@@ -116,6 +116,7 @@ typedef enum {
 	const CGFloat shadowMargin = kShadowBlur + MAX(ABS(kShadowOffset.width), ABS(kShadowOffset.height));
 	
 	CGRect rect = CGContextGetClipBoundingBox(ctx);
+	CGRect clippingRect = rect;
 	CGFloat topInset = 0, bottomInset = 0;
 	switch (self.sectionLocation) {
         case AZTableViewCellSectionLocationTop:
@@ -131,9 +132,9 @@ typedef enum {
         default:
 			break;
 	}
-	rect.origin.y += topInset;
-	rect.size.height -= topInset + bottomInset;
-    CGContextClipToRect(ctx, rect);
+	clippingRect.origin.y += topInset;
+	clippingRect.size.height -= topInset + bottomInset;
+    CGContextClipToRect(ctx, clippingRect);
     
     CGRect innerRect = CGRectInset(rect, shadowMargin, shadowMargin);    
     CGPathRef path = CGPathCreateByRoundingCornersInRect(innerRect, self.topCornerRadius, self.topCornerRadius, self.bottomCornerRadius, self.bottomCornerRadius);
