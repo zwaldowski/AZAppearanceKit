@@ -17,6 +17,7 @@
 - (void) az_sharedInit;
 
 @property (nonatomic, strong) NSMutableDictionary *appearanceStorage;
+@property (nonatomic, strong, readwrite) UIBezierPath *textPath;
 
 - (id)az_valueForAppearanceKeyForCurrentState:(NSString *)key;
 - (id)az_valueForAppearanceKey:(NSString *)key forState:(UIControlState)state;
@@ -80,8 +81,13 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 
 @implementation AZLabel
 
-@synthesize appearanceStorage = _appearanceStorage, textPath = _textPath;
-@synthesize text = _text, font = _font, lineBreakMode = _lineBreakMode, textEdgeInsets = _textEdgeInsets;
+@synthesize appearanceStorage = _appearanceStorage;
+@synthesize textPath = _textPath;
+
+@synthesize text = _text;
+@synthesize font = _font;
+@synthesize lineBreakMode = _lineBreakMode;
+@synthesize textEdgeInsets = _textEdgeInsets;
 
 + (UIFont *)az_defaultFont {
 	return [UIFont systemFontOfSize: 17];
@@ -93,6 +99,13 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	self.userInteractionEnabled = NO;
 	self.contentMode = UIViewContentModeRedraw;
 	[self setTextColor: [UIColor blackColor] forState: UIControlStateNormal];
+}
+
+- (id)init {
+	if ((self = [super init])) {
+		[self az_sharedInit];
+	}
+	return self;
 }
 
 - (id)initWithFrame:(CGRect)frame {
@@ -128,10 +141,6 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 			self.minimumFontSize = [aDecoder decodeFloatForKey: @"UIMinimumFontSize"];*/
 	}
 	return self;
-}
-
-- (void)dealloc {
-    CGPathRelease(_textPath);
 }
 
 - (void)az_recalculateTextPath {
@@ -239,9 +248,8 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	CGPathAddPath(mutablePath, &alignmentTransform, letters);
 	CGPathCloseSubpath(mutablePath);
 	CGPathRelease(letters);
-    if (_textPath)
-        CGPathRelease(_textPath);
-	_textPath = mutablePath;
+	self.textPath = [UIBezierPath bezierPathWithCGPath: mutablePath];
+	CGPathRelease(mutablePath);
 }
 
 - (void) setHighlighted: (BOOL) highlighted
@@ -256,51 +264,47 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	if (!self.textPath && self.text.length)
 		[self az_recalculateTextPath];
     
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    
-    CGContextTranslateCTM(ctx, 0, rect.size.height);
-    CGContextScaleCTM(ctx, 1, -1);
-    
-    CGPathRef textPath = self.textPath;
-    CGRect bounds = CGPathGetPathBoundingBox(textPath);
-    
-    CGContextSetShadowWithColor(ctx, self.shadowOffsetForCurrentState, self.shadowBlurForCurrentState, self.shadowColorForCurrentState.CGColor);
-    CGContextBeginTransparencyLayer(ctx, NULL);
-    {
-        CGContextAddPath(ctx, textPath);
-        CGContextClip(ctx);
-        
-        if (self.shouldUseGradientForCurrentState)
-        {
-            [self.gradientForCurrentState drawInRect: bounds direction: self.gradientDirectionForCurrentState];
-        }
-        else
-        {
-            CGContextSetFillColorWithColor(ctx, self.textColorForCurrentState.CGColor);
-            CGContextFillRect(ctx, bounds);
-        }
-    }
-    CGContextEndTransparencyLayer(ctx);
-
-    CGRect textBorderRect = CGRectInset(bounds, -self.innerShadowBlurForCurrentState, -self.innerShadowBlurForCurrentState);
-    textBorderRect = CGRectOffset(textBorderRect, -self.innerShadowOffsetForCurrentState.width, -self.innerShadowOffsetForCurrentState.height);
-    textBorderRect = CGRectInset(CGRectUnion(textBorderRect, bounds), -1, -1);
-        
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-        CGFloat xOffset = self.innerShadowOffsetForCurrentState.width + round(textBorderRect.size.width);
-        CGFloat yOffset = self.innerShadowOffsetForCurrentState.height;
-        CGContextSetShadowWithColor(ctx, CGSizeMake(xOffset + copysign(0.1, xOffset), yOffset + copysign(0.1, yOffset)), self.innerShadowBlurForCurrentState, self.innerShadowColorForCurrentState.CGColor);
+        CGContextTranslateCTM(ctx, 0, rect.size.height);
+        CGContextScaleCTM(ctx, 1, -1);
         
-        CGContextAddPath(ctx, textPath);
-        CGContextClip(ctx);
+        CGContextSetShadowWithColor(ctx, self.shadowOffsetForCurrentState, self.shadowBlurForCurrentState, self.shadowColorForCurrentState.CGColor);
+		CGContextBeginTransparencyLayer(ctx, NULL);
+		{
+			if (self.shouldUseGradientForCurrentState)
+			{
+				[self.gradientForCurrentState drawInBezierPath: self.textPath direction: self.gradientDirectionForCurrentState];
+			}
+			else
+			{
+				[self.textPath addClip];
+				CGContextSetFillColorWithColor(ctx, self.textColorForCurrentState.CGColor);
+				CGContextFillRect(ctx, self.textPath.bounds);
+			}
+		}
+		CGContextEndTransparencyLayer(ctx);
+		
+		CGRect textBorderRect = CGRectInset(self.textPath.bounds, -self.innerShadowBlurForCurrentState, -self.innerShadowBlurForCurrentState);
+		textBorderRect = CGRectOffset(textBorderRect, -self.innerShadowOffsetForCurrentState.width, -self.innerShadowOffsetForCurrentState.height);
+		textBorderRect = CGRectInset(CGRectUnion(textBorderRect, self.textPath.bounds), -1, -1);
+		
+		UIBezierPath *textNegativePath = [UIBezierPath bezierPathWithRect: textBorderRect];
+		[textNegativePath appendPath: self.textPath];
+		textNegativePath.usesEvenOddFillRule = YES;
         
-        CGContextTranslateCTM(ctx, -round(textBorderRect.size.width), 0);
-        CGContextSetFillColorWithColor(ctx, [[UIColor grayColor] CGColor]);
-        CGContextAddRect(ctx, textBorderRect);
-        CGContextAddPath(ctx, textPath);
-        
-        CGContextSetFillColorWithColor(ctx, [[UIColor grayColor] CGColor]);
-        CGContextEOFillPath(ctx);
+        UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+			CGFloat xOffset = self.innerShadowOffsetForCurrentState.width + round(textBorderRect.size.width);
+			CGFloat yOffset = self.innerShadowOffsetForCurrentState.height;
+			CGContextSetShadowWithColor(ctx, CGSizeMake(xOffset + copysign(0.1, xOffset), yOffset + copysign(0.1, yOffset)), self.innerShadowBlurForCurrentState, self.innerShadowColorForCurrentState.CGColor);
+			
+			[self.textPath addClip];
+			
+			CGAffineTransform transform = CGAffineTransformMakeTranslation(-round(textBorderRect.size.width), 0);
+			[textNegativePath applyTransform: transform];
+			
+			[[UIColor grayColor] setFill];
+			[textNegativePath fill];
+        });
     });
 }
 

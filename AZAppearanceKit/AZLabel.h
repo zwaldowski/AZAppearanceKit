@@ -282,10 +282,10 @@
  */
 - (AZGradientDirection)gradientDirectionForState:(UIControlState)controlState;
 
-/** Returns a path calculated with respect to the text, size,
+/** Returns a bezier path calculated with respect to the text, size,
  line break mode, and alignment properties of the label. It is
  recalculated whenever these properties or the frame of the label
  changes. */
-@property (nonatomic, readonly) CGPathRef textPath;
+@property (nonatomic, strong, readonly) UIBezierPath *textPath;
 
 @end
