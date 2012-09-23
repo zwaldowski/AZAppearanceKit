@@ -56,9 +56,8 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 	NSArray *colors = [NSArray arrayWithObjects: colorLocs count: 2];
 	static const CGFloat locations[2] = { 0.0, 1.0 };
 	
-	id ret = [self initWithColors: colors atLocations: locations colorSpace: colorSpace];
-		
-	return ret;
+	self = [self initWithColors: colors atLocations: locations colorSpace: colorSpace];
+	return self;
 }
 
 - (id)initWithColors:(NSArray *)colorArray {
@@ -69,11 +68,11 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 	}
 	CGColorSpaceRef colorSpace = CGColorGetColorSpace([colorArray.lastObject CGColor]);
 	
-	id ret = [self initWithColors: colorArray atLocations: locations colorSpace: colorSpace];
+	self = [self initWithColors: colorArray atLocations: locations colorSpace: colorSpace];
 	
 	free(locations);
 	
-	return ret;
+	return self;
 }
 
 - (id)initWithColorsAndLocations:(UIColor *)firstColor, ... {
@@ -93,24 +92,22 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 
 - (id)initWithColorsAtLocations:(NSDictionary *)colorsWithLocations {
 	NSParameterAssert(colorsWithLocations);
+
+	NSArray *locationArray = [colorsWithLocations.allKeys sortedArrayUsingSelector: @selector(compare:)];
+	NSArray *colorArray = [colorsWithLocations objectsForKeys: locationArray notFoundMarker: [NSNull null]];
+
+	CGFloat *locations = calloc(locationArray.count, sizeof(CGFloat));
+	[locationArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+		locations[idx] = [obj doubleValue];
+	}];
+
+	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+	self = [self initWithColors: colorArray atLocations: locations colorSpace: colorSpace];
+
+	free(locations);
+	CGColorSpaceRelease(colorSpace);
 	
-	if ((self = [super init])) {
-		NSArray *locationArray = [colorsWithLocations.allKeys sortedArrayUsingSelector: @selector(compare:)];
-		NSArray *colorArray = [colorsWithLocations objectsForKeys: locationArray notFoundMarker: [NSNull null]];
-		
-		CGFloat *locations = calloc(locationArray.count, sizeof(CGFloat));
-		
-		[locationArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-			locations[idx] = [obj doubleValue];
-		}];
-		
-		_colors = colorsWithLocations;
-		_colorSpace = CGColorSpaceCreateDeviceRGB();
-		_gradient = CGGradientCreateWithColors(_colorSpace, (__bridge CFArrayRef)colorArray, locations);
-		_numberOfColorStops = _colors.count;
-		
-		free(locations);
-	}
 	return self;
 }
 
