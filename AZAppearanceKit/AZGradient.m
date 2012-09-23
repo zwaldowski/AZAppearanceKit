@@ -8,6 +8,32 @@
 
 #import "AZGradient.h"
 
+extern void AZGradientSetKVCValueForKey(NSMutableDictionary *dict, NSString *key, id value) {
+	NSScanner *keyScanner = [[NSScanner alloc] initWithString: key];
+	[keyScanner scanString: @"gradient." intoString: NULL];
+
+	BOOL(^checkFor)(NSString *) = ^BOOL(NSString *fragment){
+		NSString *str = NULL;
+		[keyScanner scanString: fragment intoString: &str];
+		return !!str.length;
+	};
+
+	CGFloat position;
+	if (checkFor(@"topColor") || checkFor(@"leftColor") || checkFor(@"startingColor") || checkFor(@"startColor") || checkFor(@"firstColor")) {
+		position = 0.0;
+	} else if (checkFor(@"bottomColor") || checkFor(@"rightColor") || checkFor(@"endingColor") || checkFor(@"endColor") || checkFor(@"lastColor")) {
+		position = 1.0;
+	} else {
+		[keyScanner scanUpToString: @"(" intoString: NULL];
+		[keyScanner scanString: @"(" intoString: NULL];
+		NSString *outStr = NULL;
+		[keyScanner scanUpToString: @")" intoString: &outStr];
+		position = [outStr doubleValue];
+	}
+
+	dict[@(position)] = value;
+}
+
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
 #import "AZDrawingFunctions.h"

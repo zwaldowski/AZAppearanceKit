@@ -233,7 +233,7 @@
  @see textColor;
  @see gradientDirection;
  */
-@property (nonatomic, readonly) AZGradient *gradient;
+@property (nonatomic, strong) AZGradient *gradient;
 
 /** Sets the gradient to use to fill the text in a specified control state.
  
@@ -261,7 +261,7 @@
  @see gradient;
  
  */
-@property (nonatomic, readonly) AZGradientDirection gradientDirection;
+@property (nonatomic) AZGradientDirection gradientDirection;
 
 /** Sets the direction for the gradient used to fill the text in a
  specified control state.

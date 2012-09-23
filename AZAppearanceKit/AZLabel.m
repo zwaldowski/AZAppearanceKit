@@ -11,12 +11,15 @@
 #import "AZGradient.h"
 #import "AZDrawingFunctions.h"
 
+extern AZGradient *AZGradientSetKVCValueForKey(NSMutableDictionary *dict, id key, id value);
+
 @interface AZLabel ()
 
 + (UIFont *)az_defaultFont;
 - (void) az_sharedInit;
 
 @property (nonatomic, strong) NSMutableDictionary *appearanceStorage;
+@property (nonatomic, strong) NSMutableDictionary *gradientDict;
 @property (nonatomic, strong, readwrite) UIBezierPath *textPath;
 
 - (id)az_valueForAppearanceKeyForCurrentState:(NSString *)key;
@@ -263,6 +266,11 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	
 	if (!self.textPath && self.text.length)
 		[self az_recalculateTextPath];
+
+	if (self.gradientDict) {
+		self.gradient = [[AZGradient alloc] initWithColorsAtLocations: self.gradientDict];
+		self.gradientDict = nil;
+	}
     
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
         CGContextTranslateCTM(ctx, 0, rect.size.height);
@@ -553,6 +561,10 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return [self gradientDirectionForState: UIControlStateNormal];
 }
 
+- (void)setGradient:(AZGradient *)gradient {
+	[self setGradient: gradient forState: UIControlStateNormal];
+}
+
 - (void)setGradient:(AZGradient *)gradient forState:(UIControlState)controlState {
 	[self az_setValue: gradient forAppearanceKey: @"gradient" forState: controlState];
 }
@@ -571,6 +583,22 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 
 - (AZGradientDirection)gradientDirectionForState:(UIControlState)controlState {
 	return [[self az_valueForAppearanceKey: @"shadowBlur" forState: controlState] integerValue];
+}
+
+#pragma mark - Gradient KVC support
+
+- (void)setValue:(id)value forKeyPath:(NSString *)keyPath {
+	if ([keyPath hasPrefix: @"gradient."]) {
+		if ([keyPath isEqualToString: @"gradient.direction"]) {
+			[self setGradientDirection: [value intValue]];
+		} else {
+			if (!self.gradientDict)
+				self.gradientDict = [NSMutableDictionary dictionary];
+			AZGradientSetKVCValueForKey(self.gradientDict, keyPath, value);
+		}
+		return;
+	}
+	[super setValue:value forKeyPath: keyPath];	
 }
 
 #pragma mark - Internal state getters
