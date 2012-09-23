@@ -55,7 +55,7 @@
  
  @see gradient;
  */
-@property (nonatomic, readonly) UIColor *textColor;
+@property (nonatomic, strong) UIColor *textColor;
 
 /** Sets the color of the text to use for a specified control state.
  
@@ -86,7 +86,7 @@
  above the text.
  
  */
-@property (nonatomic, readonly) CGSize shadowOffset;
+@property (nonatomic) CGSize shadowOffset;
 
 /** Sets the shadow offset to use on the text in a specified control state.
  
@@ -110,7 +110,7 @@
  The default blur is 0, which indicates a solid, undiffused shadow.
  
  */
-@property (nonatomic, readonly) CGFloat shadowBlur;
+@property (nonatomic) CGFloat shadowBlur;
 
 /** Sets the shadow blur to use on the text in a specified control state.
  
@@ -134,7 +134,7 @@
  shadow is drawn.
  
  */
-@property (nonatomic, readonly) UIColor *shadowColor;
+@property (nonatomic, strong) UIColor *shadowColor;
 
 /** Sets the shadow color of the text used for a specified control state.
  
@@ -157,7 +157,7 @@
  The inner shadow color must be non-nil for this property to have any effect.
  
  */
-@property (nonatomic, readonly) CGSize innerShadowOffset;
+@property (nonatomic) CGSize innerShadowOffset;
 
 /** Sets the inner shadow offset to use on the text in a specified control state.
  
@@ -181,7 +181,7 @@
  The default blur is 0, which indicates a solid, undiffused shadow.
  
  */
-@property (nonatomic, readonly) CGFloat innerShadowBlur;
+@property (nonatomic) CGFloat innerShadowBlur;
 
 /** Sets the inner shadow blur to use on the text in a specified control state.
  
@@ -206,7 +206,7 @@
  inner shadow is drawn.
  
  */
-@property (nonatomic, readonly) UIColor *innerShadowColor;
+@property (nonatomic, strong) UIColor *innerShadowColor;
 
 /** Sets the inner shadow color of the text used for a specified control state.
  

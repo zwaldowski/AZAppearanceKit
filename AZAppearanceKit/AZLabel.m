@@ -437,8 +437,12 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return [self textColorForState: UIControlStateNormal];
 }
 
+- (void)setTextColor:(UIColor *)color {
+	[self setTextColor: color forState: UIControlStateNormal];
+}
+
 - (void)setTextColor:(UIColor *)color forState:(UIControlState)state {
-	return [self az_setValue: color forAppearanceKey: @"textColor" forState: state];
+	[self az_setValue: color forAppearanceKey: @"textColor" forState: state];
 }
 
 - (UIColor *)textColorForState:(UIControlState)state {
@@ -455,6 +459,18 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 
 - (UIColor *)shadowColor {
 	return [self shadowColorForState: UIControlStateNormal];
+}
+
+- (void)setShadowOffset:(CGSize)shadowOffset {
+	[self setShadowOffset: shadowOffset forState: UIControlStateNormal];
+}
+
+- (void)setShadowBlur:(CGFloat)shadowBlur {
+	[self setShadowBlur: shadowBlur forState: UIControlStateNormal];
+}
+
+- (void)setShadowColor:(UIColor *)shadowColor {
+	[self setShadowColor: shadowColor forState: UIControlStateNormal];
 }
 
 - (void)setShadowOffset:(CGSize)shadowOffset forState:(UIControlState)controlState {
@@ -493,6 +509,18 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	return [self innerShadowColorForState: UIControlStateNormal];
 }
 
+- (void)setInnerShadowOffset:(CGSize)innerShadowOffset {
+	[self setInnerShadowOffset: innerShadowOffset forState: UIControlStateNormal];
+}
+
+- (void)setInnerShadowBlur:(CGFloat)innerShadowBlur {
+	[self setInnerShadowBlur: innerShadowBlur forState: UIControlStateNormal];
+}
+
+- (void)setInnerShadowColor:(UIColor *)innerShadowColor {
+	[self setInnerShadowColor: innerShadowColor forState: UIControlStateNormal];
+}
+
 - (void)setInnerShadowOffset:(CGSize)innerShadowOffset forState:(UIControlState)controlState {
 	[self az_setValue: [NSValue valueWithCGSize: innerShadowOffset] forAppearanceKey: @"innerShadowOffset" forState: controlState];
 }
@@ -527,6 +555,10 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 
 - (void)setGradient:(AZGradient *)gradient forState:(UIControlState)controlState {
 	[self az_setValue: gradient forAppearanceKey: @"gradient" forState: controlState];
+}
+
+- (void)setGradientDirection:(AZGradientDirection)gradientDirection {
+	[self setGradientDirection: gradientDirection forState: UIControlStateNormal];
 }
 
 - (void)setGradientDirection:(AZGradientDirection)gradientDirection forState:(UIControlState)controlState {
