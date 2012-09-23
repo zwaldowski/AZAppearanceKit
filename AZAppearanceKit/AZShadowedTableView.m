@@ -149,6 +149,28 @@
 		[self.topShadow removeFromSuperview];
 		[self.bottomShadow removeFromSuperview];
 	}
+
+	self.topShadow.hidden = self.bottomShadow.hidden = self.originShadow.hidden = self.maximumShadow.hidden = self.hidesShadows;
+	self.topShadow.alpha = self.bottomShadow.alpha = self.originShadow.alpha = self.maximumShadow.alpha = self.hidesShadows ? 0.0f : 1.0f;
+
+}
+
+- (void)setHidesShadows:(BOOL)hidesShadows {
+	[self setHidesShadows: hidesShadows animated: NO];
+}
+
+- (void)setHidesShadows:(BOOL)hidesShadows animated:(BOOL)animated {
+	_hidesShadows = hidesShadows;
+
+	self.topShadow.hidden = self.bottomShadow.hidden = self.originShadow.hidden = self.maximumShadow.hidden = !hidesShadows;
+	self.topShadow.alpha = self.bottomShadow.alpha = self.originShadow.alpha = self.maximumShadow.alpha = hidesShadows ? 1.0f : 0.0f;
+
+	[UIView animateWithDuration: (1./3.) delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent animations: ^{
+		self.topShadow.alpha = self.bottomShadow.alpha = self.originShadow.alpha = self.maximumShadow.alpha = hidesShadows ? 0.0f : 1.0f;
+	} completion:^(BOOL finished) {
+		self.topShadow.hidden = self.bottomShadow.hidden = self.originShadow.hidden = self.maximumShadow.hidden = hidesShadows;
+		[self setNeedsLayout];
+	}];
 }
 
 @end
