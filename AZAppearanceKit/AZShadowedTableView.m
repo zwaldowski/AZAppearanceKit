@@ -104,7 +104,7 @@
 	
 	NSArray *indexPathsForVisibleRows = self.indexPathsForVisibleRows;
 	if (indexPathsForVisibleRows.count) {
-		NSIndexPath *firstCell = [indexPathsForVisibleRows objectAtIndex:0];
+		NSIndexPath *firstCell = indexPathsForVisibleRows[0];
 		if (firstCell.section == 0 && firstCell.row == 0) {
 			UIView *cell = [self cellForRowAtIndexPath: firstCell];
 			

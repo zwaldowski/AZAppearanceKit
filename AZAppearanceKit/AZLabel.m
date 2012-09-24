@@ -169,10 +169,8 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	};
 	CTParagraphStyleRef paragraphStyle = CTParagraphStyleCreate(settings, 2);
 	
-	NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-								(__bridge_transfer id) font, kCTFontAttributeName,
-								(__bridge_transfer id) paragraphStyle, kCTParagraphStyleAttributeName,
-								nil];
+	NSDictionary *attributes = @{(id)kCTFontAttributeName: (__bridge_transfer id) font,
+								(id)kCTParagraphStyleAttributeName: (__bridge_transfer id) paragraphStyle};
 	NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString: self.text attributes: attributes];
 	
 	CTLineRef line = CTLineCreateWithAttributedString((__bridge CFAttributedStringRef) attributedString);
@@ -413,26 +411,26 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 	if (!self.appearanceStorage)
 		return nil;
 	
-	id stateKey = [NSNumber numberWithUnsignedInteger: state];
-	NSMutableDictionary *stateStorage = [self.appearanceStorage objectForKey: stateKey];
+	id stateKey = @(state);
+	NSMutableDictionary *stateStorage = (self.appearanceStorage)[stateKey];
 	
-	return [stateStorage objectForKey: key];
+	return stateStorage[key];
 }
 
 - (void)az_setValue:(id)value forAppearanceKey:(NSString *)key forState:(UIControlState)state {
 	if (!self.appearanceStorage)
 		self.appearanceStorage = [NSMutableDictionary dictionary];
 	
-	id stateKey = [NSNumber numberWithUnsignedInteger: state];
-	NSMutableDictionary *stateStorage = [self.appearanceStorage objectForKey: stateKey];
+	id stateKey = @(state);
+	NSMutableDictionary *stateStorage = (self.appearanceStorage)[stateKey];
 	
 	if (!stateStorage) {
 		stateStorage = [NSMutableDictionary dictionary];
-		[self.appearanceStorage setObject: stateStorage forKey: stateKey];
+		(self.appearanceStorage)[stateKey] = stateStorage;
 	}
 	
 	if (value) {
-		[stateStorage setObject: value forKey: key];
+		stateStorage[key] = value;
 	} else {
 		[stateStorage removeObjectForKey: key];
 	}
@@ -485,7 +483,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 }
 
 - (void)setShadowBlur:(CGFloat)shadowBlur forState:(UIControlState)controlState {
-	[self az_setValue: [NSNumber numberWithDouble: shadowBlur] forAppearanceKey: @"shadowBlur" forState: controlState];
+	[self az_setValue: @(shadowBlur) forAppearanceKey: @"shadowBlur" forState: controlState];
 }
 
 - (void)setShadowColor:(UIColor *)shadowColor forState:(UIControlState)controlState {
@@ -533,7 +531,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 }
 
 - (void)setInnerShadowBlur:(CGFloat)innerShadowBlur forState:(UIControlState)controlState {
-	[self az_setValue: [NSNumber numberWithDouble: innerShadowBlur] forAppearanceKey: @"innerShadowBlur" forState: controlState];
+	[self az_setValue: @(innerShadowBlur) forAppearanceKey: @"innerShadowBlur" forState: controlState];
 }
 
 - (void)setInnerShadowColor:(UIColor *)innerShadowColor forState:(UIControlState)controlState {
@@ -573,7 +571,7 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 }
 
 - (void)setGradientDirection:(AZGradientDirection)gradientDirection forState:(UIControlState)controlState {
-	[self az_setValue: [NSNumber numberWithInteger: gradientDirection] forAppearanceKey: @"gradientDirection" forState: controlState];
+	[self az_setValue: @(gradientDirection) forAppearanceKey: @"gradientDirection" forState: controlState];
 }
 
 - (AZGradient *)gradientForState:(UIControlState)controlState {

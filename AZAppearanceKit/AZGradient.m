@@ -73,23 +73,18 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 #pragma mark - Initializers
 
 - (id)initWithStartingColor:(UIColor *)startingColor endingColor:(UIColor *)endingColor {
-	CGColorRef start = startingColor.CGColor;
-	CGColorRef end = endingColor.CGColor;
-	CGColorSpaceRef colorSpace = CGColorGetColorSpace(start);
-		
-	const id colorLocs[2] = { (__bridge id)start, (__bridge id)end };
-	NSArray *colors = [NSArray arrayWithObjects: colorLocs count: 2];
-	static const CGFloat locations[2] = { 0.0, 1.0 };
-	
-	self = [self initWithColors: colors atLocations: locations colorSpace: colorSpace];
-	return self;
+	CGColorSpaceRef colorSpace = CGColorGetColorSpace(startingColor.CGColor);
+	NSArray *colors = @[ (__bridge id)startingColor.CGColor, (__bridge id)endingColor.CGColor ];
+	const CGFloat locations[2] = { 0.0, 1.0 };
+	return [self initWithColors: colors atLocations: locations colorSpace: colorSpace];
 }
 
 - (id)initWithColors:(NSArray *)colorArray {
 	NSUInteger count = colorArray.count;
+	
 	CGFloat *locations = calloc(count, sizeof(CGFloat));
 	for (NSUInteger i = 0; i < count; i++) {
-		locations[i] = (i) ? (CGFloat)i/(CGFloat)(count-1) : 0.0f;
+		locations[i] = i ? (CGFloat)i/(CGFloat)(count-1) : 0.0f;
 	}
 	CGColorSpaceRef colorSpace = CGColorGetColorSpace([colorArray.lastObject CGColor]);
 	
@@ -107,7 +102,7 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 	va_start(arguments, firstColor);
 	for (UIColor *color = firstColor; color; color = va_arg(arguments, UIColor *)) {
 		[newColors addObject:color];
-		[newLocations addObject: [NSNumber numberWithDouble: va_arg(arguments, double)]];
+		[newLocations addObject: @(va_arg(arguments, double))];
 	}
 	va_end(arguments);
 	
@@ -155,7 +150,7 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 				[NSException raise: NSInvalidArgumentException format: @"Colors must be of type UIColor or CGColorRef. An object of class %@ was passed.", [color class]];
 			}
 			
-			[locationArray addObject: [NSNumber numberWithDouble: locations[idx]]];
+			[locationArray addObject: @(locations[idx])];
 		}];
 		
 		_colors = [NSDictionary dictionaryWithObjects: colorArray forKeys: locationArray];
@@ -278,33 +273,31 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 
 - (void)getColor:(UIColor **)outColor location:(CGFloat *)outLocation atIndex:(NSInteger)index {
 	NSArray *sortedKeys = [_colors.allKeys sortedArrayUsingSelector:@selector(compare:)];
-	NSNumber *key = [sortedKeys objectAtIndex: index];
-	CGColorRef color = (__bridge CGColorRef)[_colors objectForKey: key];
+	CGColorRef color = (__bridge CGColorRef)_colors[sortedKeys[index]];
 	
 	if (outColor)
 		*outColor = [UIColor colorWithCGColor: color];
-	
+
 	if (outLocation)
-		*outLocation = [key doubleValue];
+		*outLocation = [sortedKeys[index] doubleValue];
 }
 
 - (UIColor *)interpolatedColorAtLocation:(CGFloat)location {
 	// Eliminate values outside of 0 <--> 1
 	location = MIN(MAX(0, location), 1);
 	
-	__block NSUInteger secondIndex;
+	__block NSUInteger index;
 	
 	NSArray *sortedKeys = [_colors.allKeys sortedArrayUsingSelector:@selector(compare:)];
 	[sortedKeys enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
 		if ([obj doubleValue] > location) {
-			secondIndex = idx;
+			index = idx;
 			*stop = YES;
 		}
 	}];
 	
-	NSNumber *firstKey = [sortedKeys objectAtIndex: secondIndex-1], *secondKey = [sortedKeys objectAtIndex: secondIndex];
-	UIColor *firstColor = [_colors objectForKey: firstKey], *secondColor = [_colors objectForKey: secondKey];
-	CGFloat firstLocation = [firstKey doubleValue], secondLocation = [secondKey doubleValue];
+	UIColor *firstColor = _colors[sortedKeys[index-1]], *secondColor = _colors[sortedKeys[index]];
+	CGFloat firstLocation = [sortedKeys[index-1] doubleValue], secondLocation = [sortedKeys[index] doubleValue];
 	
 	// Convert to common RGBA colorspace if needed
 	if (CGColorGetColorSpace(firstColor.CGColor) != CGColorGetColorSpace(secondColor.CGColor)) {

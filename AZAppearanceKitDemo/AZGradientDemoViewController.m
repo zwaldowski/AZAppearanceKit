@@ -48,7 +48,7 @@
 		[_gradients addObject: [[AZGradient alloc] initWithStartingColor: [UIColor orangeColor] endingColor: [UIColor brownColor]]];
 		[_gradients addObject: [[AZGradient alloc] initWithStartingColor: [UIColor darkGrayColor] endingColor: [UIColor lightGrayColor]]];
 	}
-	AZGradient *gradient = [_gradients objectAtIndex: (rand() % _gradients.count)];
+	AZGradient *gradient = _gradients[(rand() % _gradients.count)];
 	[self.gradientView setGradient: gradient animated: self.animationEnabled];
 }
 
