@@ -9,10 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "AZGradient.h"
 
-typedef enum _AZGradientViewType {
+typedef NS_ENUM(NSUInteger, AZGradientViewType) {
 	AZGradientViewTypeLinear,
 	AZGradientViewTypeRadial
-} AZGradientViewType;
+};
 
 @interface AZGradientView : UIView
 

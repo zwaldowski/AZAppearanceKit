@@ -14,9 +14,7 @@ extern NSNumber *AZGradientGetKeyForKVC(NSString *key) {
 	[keyScanner scanString: @"gradient." intoString: NULL];
 
 	BOOL(^checkFor)(NSString *) = ^BOOL(NSString *fragment){
-		NSString *str = NULL;
-		[keyScanner scanString: fragment intoString: &str];
-		return !!str.length;
+		return [keyScanner scanString: fragment intoString: NULL];
 	};
 
 	CGFloat position;

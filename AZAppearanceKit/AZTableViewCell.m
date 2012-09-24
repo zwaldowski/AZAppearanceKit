@@ -12,13 +12,13 @@
 #import "AZGradient.h"
 #import "AZDrawingFunctions.h"
 
-typedef enum {
-    AZTableViewCellSectionLocationNone = 0,
-    AZTableViewCellSectionLocationMiddle = 1,
-	AZTableViewCellSectionLocationTop = 2,
-    AZTableViewCellSectionLocationBottom = 3,
-    AZTableViewCellSectionLocationAlone = 4
-} AZTableViewCellSectionLocation;
+typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
+    AZTableViewCellSectionLocationNone,
+    AZTableViewCellSectionLocationMiddle,
+	AZTableViewCellSectionLocationTop,
+    AZTableViewCellSectionLocationBottom,
+    AZTableViewCellSectionLocationAlone
+};
 
 #pragma mark - Background hackery
 

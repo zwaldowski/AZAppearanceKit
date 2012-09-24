@@ -82,10 +82,10 @@
 
 #endif
 
-typedef enum _AZGradientDirection {
+typedef NS_ENUM(NSUInteger, AZGradientDirection) {
 	AZGradientDirectionVertical,
 	AZGradientDirectionHorizontal
-} AZGradientDirection;
+};
 
 @interface AZGradient (AZGradientFeatures)
 
