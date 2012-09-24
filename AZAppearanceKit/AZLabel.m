@@ -11,8 +11,6 @@
 #import "AZGradient.h"
 #import "AZDrawingFunctions.h"
 
-extern AZGradient *AZGradientSetKVCValueForKey(NSMutableDictionary *dict, id key, id value);
-
 @interface AZLabel ()
 
 + (UIFont *)az_defaultFont;
@@ -588,13 +586,13 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 #pragma mark - Gradient KVC support
 
 - (void)setValue:(id)value forKeyPath:(NSString *)keyPath {
-	if ([keyPath hasPrefix: @"gradient."]) {
-		if ([keyPath isEqualToString: @"gradient.direction"]) {
-			[self setGradientDirection: [value intValue]];
+	if ([keyPath rangeOfString: @"gradient."].location != NSNotFound) {
+		if ([keyPath rangeOfString: @"gradient.direction"].location != NSNotFound) {
+			self.gradientDirection = [value intValue];
 		} else {
 			if (!self.gradientDict)
 				self.gradientDict = [NSMutableDictionary dictionary];
-			AZGradientSetKVCValueForKey(self.gradientDict, keyPath, value);
+			self.gradientDict[AZGradientGetKeyForKVC(keyPath)] = value;
 		}
 		return;
 	}

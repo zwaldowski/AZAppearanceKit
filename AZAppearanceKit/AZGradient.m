@@ -8,8 +8,9 @@
 
 #import "AZGradient.h"
 
-extern void AZGradientSetKVCValueForKey(NSMutableDictionary *dict, NSString *key, id value) {
+extern NSNumber *AZGradientGetKeyForKVC(NSString *key) {
 	NSScanner *keyScanner = [[NSScanner alloc] initWithString: key];
+	[keyScanner scanUpToString: @"gradient." intoString: NULL];
 	[keyScanner scanString: @"gradient." intoString: NULL];
 
 	BOOL(^checkFor)(NSString *) = ^BOOL(NSString *fragment){
@@ -31,7 +32,7 @@ extern void AZGradientSetKVCValueForKey(NSMutableDictionary *dict, NSString *key
 		position = [outStr doubleValue];
 	}
 
-	dict[@(position)] = value;
+	return @(position);
 }
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED

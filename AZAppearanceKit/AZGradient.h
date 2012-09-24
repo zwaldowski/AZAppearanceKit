@@ -95,3 +95,5 @@ typedef enum _AZGradientDirection {
 - (void)drawInBezierPath:(id)path direction:(AZGradientDirection)direction;
 
 @end
+
+extern NSNumber *AZGradientGetKeyForKVC(NSString *key);
