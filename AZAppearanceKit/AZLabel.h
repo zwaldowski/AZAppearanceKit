@@ -9,6 +9,23 @@
 #import <UIKit/UIKit.h>
 #import "AZGradient.h"
 
+/** AZLabel is a styled drop-in replacement for text-only unattributed UILabel.
+ 
+ Labels can be be created in Interface Builder using the UILabel template and
+ then changing the class to AZLabel. Use user-defined attributes for the other
+ AZLabel properties.
+ 
+ A gradient can be initialized from Interface Builder using a keypath beginning
+ with "gradient" and ending as a representation of a position: `@(0.5)`,
+ `(0.5)`, `topColor`, `bottomColor`, `leftColor`, `rightColor`, `startColor`,
+ or `endColor`.
+ 
+ Includes code by [Ole Begemann](https://github.com/ole/Animated-Paths).
+ Licensed under MIT. Copyright (c) 2010 Ole Begemann. All rights reserved.
+ 
+ Includes code by [Sam King](http://www.codeproject.com/Articles/109729/Low-level-text-rendering).
+ Licensed under [CPOL](http://www.codeproject.com/info/cpol10.aspx). Copyright (c) 2010 Sam King. All rights reserved.
+ */
 @interface AZLabel : UIControl <UIAppearance>
 
 /** The text displayed by the label.
@@ -220,6 +237,11 @@
  
  The default value for this property is nil, which means textColor is used
  instead.
+
+ A gradient can be initialized from Interface Builder using a keypath beginning
+ with "gradient" and ending as a representation of a position: `@(0.5)`,
+ `(0.5)`, `topColor`, `bottomColor`, `leftColor`, `rightColor`, `startColor`,
+ or `endColor`.
  
  @see textColor;
  @see gradientDirection;

@@ -5,6 +5,12 @@
 //  Created by Zachary Waldowski on 3/17/12.
 //  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
+//  Includes code by Ole Begemann. Licensed under MIT.
+//  Copyright 2010. All rights reserved.
+//
+//  Includes code by Sam King. Licensed under CPOL 1.02.
+//  Copyright 2010. All rights reserved.
+//
 
 #import <CoreText/CoreText.h>
 #import "AZLabel.h"
@@ -145,11 +151,6 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 }
 
 - (void)az_recalculateTextPath {
-	// Create path from text
-    // See: http://www.codeproject.com/KB/iPhone/Glyph.aspx
-    // License: The Code Project Open License (CPOL) 1.02 http://www.codeproject.com/info/cpol10.aspx
-	
-	// See: https://github.com/ole/Animated-Paths/blob/0347e90738cedf4f543c2cb9ab97d18780d461e2/Classes/AnimatedPathViewController.m#L86
 	CGRect rect = self.bounds;
 	
 	if (!self.font || !self.text)
