@@ -18,17 +18,8 @@
 @end
 
 @implementation AZGradientDemoViewController
-@synthesize gradientView;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-		self.title = NSLocalizedString(@"Gradient", @"Gradient");
-		self.tabBarItem.image = [UIImage imageNamed:@"AZGradientDemoViewController"];
-    }
-    return self;
-}
+@synthesize gradientView;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {

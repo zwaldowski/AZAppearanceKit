@@ -7,22 +7,9 @@
 //
 
 #import "AZShadowedTableDemoViewController.h"
-
-@interface AZShadowedTableDemoViewController ()
-
-@end
+#import "AZShadowedTableView.h"
 
 @implementation AZShadowedTableDemoViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-		self.title = NSLocalizedString(@"Table Shadow", @"Table Shadow");
-		self.tabBarItem.image = [UIImage imageNamed:@"AZShadowedTableDemoViewController"];
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -52,16 +39,17 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *const CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (!cell)
-		cell = [[UITableViewCell alloc] initWithStyle: UITableViewCellStyleDefault reuseIdentifier: CellIdentifier];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"MainCell"];
 	
 	cell.contentView.backgroundColor = [UIColor whiteColor];
     cell.textLabel.text = [NSString stringWithFormat:@"Cell %i", indexPath.row];
     cell.textLabel.backgroundColor = [UIColor clearColor];
     
     return cell;
+}
+
+- (IBAction)switchToggled:(id)sender {
+	[(AZShadowedTableView *)self.tableView setHidesShadows: ![sender isOn] animated: YES];
 }
 
 @end

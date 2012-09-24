@@ -8,4 +8,6 @@
 
 @interface AZShadowedTableDemoViewController : UITableViewController
 
+- (IBAction)switchToggled:(id)sender;
+
 @end

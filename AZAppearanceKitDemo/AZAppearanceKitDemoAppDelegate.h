@@ -8,10 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AZAppearanceKitDemoAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
+@interface AZAppearanceKitDemoAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
-@property (strong, nonatomic) UITabBarController *tabBarController;
 
 @end
