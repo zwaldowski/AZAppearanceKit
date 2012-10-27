@@ -19,6 +19,7 @@
 		6C41F20D15B46FED00572729 /* AZToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C41F20A15B46FED00572729 /* AZToolbar.m */; };
 		6C4D4703160F9CAE00DC08C7 /* AZAppearanceKitDemo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6C4D4702160F9CAE00DC08C7 /* AZAppearanceKitDemo.storyboard */; };
 		6C4D4745160FA13000DC08C7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C4D4744160FA13000DC08C7 /* Default-568h@2x.png */; };
+		6C859435163B86F000DAB469 /* AZCellTableViewControllerDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C859434163B86F000DAB469 /* AZCellTableViewControllerDemo.m */; };
 		6CCEB1AD15916BCA001266F3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1AC15916BCA001266F3 /* UIKit.framework */; };
 		6CCEB1AF15916BCA001266F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1AE15916BCA001266F3 /* Foundation.framework */; };
 		6CCEB1B115916BCA001266F3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1B015916BCA001266F3 /* CoreGraphics.framework */; };
@@ -59,6 +60,8 @@
 		6C41F20F15B4701100572729 /* AZNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZNavigationBar.h; sourceTree = "<group>"; };
 		6C4D4702160F9CAE00DC08C7 /* AZAppearanceKitDemo.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = AZAppearanceKitDemo.storyboard; sourceTree = "<group>"; };
 		6C4D4744160FA13000DC08C7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		6C859433163B86F000DAB469 /* AZCellTableViewControllerDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZCellTableViewControllerDemo.h; sourceTree = "<group>"; };
+		6C859434163B86F000DAB469 /* AZCellTableViewControllerDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZCellTableViewControllerDemo.m; sourceTree = "<group>"; };
 		6CCEB1A815916BCA001266F3 /* AZAppearanceKitDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AZAppearanceKitDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CCEB1AC15916BCA001266F3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6CCEB1AE15916BCA001266F3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -145,6 +148,8 @@
 				6CD291F3159E233700736631 /* AZGradientDemoViewController.m */,
 				6CD291DA159DF33100736631 /* AZShadowedTableDemoViewController.h */,
 				6CD291DB159DF33100736631 /* AZShadowedTableDemoViewController.m */,
+				6C859433163B86F000DAB469 /* AZCellTableViewControllerDemo.h */,
+				6C859434163B86F000DAB469 /* AZCellTableViewControllerDemo.m */,
 				6CCEB1B315916BCA001266F3 /* Supporting Files */,
 			);
 			path = AZAppearanceKitDemo;
@@ -285,6 +290,7 @@
 				6C41F20B15B46FED00572729 /* AZNavigationBar.m in Sources */,
 				6C41F20C15B46FED00572729 /* AZTabBar.m in Sources */,
 				6C41F20D15B46FED00572729 /* AZToolbar.m in Sources */,
+				6C859435163B86F000DAB469 /* AZCellTableViewControllerDemo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
