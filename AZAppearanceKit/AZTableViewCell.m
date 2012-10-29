@@ -54,15 +54,20 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 - (id)init {
 	if ((self = [super init])) {
 		CALayer *mask = [CALayer layer];
+		CABasicAnimation *boundsAnim = [CABasicAnimation animationWithKeyPath: @"bounds"];
+		boundsAnim.fillMode = kCAFillModeForwards;
+		mask.actions = @{ @"bounds" : boundsAnim};
 		mask.backgroundColor = [UIColor blackColor].CGColor;
 		self.mask = mask;
 		self.masksToBounds = NO;
+		self.shadowOffset = CGSizeMake(0, 1);
+		self.shadowRadius = 3.0f;
 	}
 	return self;
 }
 
 - (id<CAAction>)actionForKey:(NSString *)event {
-	if ([event isEqualToString: @"topCornerRadius"] || [event isEqualToString: @"bottomCornerRadius"]) {
+	if ([event isEqualToString: @"topCornerRadius"] || [event isEqualToString: @"bottomCornerRadius"] || [event isEqualToString: @"shadowPath"]) {
 		CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath: event];
 		animation.fromValue = [self.presentationLayer valueForKey: event];
 		animation.fillMode = kCAFillModeForwards;
@@ -142,6 +147,7 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
     // draw the separator
     if (self.cell.separatorColor && !bottomRadius) {
 		[self.cell.separatorColor setStroke];
+		path.lineWidth = 1;
 		[path strokeEdge: CGRectMaxYEdge];
 	}
 
@@ -159,7 +165,7 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 }
 
 - (BOOL)isAnimating {
-	return !!self.layer.animationKeys;
+	return [[UIView valueForKey:@"_isInAnimationBlock"] boolValue];
 }
 
 - (id) initWithCell:(AZTableViewCell *)cell selected:(BOOL)selected
@@ -169,7 +175,6 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
         self.backgroundColor = [UIColor clearColor];
 		self.layer.contentsScale = self.layer.rasterizationScale = [[UIScreen mainScreen] scale];
 		self.layer.shouldRasterize = YES;
-//		self.layer.drawsAsynchronously = YES;
 		_cell = cell;
 		_selected = selected;
     }
@@ -205,8 +210,6 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 		} else {
 			anim();
 		}
-	} else {
-		[super setFrame: frame];
 	}
 }
 
@@ -223,7 +226,6 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
             break;
 	}
 }
-
 
 - (CGRect)az_contentsCenter:(BOOL)animated {
 	if (animated) {
@@ -261,40 +263,30 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 }
 
 - (void)layoutSubviews {
-	const CGFloat kShadowBlur = 3.0f;
-	const CGSize kShadowOffset = CGSizeMake(0, 1);
-	const CGFloat shadowMargin = (kShadowBlur * 2) + MAX(ABS(kShadowOffset.width), ABS(kShadowOffset.height));
-	self.layer.contentsRect = [self az_contentsRect: (_az_animationCount > 0) ? YES : NO];
-	self.layer.contentsCenter = [self az_contentsCenter: (_az_animationCount > 0) ? YES : NO];
-	self.layer.shadowOffset = kShadowOffset;
-	self.layer.shadowRadius = kShadowBlur;
+	//NSLog(@"Is animating %i", self.isAnimating);
+	self.layer.contentsRect = [self az_contentsRect: self.isAnimating];
+	self.layer.contentsCenter = [self az_contentsCenter: self.isAnimating];
 	self.layer.shadowColor = self.cell.shadowColor.CGColor;
 	self.layer.shadowOpacity = CGColorGetAlpha(self.layer.shadowColor);
 	[self.layer setNeedsDisplay];
-	
+
+	const CGFloat shadowMargin = (self.layer.shadowRadius * 2) + MAX(ABS(self.layer.shadowOffset.width), ABS(self.layer.shadowOffset.height));
 	UIEdgeInsets insets = UIEdgeInsetsZero;
-	
 	switch (self.sectionLocation) {
 		case AZTableViewCellSectionLocationTop:
 			insets.top = insets.left = insets.right = -shadowMargin;
 			break;
-			
 		case AZTableViewCellSectionLocationMiddle:
 			insets.left = insets.right = -shadowMargin;
 			break;
-			
 		case AZTableViewCellSectionLocationBottom:
 			insets.left = insets.bottom = insets.right = -shadowMargin;
-			break;
-			
+			break;			
 		case AZTableViewCellSectionLocationAlone:
 			insets.top = insets.left = insets.right = insets.bottom = -shadowMargin;
 			break;
-			
-		default:
-			break;
+		default: break;
 	}
-
 	self.layer.mask.frame = UIEdgeInsetsInsetRect(self.layer.bounds, insets);
 }
 
@@ -369,11 +361,11 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 #pragma mark - Properties
 
 - (void)setBackgroundView:(UIView *)backgroundView {
-	[NSException raise: NSInvalidArgumentException format: @"%@ is unavailable on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])];
+	[self doesNotRecognizeSelector: _cmd];
 }
 
 - (void)setSelectedBackgroundView:(UIView *)selectedBackgroundView {
-	[NSException raise: NSInvalidArgumentException format: @"%@ is unavailable on %@", NSStringFromSelector(_cmd), NSStringFromClass([self class])];
+	[self doesNotRecognizeSelector: _cmd];
 }
 
 #pragma mark - UITableViewCell
@@ -396,6 +388,5 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	
 	[self setNeedsLayout];
 }
-
 
 @end
