@@ -70,6 +70,18 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	return [self.delegate cell];
 }
 
+- (void)layoutSublayers
+{
+	[super layoutSublayers];
+	self.masksToBounds = NO;
+	
+	CGFloat topCornerRadius = self.topCornerRadius;
+	CGFloat bottomCornerRadius = self.bottomCornerRadius;
+    CGPathRef path = CGPathCreateByRoundingCornersInRect(self.bounds, topCornerRadius, topCornerRadius, bottomCornerRadius, bottomCornerRadius);
+	self.shadowPath = path;
+	CGPathRelease(path);
+}
+
 - (void)drawInContext:(CGContextRef)ctx {
 	if (!self.cell.tableViewIsGrouped)
 		return;
@@ -166,7 +178,7 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
         self.backgroundColor = [UIColor clearColor];
 		self.layer.contentsScale = self.layer.rasterizationScale = [[UIScreen mainScreen] scale];
 		self.layer.shouldRasterize = YES;
-		self.layer.drawsAsynchronously = YES;
+//		self.layer.drawsAsynchronously = YES;
 		_cell = cell;
 		_selected = selected;
     }
@@ -263,7 +275,39 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	const CGFloat shadowMargin = kShadowBlur + MAX(ABS(kShadowOffset.width), ABS(kShadowOffset.height));
 	self.layer.contentsRect = [self az_contentsRect: (_az_animationCount > 0) ? YES : NO];
 	self.layer.contentsCenter = [self az_contentsCenter: (_az_animationCount > 0) ? YES : NO];
+	self.layer.shadowOffset = kShadowOffset;
+	self.layer.shadowRadius = kShadowBlur;
+	self.layer.shadowColor = self.cell.shadowColor.CGColor;
+	self.layer.shadowOpacity = 1.0;
 	[self.layer setNeedsDisplay];
+	
+	UIEdgeInsets insets = UIEdgeInsetsZero;
+	
+	switch (self.sectionLocation) {
+		case AZTableViewCellSectionLocationTop:
+			insets.top = insets.left = insets.right = -shadowMargin;
+			break;
+			
+		case AZTableViewCellSectionLocationMiddle:
+			insets.left = insets.right = -shadowMargin;
+			break;
+			
+		case AZTableViewCellSectionLocationBottom:
+			insets.left = insets.bottom = insets.right = -shadowMargin;
+			break;
+			
+		case AZTableViewCellSectionLocationAlone:
+			insets.top = insets.left = insets.right = insets.bottom = -shadowMargin;
+			break;
+			
+		default:
+			break;
+	}
+	
+	CALayer *mask = [CALayer layer];
+	mask.backgroundColor = [UIColor blackColor].CGColor;
+	mask.frame = UIEdgeInsetsInsetRect(self.layer.bounds, insets);
+	self.layer.mask = mask;
 }
 
 - (void)setSectionLocation:(AZTableViewCellSectionLocation)location
