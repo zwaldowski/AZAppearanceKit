@@ -48,16 +48,28 @@ extern CGPathRef CGPathCreateWithRoundedRect(CGRect rect, CGFloat cornerRadius) 
 }
 
 extern CGPathRef CGPathCreateByRoundingCornersInRect(CGRect rect, CGFloat topLeftRadius, CGFloat topRightRadius, CGFloat bottomLeftRadius, CGFloat bottomRightRadius) {
-    CGPoint minPoint = rect.origin;
-    CGPoint maxPoint = CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
-
+	const CGPoint topLeft = rect.origin;
+    const CGPoint topRight = CGPointMake(CGRectGetMaxX(rect), CGRectGetMinY(rect));
+    const CGPoint bottomRight = CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
+    const CGPoint bottomLeft = CGPointMake(CGRectGetMinX(rect), CGRectGetMaxY(rect));
     CGMutablePathRef path = CGPathCreateMutable();
-    CGPathMoveToPoint(path, NULL, minPoint.x + topLeftRadius, minPoint.y);
-    CGPathAddArcToPoint(path, NULL, maxPoint.x, minPoint.y, maxPoint.x, minPoint.y + topRightRadius, topRightRadius);
-    CGPathAddArcToPoint(path, NULL, maxPoint.x, maxPoint.y, maxPoint.x - bottomRightRadius, maxPoint.y, bottomRightRadius);
-    CGPathAddArcToPoint(path, NULL, minPoint.x, maxPoint.y, minPoint.x, maxPoint.y - bottomLeftRadius, bottomLeftRadius);
-    CGPathAddArcToPoint(path, NULL, minPoint.x, minPoint.y, minPoint.x + topLeftRadius, minPoint.y, topLeftRadius);
+
+	CGPathMoveToPoint(path, NULL, topLeft.x + topLeftRadius, topLeft.y);
+
+	CGPathAddLineToPoint(path, NULL, topRight.x - topRightRadius, topRight.y);
+	CGPathAddCurveToPoint(path, NULL, topRight.x, topRight.y, topRight.x, topRight.y + topRightRadius, topRight.x, topRight.y + topRightRadius);
+
+	CGPathAddLineToPoint(path, NULL, bottomRight.x, bottomRight.y - bottomRightRadius);
+	CGPathAddCurveToPoint(path, NULL, bottomRight.x, bottomRight.y, bottomRight.x - bottomRightRadius, bottomRight.y, bottomRight.x - bottomRightRadius, bottomRight.y);
+
+	CGPathAddLineToPoint(path, NULL, bottomLeft.x + bottomLeftRadius, bottomLeft.y);
+	CGPathAddCurveToPoint(path, NULL, bottomLeft.x, bottomLeft.y, bottomLeft.x, bottomLeft.y - bottomLeftRadius, bottomLeft.x, bottomLeft.y - bottomLeftRadius);
+
+	CGPathAddLineToPoint(path, NULL, topLeft.x, topLeft.y + topLeftRadius);
+	CGPathAddCurveToPoint(path, NULL, topLeft.x, topLeft.y, topLeft.x + topLeftRadius, topLeft.y, topLeft.x + topLeftRadius, topLeft.y);
+
     CGPathCloseSubpath(path);
+	
     return path;
 }
 
