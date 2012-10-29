@@ -84,8 +84,8 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 {
 	[super layoutSublayers];
 
-	CGFloat topCornerRadius = self.topCornerRadius;
-	CGFloat bottomCornerRadius = self.bottomCornerRadius;
+	CGFloat topRadius = self.topCornerRadius;
+	CGFloat bottomRadius = self.bottomCornerRadius;
 	CGRect rect = self.bounds;
 	const CGFloat shadowMargin = (2*self.shadowRadius);
 	CGFloat topInset = 0, bottomInset = 0;
@@ -104,7 +104,8 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	}
 	rect.origin.y -= topInset;
 	rect.size.height += topInset + bottomInset;
-    CGPathRef path =  CGPathCreateByRoundingCornersInRect(rect, topCornerRadius, topCornerRadius, bottomCornerRadius, bottomCornerRadius);
+	
+	CGPathRef path = CGPathCreateByRoundingCornersInRect(rect, topRadius, topRadius, bottomRadius, bottomRadius);
 	self.shadowPath = path;
 	CGPathRelease(path);
 }
@@ -116,43 +117,33 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	UIGraphicsPushContext(ctx);
 
 	CGRect rect = CGContextGetClipBoundingBox(ctx);
-
-	CGFloat topCornerRadius = self.topCornerRadius;
-	CGFloat bottomCornerRadius = self.bottomCornerRadius;
-    CGPathRef path = CGPathCreateByRoundingCornersInRect(rect, topCornerRadius, topCornerRadius, bottomCornerRadius, bottomCornerRadius);
+	CGFloat topRadius = self.topCornerRadius;
+	CGFloat bottomRadius = self.bottomCornerRadius;
+	
+	UIBezierPath *path = [UIBezierPath bezierPathByRoundingCornersInRect: rect topLeft: topRadius topRight: topRadius bottomLeft: bottomRadius bottomRight: bottomRadius];
+	
+	[self.cell.backgroundColor setFill];
+	[self.cell.borderColor setStroke];
 
     // stroke the primary shadow
-    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-        //CGContextSetShadowWithColor(ctx, kShadowOffset, kShadowBlur, self.cell.shadowColor.CGColor);
-        CGContextSetStrokeColorWithColor(ctx, self.cell.borderColor.CGColor);
-        CGContextSetLineWidth(ctx, self.cell.shadowColor ? 0.5 : 1);
-        CGContextAddPath(ctx, path);
-        CGContextStrokePath(ctx);
-    });
+	path.lineWidth = self.shadowColor ? 0.5 : 1;
+	[path stroke];
 
     // draw the cell background
-    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-        CGContextAddPath(ctx, path);
-        CGContextClip(ctx);
-
-        CGPoint start = rect.origin;
-        CGPoint end = CGPointMake(start.x, CGRectGetMaxY(rect));
-
-        if ([self.delegate isSelected] && self.cell.selectionStyle != UITableViewCellSelectionStyleNone && self.cell.selectionGradient) {
-            CGContextDrawLinearGradient(ctx, self.cell.selectionGradient.gradient, start, end, 0);
-        } else if (!self.cell.selected && self.cell.gradient) {
-            CGContextDrawLinearGradient(ctx, self.cell.gradient.gradient, start, end, 0);
-        } else {
-            CGContextSetFillColorWithColor(ctx, self.cell.backgroundColor.CGColor);
-            CGContextFillRect(ctx, rect);
-        }
-    });
-
-    CGPathRelease(path);
+	if ([self.delegate isSelected] && self.cell.selectionStyle != UITableViewCellSelectionStyleNone && self.cell.selectionGradient) {
+		[self.cell.selectionGradient drawInBezierPath: path direction: AZGradientDirectionVertical];
+	} else if (!self.cell.selected && self.cell.gradient) {
+		[self.cell.gradient drawInBezierPath: path direction: AZGradientDirectionVertical];
+	} else {
+		[path addClip];
+		[path fill];
+	}
 
     // draw the separator
-    if (self.cell.separatorColor && !bottomCornerRadius)
-        UIRectStrokeWithColor(rect, CGRectMaxYEdge, 1, self.cell.separatorColor);
+    if (self.cell.separatorColor && !bottomRadius) {
+		[self.cell.separatorColor setStroke];
+		[path strokeEdge: CGRectMaxYEdge];
+	}
 
 	UIGraphicsPopContext();
 }

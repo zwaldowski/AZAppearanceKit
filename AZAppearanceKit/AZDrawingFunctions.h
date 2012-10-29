@@ -16,7 +16,15 @@ extern CGPathRef CGPathCreateByRoundingCornersInRect(CGRect rect, CGFloat topLef
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
-extern void UIGraphicsContextPerformBlock(void (^)(CGContextRef ctx));
+@interface UIBezierPath (AZDrawingFunctions)
+
++ (UIBezierPath *)bezierPathByRoundingCornersInRect:(CGRect)rect topLeft:(CGFloat)topLeftRadius topRight:(CGFloat)topRightRadius bottomLeft:(CGFloat)bottomLeftRadius bottomRight:(CGFloat)bottomRightRadius;
+
+- (void)strokeEdge:(CGRectEdge)edge;
+
+@end
+
+extern inline void UIGraphicsContextPerformBlock(void (^)(CGContextRef ctx));
 extern void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color);
 
 #endif
