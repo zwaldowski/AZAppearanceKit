@@ -77,7 +77,25 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	
 	CGFloat topCornerRadius = self.topCornerRadius;
 	CGFloat bottomCornerRadius = self.bottomCornerRadius;
-    CGPathRef path = CGPathCreateByRoundingCornersInRect(self.bounds, topCornerRadius, topCornerRadius, bottomCornerRadius, bottomCornerRadius);
+	CGRect rect = self.bounds;
+	const CGFloat shadowMargin = (2*self.shadowRadius);
+	CGFloat topInset = 0, bottomInset = 0;
+	switch ([self.delegate sectionLocation]) {
+		case AZTableViewCellSectionLocationTop:
+			bottomInset = shadowMargin;
+			break;
+		case AZTableViewCellSectionLocationMiddle:
+			topInset = shadowMargin;
+			bottomInset = shadowMargin;
+			break;
+		case AZTableViewCellSectionLocationBottom:
+			topInset = shadowMargin;
+			break;
+		default: break;
+	}
+	rect.origin.y -= topInset;
+	rect.size.height += topInset + bottomInset;
+    CGPathRef path =  CGPathCreateByRoundingCornersInRect(rect, topCornerRadius, topCornerRadius, bottomCornerRadius, bottomCornerRadius);
 	self.shadowPath = path;
 	CGPathRelease(path);
 }
