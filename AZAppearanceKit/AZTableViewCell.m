@@ -51,6 +51,16 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 
 @dynamic topCornerRadius, bottomCornerRadius;
 
+- (id)init {
+	if ((self = [super init])) {
+		CALayer *mask = [CALayer layer];
+		mask.backgroundColor = [UIColor blackColor].CGColor;
+		self.mask = mask;
+		self.masksToBounds = NO;
+	}
+	return self;
+}
+
 - (id<CAAction>)actionForKey:(NSString *)event {
 	if ([event isEqualToString: @"topCornerRadius"] || [event isEqualToString: @"bottomCornerRadius"]) {
 		CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath: event];
@@ -73,8 +83,7 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 - (void)layoutSublayers
 {
 	[super layoutSublayers];
-	self.masksToBounds = NO;
-	
+
 	CGFloat topCornerRadius = self.topCornerRadius;
 	CGFloat bottomCornerRadius = self.bottomCornerRadius;
 	CGRect rect = self.bounds;
@@ -321,11 +330,8 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 		default:
 			break;
 	}
-	
-	CALayer *mask = [CALayer layer];
-	mask.backgroundColor = [UIColor blackColor].CGColor;
-	mask.frame = UIEdgeInsetsInsetRect(self.layer.bounds, insets);
-	self.layer.mask = mask;
+
+	self.layer.mask.frame = UIEdgeInsetsInsetRect(self.layer.bounds, insets);
 }
 
 - (void)setSectionLocation:(AZTableViewCellSectionLocation)location
