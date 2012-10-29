@@ -278,7 +278,7 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	self.layer.shadowOffset = kShadowOffset;
 	self.layer.shadowRadius = kShadowBlur;
 	self.layer.shadowColor = self.cell.shadowColor.CGColor;
-	self.layer.shadowOpacity = 1.0;
+	self.layer.shadowOpacity = CGColorGetAlpha(self.layer.shadowColor);
 	[self.layer setNeedsDisplay];
 	
 	UIEdgeInsets insets = UIEdgeInsetsZero;
