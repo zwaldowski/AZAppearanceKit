@@ -272,7 +272,7 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 - (void)layoutSubviews {
 	const CGFloat kShadowBlur = 3.0f;
 	const CGSize kShadowOffset = CGSizeMake(0, 1);
-	const CGFloat shadowMargin = kShadowBlur + MAX(ABS(kShadowOffset.width), ABS(kShadowOffset.height));
+	const CGFloat shadowMargin = (kShadowBlur * 2) + MAX(ABS(kShadowOffset.width), ABS(kShadowOffset.height));
 	self.layer.contentsRect = [self az_contentsRect: (_az_animationCount > 0) ? YES : NO];
 	self.layer.contentsCenter = [self az_contentsCenter: (_az_animationCount > 0) ? YES : NO];
 	self.layer.shadowOffset = kShadowOffset;
