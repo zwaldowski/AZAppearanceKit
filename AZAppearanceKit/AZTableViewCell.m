@@ -213,31 +213,17 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	}
 }
 
-- (CGFloat)az_pixelDisplayedImageHeight {
-	switch (self.sectionLocation) {
-        case AZTableViewCellSectionLocationMiddle:
-			return 1.0;
-            break;
-        case AZTableViewCellSectionLocationAlone:
-			return 2 * (self.cell.cornerRadius + 2);
-			break;
-        default:
-			return (self.cell.cornerRadius + 2);
-            break;
-	}
-}
-
 - (CGRect)az_contentsCenter:(BOOL)animated {
 	if (animated) {
 		switch (self.sectionLocation) {
 			case AZTableViewCellSectionLocationTop:
-				return CGRectMake(0.5, 0.95, 0, 0); // center bottom
+				return CGRectMake(0.5, 0.95, 0.01, 0); // center bottom
 				break;
 			case AZTableViewCellSectionLocationBottom:
-				return CGRectMake(0.5, 0.05, 0, 0); // center top
+				return CGRectMake(0.5, 0.05, 0.01, 0); // center top
 				break;
 			default:
-				return CGRectMake(0.5, 0.5, 0, 0); // drag out the middle
+				return CGRectMake(0.5, 0.5, 0.01, 0); // drag out the middle
 				break;
 		}
 	}
@@ -263,11 +249,12 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 }
 
 - (void)layoutSubviews {
-	//NSLog(@"Is animating %i", self.isAnimating);
-	self.layer.contentsRect = [self az_contentsRect: self.isAnimating];
-	self.layer.contentsCenter = [self az_contentsCenter: self.isAnimating];
-	self.layer.shadowColor = self.cell.shadowColor.CGColor;
-	self.layer.shadowOpacity = CGColorGetAlpha(self.layer.shadowColor);
+	self.layer.contentsCenter = [self az_contentsCenter: (_az_animationCount > 0 ? YES : NO)];
+	if (!self.selected) {
+		self.layer.shadowColor = self.cell.shadowColor.CGColor;
+		self.layer.shadowOpacity = CGColorGetAlpha(self.layer.shadowColor);
+
+	}
 	[self.layer setNeedsDisplay];
 
 	const CGFloat shadowMargin = (self.layer.shadowRadius * 2) + MAX(ABS(self.layer.shadowOffset.width), ABS(self.layer.shadowOffset.height));
