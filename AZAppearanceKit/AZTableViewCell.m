@@ -115,38 +115,11 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 
 	UIGraphicsPushContext(ctx);
 
-	const CGFloat kShadowBlur = 3.0f;
-	const CGSize kShadowOffset = CGSizeMake(0, 1);
-	const CGFloat shadowMargin = kShadowBlur + MAX(ABS(kShadowOffset.width), ABS(kShadowOffset.height));
-
 	CGRect rect = CGContextGetClipBoundingBox(ctx);
-	/*CGRect clippingRect = rect;
-	 CGFloat topInset = 0, bottomInset = 0;
-	 switch (self.sectionLocation) {
-	 case AZTableViewCellSectionLocationTop:
-	 bottomInset = shadowMargin;
-	 break;
-	 case AZTableViewCellSectionLocationMiddle:
-	 topInset = shadowMargin;
-	 bottomInset = shadowMargin;
-	 break;
-	 case AZTableViewCellSectionLocationBottom:
-	 topInset = shadowMargin;
-	 break;
-	 default:
-	 break;
-	 }
-	 clippingRect.origin.y += topInset;
-	 clippingRect.size.height -= topInset + bottomInset;
-	 CGContextClipToRect(ctx, clippingRect);*/
-
-    //CGRect innerRect = CGRectInset(rect, shadowMargin, shadowMargin);
-	CGRect innerRect = rect;
-
 
 	CGFloat topCornerRadius = self.topCornerRadius;
 	CGFloat bottomCornerRadius = self.bottomCornerRadius;
-    CGPathRef path = CGPathCreateByRoundingCornersInRect(innerRect, topCornerRadius, topCornerRadius, bottomCornerRadius, bottomCornerRadius);
+    CGPathRef path = CGPathCreateByRoundingCornersInRect(rect, topCornerRadius, topCornerRadius, bottomCornerRadius, bottomCornerRadius);
 
     // stroke the primary shadow
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
@@ -162,8 +135,8 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
         CGContextAddPath(ctx, path);
         CGContextClip(ctx);
 
-        CGPoint start = innerRect.origin;
-        CGPoint end = CGPointMake(start.x, CGRectGetMaxY(innerRect));
+        CGPoint start = rect.origin;
+        CGPoint end = CGPointMake(start.x, CGRectGetMaxY(rect));
 
         if ([self.delegate isSelected] && self.cell.selectionStyle != UITableViewCellSelectionStyleNone && self.cell.selectionGradient) {
             CGContextDrawLinearGradient(ctx, self.cell.selectionGradient.gradient, start, end, 0);
@@ -171,7 +144,7 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
             CGContextDrawLinearGradient(ctx, self.cell.gradient.gradient, start, end, 0);
         } else {
             CGContextSetFillColorWithColor(ctx, self.cell.backgroundColor.CGColor);
-            CGContextFillRect(ctx, innerRect);
+            CGContextFillRect(ctx, rect);
         }
     });
 
@@ -179,7 +152,7 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 
     // draw the separator
     if (self.cell.separatorColor && !bottomCornerRadius)
-        UIRectStrokeWithColor(innerRect, CGRectMaxYEdge, 1, self.cell.separatorColor);
+        UIRectStrokeWithColor(rect, CGRectMaxYEdge, 1, self.cell.separatorColor);
 
 	UIGraphicsPopContext();
 }
