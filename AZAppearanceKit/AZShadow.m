@@ -38,10 +38,16 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 }
 
 - (id)init {
-	if (NSClassFromString(@"NSShadow")) {
-		return (id)[[NSClassFromString(@"NSShadow") alloc] init];
+	if (NSClassFromString(@"NSShadow"))
+	{
+		id oldSelf = self;
+		self = (id) [[NSClassFromString(@"NSShadow") alloc] init];
+		oldSelf = nil;
+		return self;
 	}
-	return [super init];
+	
+	self = [super init];
+	return self;
 }
 
 - (id)copyWithZone:(NSZone *)zone {
