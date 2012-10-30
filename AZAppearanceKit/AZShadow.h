@@ -18,6 +18,7 @@
 
 + (id)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius;
 + (id)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius color:(id)shadowColor;
++ (void)clear;
 - (void)set;
 
 @end

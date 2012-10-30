@@ -117,6 +117,10 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 		CGContextSetShadow(ctx, self.shadowOffset, self.shadowBlurRadius);
 }
 
++ (void)clear {
+	CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), CGSizeZero, 0, NULL);
+}
+
 @end
 
 @implementation NSShadow (AZShadow)
@@ -142,6 +146,10 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 		CGContextSetShadowWithColor(ctx, self.shadowOffset, self.shadowBlurRadius, [self.shadowColor CGColor]);
 	else
 		CGContextSetShadow(ctx, self.shadowOffset, self.shadowBlurRadius);
+}
+
++ (void)clear {
+	CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), CGSizeZero, 0, NULL);
 }
 
 @end
