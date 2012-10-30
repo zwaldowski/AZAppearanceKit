@@ -114,11 +114,12 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	const CGFloat kShadowBlur = 3.0f;
 	const CGSize kShadowOffset = CGSizeMake(0, 1);
 	const CGFloat shadowMargin = kShadowBlur + MAX(ABS(kShadowOffset.width), ABS(kShadowOffset.height));
+	const AZTableViewCellSectionLocation location = self.sectionLocation;
 	
 	CGRect rect = CGContextGetClipBoundingBox(ctx);
 	CGRect clippingRect = rect;
 	CGFloat topInset = 0, bottomInset = 0;
-	switch (self.sectionLocation) {
+	switch (location) {
         case AZTableViewCellSectionLocationTop:
 			bottomInset = shadowMargin;
 			break;
@@ -136,15 +137,23 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	clippingRect.size.height -= topInset + bottomInset;
     CGContextClipToRect(ctx, clippingRect);
     
-    CGRect innerRect = CGRectInset(rect, shadowMargin, shadowMargin);    
+    CGRect innerRect = CGRectInset(rect, shadowMargin, shadowMargin);
     CGPathRef path = CGPathCreateByRoundingCornersInRect(innerRect, self.topCornerRadius, self.topCornerRadius, self.bottomCornerRadius, self.bottomCornerRadius);
-    
+	CGPathRef shadowPath = path;
+
+	if (self.cell.shadow && !self.topCornerRadius && (location == AZTableViewCellSectionLocationMiddle || location == AZTableViewCellSectionLocationBottom)) {
+		CGRect shadowRect = innerRect;
+		shadowRect.origin.y -= kShadowBlur;
+		shadowRect.size.height += kShadowBlur;
+		shadowPath = CGPathCreateByRoundingCornersInRect(shadowRect, self.topCornerRadius, self.topCornerRadius, self.bottomCornerRadius, self.bottomCornerRadius);
+	}
+
     // stroke the primary shadow
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
 		if (!self.background.selected) [self.cell.shadow set];
         CGContextSetStrokeColorWithColor(ctx, self.cell.borderColor.CGColor);
         CGContextSetLineWidth(ctx, self.cell.shadow ? 0.5 : 1);
-        CGContextAddPath(ctx, path);
+        CGContextAddPath(ctx, shadowPath);
         CGContextStrokePath(ctx);
     });
     
