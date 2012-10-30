@@ -37,7 +37,6 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 
 @interface AZTableViewCellBackgroundLayer : CALayer
 
-@property (nonatomic) AZTableViewCellSectionLocation sectionLocation;
 @property (nonatomic) CGFloat topCornerRadius;
 @property (nonatomic) CGFloat bottomCornerRadius;
 
@@ -51,6 +50,9 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 
 - (id) initWithCell:(AZTableViewCell *)cell selected:(BOOL)selected;
 
+@property (nonatomic) AZTableViewCellSectionLocation sectionLocation;
+- (void)setSectionLocation:(AZTableViewCellSectionLocation)sectionLocation animated:(BOOL)animated;
+
 @end
 
 @implementation AZTableViewCellBackgroundView
@@ -63,21 +65,18 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 
 @implementation AZTableViewCellBackgroundLayer
 
-@dynamic sectionLocation;
 @dynamic topCornerRadius;
 @dynamic bottomCornerRadius;
 
 + (BOOL)needsDisplayForKey:(NSString *)key {
-	if ([key isEqualToString: @"sectionLocation"] ||
-		[key isEqualToString: @"topCornerRadius"] ||
+	if ([key isEqualToString: @"topCornerRadius"] ||
 		[key isEqualToString: @"bottomCornerRadius"])
 		return YES;
 	return [super needsDisplayForKey:key];
 }
 
 - (id<CAAction>)actionForKey:(NSString *)event {
-	if ([event isEqualToString: @"sectionLocation"] ||
-		[event isEqualToString: @"topCornerRadius"] ||
+	if ([event isEqualToString: @"topCornerRadius"] ||
 		[event isEqualToString: @"bottomCornerRadius"]) {
 		CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath: event];
         animation.fromValue = [self.presentationLayer valueForKey: event];
@@ -96,7 +95,7 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	UIGraphicsPushContext(ctx);
 	
 	const CGSize margin = cell.shadowMargin;
-	const AZTableViewCellSectionLocation location = self.sectionLocation;
+	const AZTableViewCellSectionLocation location = background.sectionLocation;
 	CGFloat topRadii = self.topCornerRadius, bottomRadii = self.bottomCornerRadius;
 	
 	CGRect rect = CGContextGetClipBoundingBox(ctx);
@@ -201,6 +200,8 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 
 - (void)setSectionLocation:(AZTableViewCellSectionLocation)location animated:(BOOL)animated
 {
+	_sectionLocation = location;
+	
 	AZTableViewCellBackgroundLayer *shadow = (id)self.shadowView.layer;
 	
 	CGFloat topRadius = 0, bottomRadius = 0, radius = self.cell.cornerRadius;
@@ -224,9 +225,9 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 	[CATransaction begin];
 	[CATransaction setAnimationDuration: animated ? (1./3.) : 0];
 	[CATransaction setAnimationTimingFunction: [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut]];
-	shadow.sectionLocation = location;
 	shadow.topCornerRadius = topRadius;
 	shadow.bottomCornerRadius = bottomRadius;
+	[shadow setNeedsDisplay];
 	[self setNeedsLayout];
 	[CATransaction commit];
 }
