@@ -8,6 +8,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AZShadow.h"
 
 @class AZGradient;
 
@@ -50,14 +51,13 @@
 
 /** @name Customizing appearance */
 
-/** Specifies the color used for the table view cell.
- 
- At this time, the cell is drawn with a shadow blur of 3
- points and an offset of 1 vertical point. The color can
- be used to customize the hue and opacity of the shadow.
- 
+ /** Specifies the shadow used to draw a shadow for the table view cell.
+
+ By default, this is a shadow with a vertical offset of 1 point, a black color
+ with an alpha of 0.7, and a blur radius of 3 points.
+
  */
-@property (nonatomic, strong) UIColor *shadowColor;
+@property (nonatomic, strong) id <AZShadow> shadow;
 
 /** Specifies the gradient used when the cell is not selected.
  

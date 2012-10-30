@@ -141,9 +141,9 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
     
     // stroke the primary shadow
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-        CGContextSetShadowWithColor(ctx, kShadowOffset, kShadowBlur, self.cell.shadowColor.CGColor);
+		if (!self.background.selected) [self.cell.shadow set];
         CGContextSetStrokeColorWithColor(ctx, self.cell.borderColor.CGColor);
-        CGContextSetLineWidth(ctx, self.cell.shadowColor ? 0.5 : 1);
+        CGContextSetLineWidth(ctx, self.cell.shadow ? 0.5 : 1);
         CGContextAddPath(ctx, path);
         CGContextStrokePath(ctx);
     });
@@ -246,7 +246,7 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 
 @implementation AZTableViewCell
 
-@synthesize shadowColor = _shadowColor, borderColor = _borderColor, separatorColor = _az_separatorColor, cornerRadius = _cornerRadius, selectionGradient = _selectionGradient, tableViewIsGrouped = _tableViewIsGrouped;
+@synthesize borderColor = _borderColor, separatorColor = _az_separatorColor, cornerRadius = _cornerRadius, selectionGradient = _selectionGradient, tableViewIsGrouped = _tableViewIsGrouped;
 
 #pragma mark - Setup and teardown
 
@@ -255,7 +255,7 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
     [super setBackgroundView: [[AZTableViewCellBackground alloc] initWithCell: self selected: NO]];
     [super setSelectedBackgroundView: [[AZTableViewCellBackground alloc] initWithCell: self selected:YES]];
     
-    self.shadowColor = [UIColor colorWithWhite: 0.0 alpha: 0.7];
+	self.shadow = [AZShadow shadowWithOffset: CGSizeMake(0, 1) blurRadius: 3.0f color: [UIColor colorWithWhite: 0 alpha: 0.7]];
     self.borderColor = [UIColor colorWithRed: 0.737 green: 0.737 blue: 0.737 alpha: 1.0];
     self.separatorColor = [UIColor colorWithWhite: 0.804 alpha: 1.0];
     self.selectionGradient = [[AZGradient alloc] initWithStartingColor: [UIColor colorWithRed: 0 green: 0.537 blue: 0.976 alpha: 1] endingColor: [UIColor colorWithRed: 0 green: 0.329 blue: 0.918 alpha: 1]];
