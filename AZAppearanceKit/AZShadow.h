@@ -23,10 +23,6 @@
 
 @end
 
-@interface NSShadow (AZShadow) <AZShadow>
-
-@end
-
 @interface AZShadow : NSObject <AZShadow>
 
 @end
@@ -38,3 +34,7 @@
 @compatibility_alias AZShadow NSShadow;
 
 #endif
+
+@interface NSShadow (AZShadow) <AZShadow>
+
+@end

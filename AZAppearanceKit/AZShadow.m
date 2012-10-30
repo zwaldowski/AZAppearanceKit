@@ -129,6 +129,8 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 
 @end
 
+#endif
+
 @implementation NSShadow (AZShadow)
 
 @dynamic shadowBlurRadius, shadowColor, shadowOffset;
@@ -138,7 +140,7 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 }
 
 + (id)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius color:(id)shadowColor {
-	NSShadow *ret = [[[self class] alloc] init];
+	id <AZShadow> ret = [[[self class] alloc] init];
 	ret.shadowOffset = shadowOffset;
 	ret.shadowBlurRadius = shadowBlurRadius;
 	if (shadowColor) // setting to nil will cause a flag to be set
@@ -147,7 +149,11 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 }
 
 - (void)set {
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
+#else
+	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort]
+#endif
 	if (self.shadowColor)
 		CGContextSetShadowWithColor(ctx, self.shadowOffset, self.shadowBlurRadius, [self.shadowColor CGColor]);
 	else
@@ -155,9 +161,12 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 }
 
 + (void)clear {
-	CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), CGSizeZero, 0, NULL);
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+#else
+	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort]
+#endif
+	CGContextSetShadowWithColor(ctx, CGSizeZero, 0, NULL);
 }
 
 @end
-
-#endif
