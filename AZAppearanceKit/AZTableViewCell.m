@@ -234,21 +234,12 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
         default:
             break;
     }
-
-	void (^animation)(void) = ^{
+	
+	[UIView animateWithDuration: animated ? (1./3.) : 0 delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: ^{
 		shadow.sectionLocation = location;
 		shadow.topCornerRadius = topRadius;
 		shadow.bottomCornerRadius = bottomRadius;
-	};
-	
-	if (animated) {
-		[UIView animateWithDuration: 0.33 delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	} else {
-		[CATransaction begin];
-		[CATransaction setDisableActions: YES];
-		animation();
-		[CATransaction commit];
-	}
+	} completion: NULL];
 }
 
 @end
