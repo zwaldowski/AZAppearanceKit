@@ -25,7 +25,7 @@
 /** Specifies the navigation bar shadow's opacity.
  
  By default is `0.5`. */
-@property (nonatomic, assign) float shadowOpacity;
+@property (nonatomic, assign) CGFloat shadowOpacity;
 
 /** Specifies the gradient's start color.
  

@@ -11,52 +11,56 @@
 
 @interface AZGradientLayer : CALayer
 
-@property (nonatomic, strong) AZGradient *gradient;
 @property (nonatomic) AZGradientViewType type;
 @property (nonatomic) CGFloat angle;
 @property (nonatomic) CGPoint relativeCenterPosition;
+@property (nonatomic, strong) AZGradient *gradient;
 
 @end
 
 @implementation AZGradientLayer
 
-@dynamic gradient, type, angle, relativeCenterPosition;
+@dynamic angle;
+@dynamic gradient;
+@dynamic relativeCenterPosition;
+@dynamic type;
 
-+ (BOOL)needsDisplayForKey:(NSString *)key
++ (BOOL) needsDisplayForKey: (NSString *) key
 {
-    if ([key isEqualToString:@"gradient"] || [key isEqualToString:@"type"] || [key isEqualToString:@"angle"] || [key isEqualToString:@"relativeCenterPosition"]) {
+    if ([key isEqualToString:@"gradient"] || [key isEqualToString:@"type"] || [key isEqualToString:@"angle"] || [key isEqualToString:@"relativeCenterPosition"])
 		return YES;
-	} else {
-		return [super needsDisplayForKey:key];
-	}
+	else
+		return [super needsDisplayForKey: key];
 }
 
-- (id < CAAction >)actionForKey:(NSString *)key
+- (id <CAAction>) actionForKey: (NSString *) key
 {
-	if ([key isEqualToString:@"gradient"] || [key isEqualToString:@"type"]) {
+	if ([key isEqualToString: @"gradient"] || [key isEqualToString: @"type"])
+	{
 		CATransition *transition = [CATransition animation];
 		transition.fillMode = kCAFillModeForwards;
 		return transition;
-	} else if ([key isEqualToString:@"angle"] || [key isEqualToString:@"relativeCenterPosition"]) {
+	}
+	else if ([key isEqualToString: @"angle"] || [key isEqualToString: @"relativeCenterPosition"])
+	{
         CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath: key];
         animation.fromValue = [self.presentationLayer valueForKey: key];
         return animation;
-    } else {
-        return [super actionForKey:key];
     }
+	
+	return [super actionForKey: key];
 }
 
-- (void)drawInContext:(CGContextRef)context {
+- (void) drawInContext: (CGContextRef) context {
 	[super drawInContext: context];
 	
 	UIGraphicsPushContext(context);
-	
-	if (self.type == AZGradientViewTypeLinear) {
-		[self.gradient drawInRect: self.bounds angle: self.angle];
-	} else {
-		[self.gradient drawInRect: self.bounds relativeCenterPosition: self.relativeCenterPosition];
+	{
+		if (self.type == AZGradientViewTypeLinear)
+			[self.gradient drawInRect: self.bounds angle: self.angle];
+		else
+			[self.gradient drawInRect: self.bounds relativeCenterPosition: self.relativeCenterPosition];
 	}
-	
 	UIGraphicsPopContext();
 }
 
@@ -64,135 +68,173 @@
 
 @implementation AZGradientView
 
-+ (Class)layerClass {
+- (AZGradientLayer *) gradientLayer
+{
+	return (AZGradientLayer *) self.layer;
+}
+
++ (Class) layerClass
+{
 	return [AZGradientLayer class];
 }
 
-- (void)az_sharedInit {
+- (id) init
+{
+	if ((self = [super init]))
+	{
+		[self az_sharedInit];
+	}
+	
+	return self;
+}
+- (id) initWithCoder: (NSCoder *) aDecoder
+{
+    if ((self = [super initWithCoder: aDecoder]))
+	{
+		[self az_sharedInit];
+    }
+	
+    return self;
+}
+- (id) initWithFrame: (CGRect) frame
+{
+    if ((self = [super initWithFrame:frame])) {
+		[self az_sharedInit];
+    }
+	
+    return self;
+}
+- (id) initWithGradient: (AZGradient *) gradient
+{
+	if ((self = [super initWithFrame: CGRectZero]))
+	{
+		self.gradient = gradient;
+		[self az_sharedInit];
+	}
+	
+	return self;
+}
+
+- (void) az_sharedInit
+{
 	self.contentMode = UIViewContentModeRedraw;
 	self.layer.contentsScale = [[UIScreen mainScreen] scale];
 	[self.layer setNeedsDisplay];
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-    if ((self = [super initWithCoder: aDecoder])) {
-		[self az_sharedInit];
-    }
-    return self;
+#pragma mark - Gradient Accessors
+
+- (AZGradient *) gradient
+{
+	return self.gradientLayer.gradient;
 }
 
-- (id)initWithFrame:(CGRect)frame {
-    if ((self = [super initWithFrame:frame])) {
-		[self az_sharedInit];
-    }
-    return self;
-}
-
-- (id)initWithGradient:(AZGradient *)gradient {
-	if ((self = [super initWithFrame: CGRectZero])) {
-		self.gradient = gradient;
-		[self az_sharedInit];
-	}
-	return self;
-}
-
-#pragma mark - Accessors
-
-- (AZGradient *)gradient {
-	AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-	return layer.gradient;
-}
-
-- (void)setGradient:(AZGradient *)gradient {
+- (void) setGradient: (AZGradient *) gradient
+{
 	[self setGradient: gradient animated: NO];
 }
-
-- (void)setGradient:(AZGradient *)gradient animated:(BOOL)animated {
+- (void) setGradient: (AZGradient *) gradient animated: (BOOL) animated {
 	void (^animation)(void) = ^{
-		AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-		layer.gradient = gradient;
+		self.gradientLayer.gradient = gradient;
 	};
 	
-	if (animated) {
-		[UIView animateWithDuration: 0.33 delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	} else {
+	if (animated)
+	{
+		[UIView animateWithDuration: (1./3.) delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
+	}
+	else
+	{
 		[CATransaction begin];
-		[CATransaction setValue: (id)kCFBooleanTrue forKey: kCATransactionDisableActions];
+		[CATransaction setValue: @YES forKey: kCATransactionDisableActions];
 		animation();
 		[CATransaction commit];
 	}
 }
 
-- (AZGradientViewType)type {
-	AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-	return layer.type;
+#pragma mark - Gradient Type Accessors
+
+- (AZGradientViewType) type
+{
+	return self.gradientLayer.type;
 }
 
-- (void)setType:(AZGradientViewType)type {
+- (void) setType: (AZGradientViewType) type
+{
 	[self setType: type animated: NO];
 }
-
-- (void)setType:(AZGradientViewType)type animated:(BOOL)animated {
+- (void) setType: (AZGradientViewType) type animated: (BOOL) animated
+{
 	void (^animation)(void) = ^{
-		AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-		layer.type = type;
+		self.gradientLayer.type = type;
 	};
 	
-	if (animated) {
-		[UIView animateWithDuration: 0.33 delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	} else {
+	if (animated)
+	{
+		[UIView animateWithDuration: (1./3.) delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
+	}
+	else
+	{
 		[CATransaction begin];
-		[CATransaction setValue: (id)kCFBooleanTrue forKey: kCATransactionDisableActions];
+		[CATransaction setValue: @YES forKey: kCATransactionDisableActions];
 		animation();
 		[CATransaction commit];
 	}
 }
 
-- (CGFloat)angle {
-	AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-	return layer.angle;
+#pragma mark - Angle Accessors
+
+- (CGFloat) angle
+{
+	return self.gradientLayer.angle;
 }
 
-- (void)setAngle:(CGFloat)angle {
+- (void) setAngle: (CGFloat) angle
+{
 	[self setAngle: angle animated: NO];
 }
-
-- (void)setAngle:(CGFloat)angle animated:(BOOL)animated {
+- (void) setAngle: (CGFloat) angle animated: (BOOL) animated {
 	void (^animation)(void) = ^{
-		AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-		layer.angle = angle;
+		self.gradientLayer.angle = angle;
 	};
 	
-	if (animated) {
-		[UIView animateWithDuration: 0.33 delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	} else {
+	if (animated)
+	{
+		[UIView animateWithDuration: (1./3.) delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
+	}
+	else
+	{
 		[CATransaction begin];
-		[CATransaction setValue: (id)kCFBooleanTrue forKey: kCATransactionDisableActions];
+		[CATransaction setValue: @YES forKey: kCATransactionDisableActions];
 		animation();
 		[CATransaction commit];
 	}
 }
 
-- (CGPoint)relativeCenterPosition {
-	AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-	return layer.relativeCenterPosition;
+#pragma mark - Relative Center Position Accessors
+
+- (CGPoint) relativeCenterPosition
+{
+	return self.gradientLayer.relativeCenterPosition;
 }
 
-- (void)setRelativeCenterPosition:(CGPoint)relativeCenterPosition {
+- (void) setRelativeCenterPosition: (CGPoint) relativeCenterPosition
+{
 	[self setRelativeCenterPosition: relativeCenterPosition animated: NO];
 }
-
-- (void)setRelativeCenterPosition:(CGPoint)relativeCenterPosition animated:(BOOL)animated {
+- (void) setRelativeCenterPosition: (CGPoint) relativeCenterPosition animated: (BOOL) animated
+{
 	void (^animation)(void) = ^{
-		AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-		layer.relativeCenterPosition = relativeCenterPosition;
+		self.gradientLayer.relativeCenterPosition = relativeCenterPosition;
 	};
 	
-	if (animated) {
-		[UIView animateWithDuration: 0.33 delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	} else {
+	if (animated)
+	{
+		[UIView animateWithDuration: (1./3.) delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
+	}
+	else
+	{
 		[CATransaction begin];
-		[CATransaction setValue: (id)kCFBooleanTrue forKey: kCATransactionDisableActions];
+		[CATransaction setValue: @YES forKey: kCATransactionDisableActions];
 		animation();
 		[CATransaction commit];
 	}

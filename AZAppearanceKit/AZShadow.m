@@ -10,11 +10,8 @@
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
-@interface AZShadow ()
-
-@property (nonatomic, readonly, getter = az_hasShadowColor) BOOL hasShadowColor;
-
-@end
+#define NSUINT_BIT (CHAR_BIT * sizeof(NSUInteger))
+#define NSUINTROTATE(val, howmuch) ((((NSUInteger)val) << howmuch) | (((NSUInteger)val) >> (NSUINT_BIT - howmuch)))
 
 static NSString *const AZShadowColorKey = @"NSShadowColor";
 static NSString *const AZShadowHorizKey = @"NSShadowHoriz";
@@ -23,21 +20,22 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 
 @implementation AZShadow
 
-@synthesize shadowOffset = _shadowOffset, shadowBlurRadius = _shadowBlurRadius, shadowColor = _shadowColor;
+@synthesize shadowBlurRadius = _shadowBlurRadius;
+@synthesize shadowColor = _shadowColor;
+@synthesize shadowOffset = _shadowOffset;
 
-+ (id)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius {
-	return [self shadowWithOffset: shadowOffset blurRadius: shadowBlurRadius color: nil];
+- (BOOL) isEqual: (id) object
+{
+	if (object == self) return YES;
+	if (![object isKindOfClass: [self class]]) return NO;
+	if ([object shadowBlurRadius] != self.shadowBlurRadius) return NO;
+	if (!CGSizeEqualToSize([object shadowOffset], self.shadowOffset)) return NO;
+	if (![[object shadowColor] isEqual: self.shadowColor]) return NO;
+	return YES;
 }
 
-+ (id)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius color:(id)shadowColor {
-	id <AZShadow> ret = NSClassFromString(@"NSShadow") ? [NSClassFromString(@"NSShadow") new] : [AZShadow new];
-	ret.shadowOffset = shadowOffset;
-	ret.shadowBlurRadius = shadowBlurRadius;
-	ret.shadowColor = shadowColor;
-	return ret;
-}
-
-- (id)init {
+- (id) init
+{
 	if (NSClassFromString(@"NSShadow"))
 	{
 		id oldSelf = self;
@@ -49,17 +47,59 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 	self = [super init];
 	return self;
 }
-
-- (id)copyWithZone:(NSZone *)zone {
-	id <AZShadow> ret = [[[self class] alloc] init];
-	ret.shadowOffset = self.shadowOffset;
-	ret.shadowBlurRadius = self.shadowBlurRadius;
-	ret.shadowColor = self.shadowColor;
++ (id <AZShadow>) shadowWithOffset: (CGSize) shadowOffset blurRadius: (CGFloat) shadowBlurRadius
+{
+	return [self shadowWithOffset: shadowOffset blurRadius: shadowBlurRadius color: nil];
+}
++ (id <AZShadow>) shadowWithOffset: (CGSize) shadowOffset blurRadius: (CGFloat) shadowBlurRadius color: (id) shadowColor
+{
+	id <AZShadow> ret = NSClassFromString(@"NSShadow") ? [NSClassFromString(@"NSShadow") new] : [AZShadow new];
+	ret.shadowOffset = shadowOffset;
+	ret.shadowBlurRadius = shadowBlurRadius;
+	ret.shadowColor = shadowColor;
+	
 	return ret;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
-	if ((self = [super init])) {
+- (NSUInteger) hash
+{
+	NSUInteger hash = [self.shadowColor hash];
+	hash ^= [@(self.shadowBlurRadius) hash];
+	hash ^= [[NSValue valueWithCGSize: self.shadowOffset] hash];
+	
+	return hash;
+}
+
+- (NSString *) description
+{
+	NSMutableString *ret = [NSMutableString stringWithFormat: @"<AZShadow %@", NSStringFromCGSize(self.shadowOffset)];
+	if (self.shadowBlurRadius)
+		[ret appendFormat: @" blur = %f", self.shadowBlurRadius];
+	if (self.shadowColor)
+		[ret appendFormat: @" color = {%@}", self.shadowColor];
+	[ret appendString: @">"];
+	return ret;
+}
+
++ (void) clear
+{
+	CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), CGSizeZero, 0, NULL);
+}
+- (void) set
+{
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	if (self.shadowColor)
+		CGContextSetShadowWithColor(ctx, self.shadowOffset, self.shadowBlurRadius, [self.shadowColor CGColor]);
+	else
+		CGContextSetShadow(ctx, self.shadowOffset, self.shadowBlurRadius);
+}
+
+#pragma mark - Coding
+
+- (id) initWithCoder: (NSCoder *) aDecoder
+{
+	if ((self = [super init]))
+	{
 		CGSize size;
 #if CGFLOAT_IS_DOUBLE
 		size.width = [aDecoder decodeDoubleForKey: AZShadowHorizKey];
@@ -71,14 +111,17 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 		self.shadowBlurRadius = [aDecoder decodeFloatForKey: AZShadowBlurRadiusKey];
 #endif
 		self.shadowOffset = size;
-		if ([aDecoder containsValueForKey: AZShadowColorKey]) {
+		
+		if ([aDecoder containsValueForKey: AZShadowColorKey])
+		{
 			self.shadowColor = [aDecoder decodeObjectForKey: AZShadowColorKey];
 		}
 	}
 	return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)aCoder {
+- (void) encodeWithCoder: (NSCoder *) aCoder
+{
 #if CGFLOAT_IS_DOUBLE
 	[aCoder encodeDouble: self.shadowOffset.width forKey: AZShadowHorizKey];
 	[aCoder encodeDouble: self.shadowOffset.height forKey: AZShadowVertKey];
@@ -88,43 +131,18 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 	[aCoder encodeFloat: self.shadowOffset.height forKey: AZShadowVertKey];
 	[aCoder encodeFloat: self.shadowBlurRadius forKey: AZShadowBlurRadiusKey];
 #endif
-	if (self.hasShadowColor) {
+	
+	if (self.shadowColor)
+	{
 		[aCoder encodeObject: self.shadowColor forKey: AZShadowColorKey];
 	}
 }
 
-- (BOOL)az_hasShadowColor {
-	return !!_shadowColor;
-}
+#pragma mark - Copying
 
-- (BOOL)isEqual:(id)object {
-	if (object == self) return YES;
-	if (![object isKindOfClass: [self class]]) return NO;
-	if ([object shadowBlurRadius] != self.shadowBlurRadius) return NO;
-	if (!CGSizeEqualToSize([object shadowOffset], self.shadowOffset)) return NO;
-	if (![[object shadowColor] isEqual: self.shadowColor]) return NO;
-	return YES;
-}
-
-- (NSString *)description {
-	NSMutableString *ret = [NSMutableString stringWithFormat: @"AZShadow %@", NSStringFromCGSize(self.shadowOffset)];
-	if (self.shadowBlurRadius)
-		[ret appendFormat: @" blur = %f", self.shadowBlurRadius];
-	if (self.hasShadowColor)
-		[ret appendFormat: @" color = {%@}", self.shadowColor];
-	return ret;
-}
-
-- (void)set {
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	if (self.hasShadowColor)
-		CGContextSetShadowWithColor(ctx, self.shadowOffset, self.shadowBlurRadius, [self.shadowColor CGColor]);
-	else
-		CGContextSetShadow(ctx, self.shadowOffset, self.shadowBlurRadius);
-}
-
-+ (void)clear {
-	CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), CGSizeZero, 0, NULL);
+- (id) copyWithZone: (NSZone *) zone
+{
+	return [[self class] shadowWithOffset: self.shadowOffset blurRadius: self.shadowBlurRadius color: self.shadowColor];
 }
 
 @end
@@ -133,34 +151,25 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 
 @implementation NSShadow (AZShadow)
 
-@dynamic shadowBlurRadius, shadowColor, shadowOffset;
+@dynamic shadowBlurRadius;
+@dynamic shadowColor;
+@dynamic shadowOffset;
 
-+ (id)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius {
++ (id <AZShadow>) shadowWithOffset: (CGSize) shadowOffset blurRadius: (CGFloat) shadowBlurRadius
+{
 	return [self shadowWithOffset: shadowOffset blurRadius: shadowBlurRadius color: nil];
 }
-
-+ (id)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius color:(id)shadowColor {
++ (id <AZShadow>) shadowWithOffset: (CGSize) shadowOffset blurRadius: (CGFloat) shadowBlurRadius color: (id) shadowColor
+{
 	id <AZShadow> ret = [[[self class] alloc] init];
 	ret.shadowOffset = shadowOffset;
 	ret.shadowBlurRadius = shadowBlurRadius;
-	if (shadowColor) // setting to nil will cause a flag to be set
+	if (shadowColor) // Setting to `nil` will cause a flag to be set
 		ret.shadowColor = shadowColor;
 	return ret;
 }
 
-- (void)set {
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-#else
-	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort]
-#endif
-	if (self.shadowColor)
-		CGContextSetShadowWithColor(ctx, self.shadowOffset, self.shadowBlurRadius, [self.shadowColor CGColor]);
-	else
-		CGContextSetShadow(ctx, self.shadowOffset, self.shadowBlurRadius);
-}
-
-+ (void)clear {
++ (void) clear {
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 #else
@@ -168,5 +177,14 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 #endif
 	CGContextSetShadowWithColor(ctx, CGSizeZero, 0, NULL);
 }
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+- (void) set {
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	if (self.shadowColor)
+		CGContextSetShadowWithColor(ctx, self.shadowOffset, self.shadowBlurRadius, [self.shadowColor CGColor]);
+	else
+		CGContextSetShadow(ctx, self.shadowOffset, self.shadowBlurRadius);
+}
+#endif
 
 @end
