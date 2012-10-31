@@ -21,6 +21,10 @@ Pod::Spec.new do |s|
     ss.ios.dependency 'AZAppearanceKit/AZDrawingFunctions'
   end
 
+  s.subspec 'AZShadow' do |ss|
+    ss.source_files = 'AZAppearanceKit/AZShadow.{h,m}'
+  end
+
   s.subspec 'AZGradientView' do |ss|
     ss.platform     = :ios
     ss.source_files = 'AZAppearanceKit/AZGradientView.{h,m}'
@@ -34,6 +38,7 @@ Pod::Spec.new do |s|
     ss.source_files = 'AZAppearanceKit/AZLabel.{h,m}'
     ss.dependency     'AZAppearanceKit/AZDrawingFunctions'
     ss.dependency     'AZAppearanceKit/AZGradient'
+    ss.dependency     'AZAppearanceKit/AZShadow'
   end
   
   s.subspec 'AZShadowedTableView' do |ss|

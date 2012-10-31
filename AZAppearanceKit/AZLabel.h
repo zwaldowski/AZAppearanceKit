@@ -102,24 +102,24 @@
 - (UIColor *) textColorForState: (UIControlState) state;
 
 /** The shadow for the text used for the default control state. */
-@property (nonatomic, strong) AZShadow *shadow;
+@property (nonatomic, strong) id <AZShadow> shadow;
 
 /** Sets the shadow to use on the text in a specified control state.
  
  @param shadow The shadow for the text to use for the specified state.
  @param state The state that uses the specified offset.
  */
-- (void) setShadow: (AZShadow *) shadow forState: (UIControlState) controlState;
+- (void) setShadow: (id <AZShadow>) shadow forState: (UIControlState) controlState;
 
 /** Returns the shadow used for a state.
  
  @param state The state that uses the shadow offset.
  @return The shadow of the text for the specified state.
  */
-- (AZShadow *) shadowForState: (UIControlState) controlState;
+- (id <AZShadow>) shadowForState: (UIControlState) controlState;
 
 /** The inner shadow for the text used for the default control state. */
-@property (nonatomic, strong) AZShadow *innerShadow;
+@property (nonatomic, strong) id <AZShadow>innerShadow;
 
 /** Sets the inner shadow to use on the text in a specified control state.
  
@@ -127,14 +127,14 @@
  state.
  @param state The state that uses the specified offset.
  */
-- (void)setInnerShadow:(AZShadow *) innerShadow forState: (UIControlState) controlState;
+- (void)setInnerShadow:(id <AZShadow>) innerShadow forState: (UIControlState) controlState;
 
 /** Returns the inner shadow offset used for a state.
  
  @param state The state that uses the inner shadow offset.
  @return The inner shadow offset of the text for the specified state.
  */
-- (AZShadow *) innerShadowForState: (UIControlState) controlState;
+- (id <AZShadow>) innerShadowForState: (UIControlState) controlState;
 
 /** The gradient used to color in the text for the default control state.
  

@@ -19,7 +19,6 @@
 		6C41F20D15B46FED00572729 /* AZToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C41F20A15B46FED00572729 /* AZToolbar.m */; };
 		6C4D4703160F9CAE00DC08C7 /* AZAppearanceKitDemo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6C4D4702160F9CAE00DC08C7 /* AZAppearanceKitDemo.storyboard */; };
 		6C4D4745160FA13000DC08C7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C4D4744160FA13000DC08C7 /* Default-568h@2x.png */; };
-		6C6C02F3163F5A0A00CAAB0E /* UIBezierPath+AZAppearanceKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C6C02F2163F5A0A00CAAB0E /* UIBezierPath+AZAppearanceKit.m */; };
 		6C859435163B86F000DAB469 /* AZCellTableViewControllerDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C859434163B86F000DAB469 /* AZCellTableViewControllerDemo.m */; };
 		6C931B44163F309500542F72 /* AZShadow.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C931B43163F309400542F72 /* AZShadow.m */; };
 		6CCEB1AD15916BCA001266F3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1AC15916BCA001266F3 /* UIKit.framework */; };
@@ -62,8 +61,6 @@
 		6C41F20F15B4701100572729 /* AZNavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZNavigationBar.h; sourceTree = "<group>"; };
 		6C4D4702160F9CAE00DC08C7 /* AZAppearanceKitDemo.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = AZAppearanceKitDemo.storyboard; sourceTree = "<group>"; };
 		6C4D4744160FA13000DC08C7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		6C6C02F1163F5A0A00CAAB0E /* UIBezierPath+AZAppearanceKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBezierPath+AZAppearanceKit.h"; sourceTree = "<group>"; };
-		6C6C02F2163F5A0A00CAAB0E /* UIBezierPath+AZAppearanceKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBezierPath+AZAppearanceKit.m"; sourceTree = "<group>"; };
 		6C859433163B86F000DAB469 /* AZCellTableViewControllerDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZCellTableViewControllerDemo.h; sourceTree = "<group>"; };
 		6C859434163B86F000DAB469 /* AZCellTableViewControllerDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZCellTableViewControllerDemo.m; sourceTree = "<group>"; };
 		6C931B42163F309400542F72 /* AZShadow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZShadow.h; sourceTree = "<group>"; };
@@ -82,9 +79,9 @@
 		6CCEB1C315916BCA001266F3 /* AZLabelDemoViewController@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZLabelDemoViewController@2x.png"; sourceTree = "<group>"; };
 		6CCEB1DC15917128001266F3 /* AZGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZGradient.h; sourceTree = "<group>"; };
 		6CCEB1DD15917128001266F3 /* AZGradient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZGradient.m; sourceTree = "<group>"; };
-		6CCEB1DE15917128001266F3 /* AZLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZLabel.h; sourceTree = "<group>"; };
+		6CCEB1DE15917128001266F3 /* AZLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AZLabel.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		6CCEB1E315917137001266F3 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		6CCEB1EA159171F6001266F3 /* AZLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZLabel.m; sourceTree = "<group>"; };
+		6CCEB1EA159171F6001266F3 /* AZLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AZLabel.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		6CD291D2159DF2E700736631 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6CD291DA159DF33100736631 /* AZShadowedTableDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZShadowedTableDemoViewController.h; sourceTree = "<group>"; };
 		6CD291DB159DF33100736631 /* AZShadowedTableDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZShadowedTableDemoViewController.m; sourceTree = "<group>"; };
@@ -206,8 +203,6 @@
 				6C272F8F159D8AC900C97FC7 /* AZTableViewCell.m */,
 				6C41F20915B46FED00572729 /* AZToolbar.h */,
 				6C41F20A15B46FED00572729 /* AZToolbar.m */,
-				6C6C02F1163F5A0A00CAAB0E /* UIBezierPath+AZAppearanceKit.h */,
-				6C6C02F2163F5A0A00CAAB0E /* UIBezierPath+AZAppearanceKit.m */,
 			);
 			path = AZAppearanceKit;
 			sourceTree = "<group>";
@@ -302,7 +297,6 @@
 				6C41F20D15B46FED00572729 /* AZToolbar.m in Sources */,
 				6C859435163B86F000DAB469 /* AZCellTableViewControllerDemo.m in Sources */,
 				6C931B44163F309500542F72 /* AZShadow.m in Sources */,
-				6C6C02F3163F5A0A00CAAB0E /* UIBezierPath+AZAppearanceKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

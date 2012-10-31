@@ -77,12 +77,12 @@ static inline UIControlContentHorizontalAlignment UIControlContentHorizontalAlig
 - (void) az_sharedInit;
 - (void) az_setValue: (id) value forAppearanceKey: (NSString *) key forState: (UIControlState) state;
 
-@property (nonatomic, readonly, getter = az_textColorForCurrentState) UIColor *textColorForCurrentState;
-@property (nonatomic, readonly, getter = az_shadowForCurrentState) AZShadow *shadowForCurrentState;
-@property (nonatomic, readonly, getter = az_innerShadowForCurrentState) AZShadow *innerShadowForCurrentState;
-@property (nonatomic, readonly, getter = az_shouldUseGradientForCurrentState) BOOL shouldUseGradientForCurrentState;
-@property (nonatomic, readonly, getter = az_gradientForCurrentState) AZGradient *gradientForCurrentState;
 @property (nonatomic, readonly, getter = az_gradientDirectionForCurrentState) AZGradientDirection gradientDirectionForCurrentState;
+@property (nonatomic, readonly, getter = az_gradientForCurrentState) AZGradient *gradientForCurrentState;
+@property (nonatomic, readonly, getter = az_innerShadowForCurrentState) id <AZShadow> innerShadowForCurrentState;
+@property (nonatomic, readonly, getter = az_shadowForCurrentState) id <AZShadow> shadowForCurrentState;
+@property (nonatomic, readonly, getter = az_shouldUseGradientForCurrentState) BOOL shouldUseGradientForCurrentState;
+@property (nonatomic, readonly, getter = az_textColorForCurrentState) UIColor *textColorForCurrentState;
 @property (nonatomic, strong) NSMutableDictionary *appearanceStorage;
 @property (nonatomic, strong) NSMutableDictionary *gradientDict;
 @property (nonatomic, strong) NSMutableDictionary *innerShadowDict;
@@ -121,7 +121,7 @@ static inline UIControlContentHorizontalAlignment UIControlContentHorizontalAlig
 		
 		if ([aDecoder containsValueForKey: @"UIShadowOffset"] || [aDecoder containsValueForKey: @"UIShadowColor"])
 		{
-			AZShadow *shadow = [[AZShadow alloc] init];
+			id <AZShadow> shadow = [[AZShadow alloc] init];
 			
 			if ([aDecoder containsValueForKey: @"UIShadowOffset"])
 				shadow.shadowOffset = [aDecoder decodeCGSizeForKey: @"UIShadowOffset"];
@@ -293,7 +293,7 @@ static inline UIControlContentHorizontalAlignment UIControlContentHorizontalAlig
 	
 	if (self.shadowDict)
 	{
-		AZShadow *shadow = [[AZShadow alloc] init];
+		id <AZShadow> shadow = [[AZShadow alloc] init];
 		if (self.shadowDict[@"shadowBlurRadius"])
 			shadow.shadowBlurRadius = [self.shadowDict[@"shadowBlurRadius"] floatValue];
 		if (self.shadowDict[@"shadowColor"])
@@ -306,7 +306,7 @@ static inline UIControlContentHorizontalAlignment UIControlContentHorizontalAlig
 
 	if (self.innerShadowDict)
 	{
-		AZShadow *innerShadow = [[AZShadow alloc] init];
+		id <AZShadow> innerShadow = [[AZShadow alloc] init];
 		if (self.innerShadowDict[@"shadowBlurRadius"])
 			innerShadow.shadowBlurRadius = [self.innerShadowDict[@"shadowBlurRadius"] floatValue];
 		if (self.innerShadowDict[@"shadowColor"])
@@ -321,7 +321,7 @@ static inline UIControlContentHorizontalAlignment UIControlContentHorizontalAlig
         CGContextTranslateCTM(ctx, 0, rect.size.height);
         CGContextScaleCTM(ctx, 1, -1);
         
-		AZShadow *shadow = self.shadowForCurrentState;
+		id <AZShadow> shadow = self.shadowForCurrentState;
 		[shadow set];
 
 		CGContextBeginTransparencyLayer(ctx, NULL);
@@ -339,7 +339,7 @@ static inline UIControlContentHorizontalAlignment UIControlContentHorizontalAlig
 		}
 		CGContextEndTransparencyLayer(ctx);
 		
-		AZShadow *innerShadow = self.innerShadowForCurrentState;
+		id <AZShadow> innerShadow = self.innerShadowForCurrentState;
 		CGRect textBorderRect = CGRectInset(self.textPath.bounds, -shadow.shadowBlurRadius, -innerShadow.shadowBlurRadius);
 		textBorderRect = CGRectOffset(textBorderRect, -innerShadow.shadowOffset.width, -innerShadow.shadowOffset.height);
 		textBorderRect = CGRectInset(CGRectUnion(textBorderRect, self.textPath.bounds), -1, -1);
@@ -349,7 +349,7 @@ static inline UIControlContentHorizontalAlignment UIControlContentHorizontalAlig
 		textNegativePath.usesEvenOddFillRule = YES;
         
         UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-			AZShadow *innerShadowCopy = [innerShadow copy];
+			id <AZShadow> innerShadowCopy = [(NSObject *) innerShadow copy];
 			CGFloat xOffset = innerShadow.shadowOffset.width + round(textBorderRect.size.width);
 			CGFloat yOffset = innerShadow.shadowOffset.height;
 			innerShadowCopy.shadowOffset = CGSizeMake(xOffset + copysign(0.1, xOffset), yOffset + copysign(0.1, yOffset));
@@ -501,40 +501,40 @@ static inline UIControlContentHorizontalAlignment UIControlContentHorizontalAlig
 
 #pragma mark - Shadow
 
-- (AZShadow *) shadow
+- (id <AZShadow>) shadow
 {
 	return [self shadowForState: UIControlStateNormal];
 }
-- (AZShadow *) shadowForState: (UIControlState) controlState
+- (id <AZShadow>) shadowForState: (UIControlState) controlState
 {
 	return [self az_valueForAppearanceKey: @"shadow" forState: controlState];
 }
 
-- (void) setShadow: (AZShadow *) shadow
+- (void) setShadow: (id <AZShadow>) shadow
 {
 	[self setShadow: shadow forState: UIControlStateNormal];
 }
-- (void) setShadow: (AZShadow *) shadow forState: (UIControlState) controlState
+- (void) setShadow: (id <AZShadow>) shadow forState: (UIControlState) controlState
 {
 	[self az_setValue: shadow forAppearanceKey: @"shadow" forState: controlState];
 }
 
 #pragma mark - Inner Shadow
 
-- (AZShadow *) innerShadow
+- (id <AZShadow>) innerShadow
 {
 	return [self innerShadowForState: UIControlStateNormal];
 }
-- (AZShadow *) innerShadowForState: (UIControlState) controlState
+- (id <AZShadow>) innerShadowForState: (UIControlState) controlState
 {
 	return [self az_valueForAppearanceKey: @"innerShadow" forState: controlState];
 }
 
-- (void) setInnerShadow: (AZShadow *) innerShadow
+- (void) setInnerShadow: (id <AZShadow>) innerShadow
 {
 	[self setInnerShadow: innerShadow forState: UIControlStateNormal];
 }
-- (void) setInnerShadow: (AZShadow *) innerShadow forState: (UIControlState) controlState
+- (void) setInnerShadow: (id <AZShadow>) innerShadow forState: (UIControlState) controlState
 {
 	[self az_setValue: innerShadow forAppearanceKey: @"innerShadow" forState: controlState];
 }
@@ -623,11 +623,11 @@ static inline UIControlContentHorizontalAlignment UIControlContentHorizontalAlig
 	return [[self az_valueForAppearanceKeyForCurrentState: @"gradientDirection"] unsignedIntegerValue];
 }
 
-- (AZShadow *) az_innerShadowForCurrentState
+- (id <AZShadow>) az_innerShadowForCurrentState
 {
 	return [self az_valueForAppearanceKeyForCurrentState: @"innerShadow"];
 }
-- (AZShadow *) az_shadowForCurrentState
+- (id <AZShadow>) az_shadowForCurrentState
 {
 	return [self az_valueForAppearanceKeyForCurrentState: @"shadow"];
 }

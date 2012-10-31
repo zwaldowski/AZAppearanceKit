@@ -38,9 +38,7 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 {
 	if (NSClassFromString(@"NSShadow"))
 	{
-		id oldSelf = self;
-		self = (id) [[NSClassFromString(@"NSShadow") alloc] init];
-		oldSelf = nil;
+		self = [[NSClassFromString(@"NSShadow") alloc] init];
 		return self;
 	}
 	
@@ -173,7 +171,7 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 #else
-	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort]
+	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
 #endif
 	CGContextSetShadowWithColor(ctx, CGSizeZero, 0, NULL);
 }
