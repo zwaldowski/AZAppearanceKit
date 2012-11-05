@@ -18,5 +18,6 @@ extern CGPathRef CGPathCreateByRoundingCornersInRect(CGRect rect, CGFloat topLef
 
 extern void UIGraphicsContextPerformBlock(void (^)(CGContextRef ctx));
 extern void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color);
+extern UIImage *UIGraphicsContextCreateImage(CGSize size, BOOL opaque, void (^contextBlock)(CGContextRef ctx));
 
 #endif

@@ -329,6 +329,11 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 	return _colorSpace ?: CGColorGetColorSpace((__bridge CGColorRef)(_colors.allValues.lastObject));
 }
 
+- (BOOL)isEqual:(AZGradient *)object {
+	if (![object isKindOfClass: [self class]]) return NO;
+	return [object->_colors isEqual: _colors];
+}
+
 @end
 
 #endif

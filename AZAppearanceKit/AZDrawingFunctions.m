@@ -90,4 +90,36 @@ void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor 
     });
 }
 
+UIImage *UIGraphicsContextCreateImage(CGSize size, BOOL opaque, void (^contextBlock)(CGContextRef ctx)) {
+	BOOL isMain = (dispatch_get_current_queue() == dispatch_get_main_queue());
+	CGContextRef context = NULL;
+	CGColorSpaceRef colorSpace = NULL;
+
+	if (isMain) {
+		UIGraphicsBeginImageContextWithOptions(size, opaque, 0.0);
+		context = UIGraphicsGetCurrentContext();
+	} else {
+		colorSpace = CGColorSpaceCreateDeviceRGB();
+		CGFloat scale = [UIScreen mainScreen].scale;
+		context = CGBitmapContextCreate(NULL, size.width * scale, size.height * scale, 8, size.width * scale, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Host);
+	}
+
+	contextBlock(context);
+
+    UIImage *retImage = nil;
+
+	if (isMain) {
+		retImage = UIGraphicsGetImageFromCurrentImageContext();
+		UIGraphicsEndImageContext();
+	} else {
+		CGImageRef cgImage = CGBitmapContextCreateImage(context);
+		retImage = [UIImage imageWithCGImage:cgImage];
+		CGImageRelease(cgImage);
+		CGContextRelease(context);
+		CGColorSpaceRelease(colorSpace);
+	}
+
+	return retImage;
+}
+
 #endif
