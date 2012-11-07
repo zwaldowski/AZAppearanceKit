@@ -149,9 +149,13 @@ static NSCache *_az_imageCache;
 
 - (void)setSectionLocation:(AZTableViewCellSectionLocation)location animated:(BOOL)animated
 {
-#warning TODO animation
 	_sectionLocation = location;
-	if (self.window) [self az_redrawablePropertyChange];
+	
+	if (self.window) {
+		[UIView transitionWithView: self duration: animated ? 0.33 : 0 options: UIViewAnimationOptionLayoutSubviews | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionTransitionCrossDissolve animations:^{
+			[self az_redrawablePropertyChange];
+		} completion: NULL];
+	}
 }
 
 - (CGSize)az_shadowMarginForShadow:(id <AZShadow>)shadow {
