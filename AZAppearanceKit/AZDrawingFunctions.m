@@ -43,36 +43,6 @@ void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge) {
 	CGContextStrokePath(ctx);
 }
 
-extern CGPathRef CGPathCreateWithRoundedRect(CGRect rect, CGFloat cornerRadius) {
-    return CGPathCreateByRoundingCornersInRect(rect, cornerRadius, cornerRadius, cornerRadius, cornerRadius);
-}
-
-extern CGPathRef CGPathCreateByRoundingCornersInRect(CGRect rect, CGFloat topLeftRadius, CGFloat topRightRadius, CGFloat bottomLeftRadius, CGFloat bottomRightRadius) {
-	const CGPoint topLeft = rect.origin;
-    const CGPoint topRight = CGPointMake(CGRectGetMaxX(rect), CGRectGetMinY(rect));
-    const CGPoint bottomRight = CGPointMake(CGRectGetMaxX(rect), CGRectGetMaxY(rect));
-    const CGPoint bottomLeft = CGPointMake(CGRectGetMinX(rect), CGRectGetMaxY(rect));
-    CGMutablePathRef path = CGPathCreateMutable();
-
-	CGPathMoveToPoint(path, NULL, topLeft.x + topLeftRadius, topLeft.y);
-
-	CGPathAddLineToPoint(path, NULL, topRight.x - topRightRadius, topRight.y);
-	CGPathAddCurveToPoint(path, NULL, topRight.x, topRight.y, topRight.x, topRight.y + topRightRadius, topRight.x, topRight.y + topRightRadius);
-
-	CGPathAddLineToPoint(path, NULL, bottomRight.x, bottomRight.y - bottomRightRadius);
-	CGPathAddCurveToPoint(path, NULL, bottomRight.x, bottomRight.y, bottomRight.x - bottomRightRadius, bottomRight.y, bottomRight.x - bottomRightRadius, bottomRight.y);
-
-	CGPathAddLineToPoint(path, NULL, bottomLeft.x + bottomLeftRadius, bottomLeft.y);
-	CGPathAddCurveToPoint(path, NULL, bottomLeft.x, bottomLeft.y, bottomLeft.x, bottomLeft.y - bottomLeftRadius, bottomLeft.x, bottomLeft.y - bottomLeftRadius);
-
-	CGPathAddLineToPoint(path, NULL, topLeft.x, topLeft.y + topLeftRadius);
-	CGPathAddCurveToPoint(path, NULL, topLeft.x, topLeft.y, topLeft.x + topLeftRadius, topLeft.y, topLeft.x + topLeftRadius, topLeft.y);
-
-    CGPathCloseSubpath(path);
-	
-    return path;
-}
-
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
 void UIGraphicsContextPerformBlock(void (^block)(CGContextRef)) {
@@ -90,7 +60,7 @@ void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor 
     });
 }
 
-UIImage *UIGraphicsContextCreateImage(CGSize size, BOOL opaque, void (^contextBlock)(CGContextRef ctx)) {
+UIImage *AZGraphicsCreateImageUsingBlock(CGSize size, BOOL opaque, void (^contextBlock)(void)) {
 	BOOL isMain = (dispatch_get_current_queue() == dispatch_get_main_queue());
 	CGContextRef context = NULL;
 	CGColorSpaceRef colorSpace = NULL;
@@ -102,9 +72,10 @@ UIImage *UIGraphicsContextCreateImage(CGSize size, BOOL opaque, void (^contextBl
 		colorSpace = CGColorSpaceCreateDeviceRGB();
 		CGFloat scale = [UIScreen mainScreen].scale;
 		context = CGBitmapContextCreate(NULL, size.width * scale, size.height * scale, 8, size.width * scale, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrder32Host);
+		UIGraphicsPushContext(context);
 	}
 
-	contextBlock(context);
+	contextBlock();
 
     UIImage *retImage = nil;
 
@@ -112,6 +83,7 @@ UIImage *UIGraphicsContextCreateImage(CGSize size, BOOL opaque, void (^contextBl
 		retImage = UIGraphicsGetImageFromCurrentImageContext();
 		UIGraphicsEndImageContext();
 	} else {
+		UIGraphicsPopContext();
 		CGImageRef cgImage = CGBitmapContextCreateImage(context);
 		retImage = [UIImage imageWithCGImage:cgImage];
 		CGImageRelease(cgImage);

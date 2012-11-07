@@ -16,8 +16,8 @@
 @property (nonatomic, assign) CGFloat shadowBlurRadius;
 @property (nonatomic, retain) id shadowColor;
 
-+ (id)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius;
-+ (id)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius color:(id)shadowColor;
++ (id <AZShadow>)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius;
++ (id <AZShadow>)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius color:(id)shadowColor;
 + (void)clear;
 - (void)set;
 

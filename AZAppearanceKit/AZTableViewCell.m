@@ -22,8 +22,6 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
     AZTableViewCellSectionLocationAlone
 };
 
-#pragma mark - Background hackery
-
 @interface AZTableViewCell ()
 
 @property (nonatomic, readonly) BOOL tableViewIsGrouped;
@@ -159,21 +157,21 @@ static NSCache *_az_imageCache;
     return self;
 }
 
-- (void)az_removeObservers {
-	if (_cell) {
-		[_cell removeObserver: self forKeyPath: @"shadow"];
-		[_cell removeObserver: self forKeyPath: @"cornerRadius"];
-		[_cell removeObserver: self forKeyPath: @"backgroundColor"];
-		[_cell removeObserver: self forKeyPath: @"borderColor"];
-		if (_selected)
-			[_cell removeObserver: self forKeyPath: @"selectionGradient"];
-		else
-			[_cell removeObserver: self forKeyPath: @"gradient"];
-	}
-}
-
 - (void)dealloc {
 	[self az_removeObservers];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+	if ([keyPath isEqualToString: @"shadow"] ||
+		[keyPath isEqualToString: @"cornerRadius"] ||
+		[keyPath isEqualToString: @"backgroundColor"] ||
+		[keyPath isEqualToString: @"borderColor"] ||
+		[keyPath isEqualToString: @"gradient"] ||
+		[keyPath isEqualToString: @"selectionGradient"]) {
+		if (self.window) [self az_redrawablePropertyChange];
+		return;
+	}
+	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -197,19 +195,6 @@ static NSCache *_az_imageCache;
 	}
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-	if ([keyPath isEqualToString: @"shadow"] ||
-		[keyPath isEqualToString: @"cornerRadius"] ||
-		[keyPath isEqualToString: @"backgroundColor"] ||
-		[keyPath isEqualToString: @"borderColor"] ||
-		[keyPath isEqualToString: @"gradient"] ||
-		[keyPath isEqualToString: @"selectionGradient"]) {
-		if (self.window) [self az_redrawablePropertyChange];
-		return;
-	}
-	[super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
-}
-
 - (void)willMoveToWindow:(UIWindow *)newWindow {
 	[super willMoveToWindow: newWindow];
 	[self az_redrawablePropertyChange];
@@ -221,6 +206,8 @@ static NSCache *_az_imageCache;
 
 	[self az_updateSeparatorViews];
 }
+
+#pragma mark -
 
 - (void)setSectionLocation:(AZTableViewCellSectionLocation)location {
 	[self setSectionLocation: location animated: NO];
@@ -236,6 +223,8 @@ static NSCache *_az_imageCache;
 		} completion: NULL];
 	}
 }
+
+#pragma mark -
 
 - (CGSize)az_shadowMarginForShadow:(id <AZShadow>)shadow {
 	if (!shadow) return CGSizeZero;
@@ -279,7 +268,7 @@ static NSCache *_az_imageCache;
 
 		CGSize size = CGSizeMake(insets.left + insets.right + 1, insets.top + insets.bottom + 1);
 
-		UIImage *image = UIGraphicsContextCreateImage(size, NO, ^(CGContextRef ctx) {
+		UIImage *image = AZGraphicsCreateImageUsingBlock(size, NO, ^{
 			CGRect rect = { CGPointZero, size };
 
 			CGRect clippingRect = rect;
@@ -300,35 +289,33 @@ static NSCache *_az_imageCache;
 			}
 			clippingRect.origin.y += topInset;
 			clippingRect.size.height -= topInset + bottomInset;
-			CGContextClipToRect(ctx, clippingRect);
+			UIRectClip(clippingRect);
 
 			CGRect innerRect = CGRectInset(rect, shadowMargin.width, shadowMargin.height);
-			CGPathRef path = CGPathCreateByRoundingCornersInRect(innerRect, topRadius, topRadius, bottomRadius, bottomRadius);
-			CGPathRef shadowPath = path;
+			UIBezierPath *path = [UIBezierPath bezierPathByRoundingCornersInRect: innerRect topLeft: topRadius topRight: topRadius bottomLeft: bottomRadius bottomRight: bottomRadius];
 
+			UIBezierPath *shadowPath = nil;
 			if (shadow && !topRadius && (location == AZTableViewCellSectionLocationMiddle || location == AZTableViewCellSectionLocationBottom)) {
 				CGRect shadowRect = innerRect;
 				shadowRect.origin.y -= shadow.shadowBlurRadius;
 				shadowRect.size.height += shadow.shadowBlurRadius;
-				shadowPath = CGPathCreateByRoundingCornersInRect(shadowRect, topRadius, topRadius, bottomRadius, bottomRadius);
+				shadowPath = [UIBezierPath bezierPathByRoundingCornersInRect: shadowRect topLeft: topRadius topRight: topRadius bottomLeft: bottomRadius bottomRight: bottomRadius];
+			} else {
+				shadowPath = [path copy];
 			}
+
+			[borderColor setStroke];
+			[backgroundColor setFill];
 
 			// stroke the primary shadow
 			UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
 				if (!isSelected) [shadow set];
-				CGContextSetStrokeColorWithColor(ctx, borderColor.CGColor);
-				CGContextSetLineWidth(ctx, shadow ? 0.5 : 1);
-				CGContextAddPath(ctx, shadowPath);
-				CGContextStrokePath(ctx);
+				shadowPath.lineWidth = shadow ? 0.5 : 1;
+				[shadowPath stroke];
 			});
 
 			// draw the cell background
-			UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-				CGContextAddPath(ctx, path);
-				CGContextClip(ctx);
-				CGContextSetFillColorWithColor(ctx, [backgroundColor CGColor]);
-				CGContextFillRect(ctx, innerRect);
-			});
+			[path fill];
 		});
 
 		ret = [image resizableImageWithCapInsets: insets resizingMode: UIImageResizingModeStretch];
@@ -376,6 +363,19 @@ static NSCache *_az_imageCache;
 			[_az_bottomSeparatorView removeFromSuperview];
 			_az_bottomSeparatorView = nil;
 		}
+	}
+}
+
+- (void)az_removeObservers {
+	if (_cell) {
+		[_cell removeObserver: self forKeyPath: @"shadow"];
+		[_cell removeObserver: self forKeyPath: @"cornerRadius"];
+		[_cell removeObserver: self forKeyPath: @"backgroundColor"];
+		[_cell removeObserver: self forKeyPath: @"borderColor"];
+		if (_selected)
+			[_cell removeObserver: self forKeyPath: @"selectionGradient"];
+		else
+			[_cell removeObserver: self forKeyPath: @"gradient"];
 	}
 }
 

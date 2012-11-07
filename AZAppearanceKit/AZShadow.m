@@ -25,11 +25,11 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 
 @synthesize shadowOffset = _shadowOffset, shadowBlurRadius = _shadowBlurRadius, shadowColor = _shadowColor;
 
-+ (id)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius {
++ (id <AZShadow>)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius {
 	return [self shadowWithOffset: shadowOffset blurRadius: shadowBlurRadius color: nil];
 }
 
-+ (id)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius color:(id)shadowColor {
++ (id <AZShadow>)shadowWithOffset:(CGSize)shadowOffset blurRadius:(CGFloat)shadowBlurRadius color:(id)shadowColor {
 	id <AZShadow> ret = NSClassFromString(@"NSShadow") ? [NSClassFromString(@"NSShadow") new] : [AZShadow new];
 	ret.shadowOffset = shadowOffset;
 	ret.shadowBlurRadius = shadowBlurRadius;
