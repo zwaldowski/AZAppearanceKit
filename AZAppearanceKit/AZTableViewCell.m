@@ -11,6 +11,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "AZGradient.h"
 #import "AZDrawingFunctions.h"
+#import "AZGradientView.h"
+#import "UIBezierPath+AZAppearanceKit.h"
 
 typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
     AZTableViewCellSectionLocationNone,
@@ -29,13 +31,16 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 
 @end
 
+@interface AZTableViewCellBackgroundFillView : AZGradientView
+
+@end
+
 @interface AZTableViewCellBackground : UIView
 
 @property (nonatomic, readonly, weak) AZTableViewCell *cell;
 @property (nonatomic, readonly, getter = isSelected) BOOL selected;
 @property (nonatomic, weak) UIImageView *contentsView;
-
-- (id) initForSelectionView:(BOOL)selected;
+@property (nonatomic, weak) AZTableViewCellBackgroundFillView *fillView;
 
 @property (nonatomic) AZTableViewCellSectionLocation sectionLocation;
 - (void)setSectionLocation:(AZTableViewCellSectionLocation)sectionLocation animated:(BOOL)animated;
@@ -81,8 +86,43 @@ typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
 
 @end
 
+@implementation AZTableViewCellBackgroundFillView
+
+- (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
+	UIGraphicsPushContext(ctx);
+
+	AZTableViewCellBackground *background = (id)[self superview];
+	AZTableViewCell *cell = background.cell;
+
+	CGFloat topRadius = 0, bottomRadius = 0, radius = cell.cornerRadius;
+
+	switch (background.sectionLocation)
+	{
+		case AZTableViewCellSectionLocationTop:
+			topRadius = radius;
+			break;
+		case AZTableViewCellSectionLocationAlone:
+			topRadius = radius;
+			bottomRadius = radius;
+			break;
+		case AZTableViewCellSectionLocationBottom:
+			bottomRadius = radius;
+			break;
+		default:
+			break;
+	}
+
+	CGRect rect = CGContextGetClipBoundingBox(ctx);
+	[[UIBezierPath bezierPathByRoundingCornersInRect: rect topLeft: topRadius topRight: topRadius bottomLeft: bottomRadius bottomRight: bottomRadius] addClip];
+
+	[super drawLayer:layer inContext:ctx];
+
+	UIGraphicsPopContext();
+}
+
+@end
+
 @implementation AZTableViewCellBackground {
-	NSUInteger _az_animationCount;
 	UIView *_az_bottomSeparatorView;
 	AZTableViewCellBackgroundContentsKey *_az_currentContentsKey;
 }
@@ -101,14 +141,20 @@ static NSCache *_az_imageCache;
 - (id)init {
     if (self = [super initWithFrame: CGRectZero])
     {
-		self.clipsToBounds = NO;
-		self.opaque = NO;
-
 		UIImageView *contents = [[UIImageView alloc] initWithFrame: CGRectZero];
 		contents.backgroundColor = [UIColor clearColor];
 		contents.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 		[self addSubview: contents];
 		self.contentsView = contents;
+
+		AZTableViewCellBackgroundFillView *fill = [[AZTableViewCellBackgroundFillView alloc] initWithFrame: CGRectZero];
+		fill.type = AZGradientViewTypeLinear;
+		fill.angle = 90.0f;
+		fill.backgroundColor = [UIColor clearColor];
+		fill.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		fill.contentMode = UIViewContentModeRedraw;
+		[self addSubview: fill];
+		self.fillView = fill;
     }
     return self;
 }
@@ -119,6 +165,10 @@ static NSCache *_az_imageCache;
 		[_cell removeObserver: self forKeyPath: @"cornerRadius"];
 		[_cell removeObserver: self forKeyPath: @"backgroundColor"];
 		[_cell removeObserver: self forKeyPath: @"borderColor"];
+		if (_selected)
+			[_cell removeObserver: self forKeyPath: @"selectionGradient"];
+		else
+			[_cell removeObserver: self forKeyPath: @"gradient"];
 	}
 }
 
@@ -136,6 +186,13 @@ static NSCache *_az_imageCache;
 		[_cell addObserver: self forKeyPath: @"backgroundColor" options: 0 context: NULL];
 		[_cell addObserver: self forKeyPath: @"borderColor" options: 0 context: NULL];
 		_selected = ![[(UITableViewCell *)newSuperview backgroundView] isEqual: self];
+		if (_selected) {
+			[_cell addObserver: self forKeyPath: @"selectionGradient" options: 0 context: NULL];
+			self.fillView.gradient = self.cell.selectionGradient;
+		} else {
+			[_cell addObserver: self forKeyPath: @"gradient" options: 0 context: NULL];
+			self.fillView.gradient = self.cell.gradient;
+		}
 		[self az_redrawablePropertyChange];
 	}
 }
@@ -144,7 +201,9 @@ static NSCache *_az_imageCache;
 	if ([keyPath isEqualToString: @"shadow"] ||
 		[keyPath isEqualToString: @"cornerRadius"] ||
 		[keyPath isEqualToString: @"backgroundColor"] ||
-		[keyPath isEqualToString: @"borderColor"]) {
+		[keyPath isEqualToString: @"borderColor"] ||
+		[keyPath isEqualToString: @"gradient"] ||
+		[keyPath isEqualToString: @"selectionGradient"]) {
 		if (self.window) [self az_redrawablePropertyChange];
 		return;
 	}
@@ -157,6 +216,9 @@ static NSCache *_az_imageCache;
 }
 
 - (void)layoutSubviews {
+	CGSize shadowMargin = [self az_shadowMarginForShadow: self.cell.shadow];
+	self.contentsView.frame = CGRectInset(self.bounds, -shadowMargin.width, -shadowMargin.height);
+
 	[self az_updateSeparatorViews];
 }
 
@@ -182,7 +244,6 @@ static NSCache *_az_imageCache;
 }
 
 - (UIImage *)az_cachedImageForKey:(AZTableViewCellBackgroundContentsKey *)key {
-#warning TODO Fix appearance of gradients, possibly draw elsewhere
 	UIImage *ret = [_az_imageCache objectForKey: key];
 	if (!ret) {
 		BOOL isSelected = key.selected;
@@ -277,18 +338,21 @@ static NSCache *_az_imageCache;
 }
 
 - (void)az_redrawablePropertyChange {
-	id <AZShadow> shadow = self.cell.shadow;
-	CGSize shadowMargin = [self az_shadowMarginForShadow: shadow];
-	self.contentsView.frame = CGRectInset(self.bounds, -shadowMargin.width, -shadowMargin.height);
 	AZTableViewCellBackgroundContentsKey *key = [AZTableViewCellBackgroundContentsKey new];
 	key.sectionLocation = self.sectionLocation;
 	key.selected = self.selected;
 	key.cornerRadius = self.cell.cornerRadius;
-	key.shadow = shadow;
+	key.shadow = self.cell.shadow;
 	key.backgroundColor = self.cell.backgroundColor;
 	key.borderColor = self.cell.borderColor;
 	self.contentsView.image = [self az_cachedImageForKey: key];
+	
 	[self setNeedsLayout];
+
+	if (_selected)
+		self.fillView.gradient = self.cell.selectionGradient;
+	else
+		self.fillView.gradient = self.cell.gradient;
 }
 
 - (void)az_updateSeparatorViews {
@@ -308,7 +372,7 @@ static NSCache *_az_imageCache;
 		_az_bottomSeparatorView.backgroundColor = self.cell.separatorColor;
 		[self bringSubviewToFront: _az_bottomSeparatorView];
 	} else {
-		if (_az_bottomSeparatorView && !_az_animationCount) {
+		if (_az_bottomSeparatorView) {
 			[_az_bottomSeparatorView removeFromSuperview];
 			_az_bottomSeparatorView = nil;
 		}
