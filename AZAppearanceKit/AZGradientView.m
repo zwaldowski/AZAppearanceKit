@@ -69,9 +69,8 @@
 }
 
 - (void)az_sharedInit {
-	self.contentMode = UIViewContentModeRedraw;
-	self.layer.contentsScale = [[UIScreen mainScreen] scale];
-	[self.layer setNeedsDisplay];
+	self.layer.shouldRasterize = YES;
+	self.layer.rasterizationScale = self.layer.contentsScale = [[UIScreen mainScreen] scale];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
@@ -108,19 +107,12 @@
 }
 
 - (void)setGradient:(AZGradient *)gradient animated:(BOOL)animated {
-	void (^animation)(void) = ^{
-		AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-		layer.gradient = gradient;
-	};
-	
-	if (animated) {
-		[UIView animateWithDuration: 0.33 delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	} else {
-		[CATransaction begin];
-		[CATransaction setValue: (id)kCFBooleanTrue forKey: kCATransactionDisableActions];
-		animation();
-		[CATransaction commit];
-	}
+	[CATransaction begin];
+	[CATransaction setAnimationDuration: animated ? 0.33 : 0];
+	[CATransaction setAnimationTimingFunction: [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut]];
+	AZGradientLayer *layer = (AZGradientLayer *)self.layer;
+	layer.gradient = gradient;
+	[CATransaction commit];
 }
 
 - (AZGradientViewType)type {
@@ -133,19 +125,12 @@
 }
 
 - (void)setType:(AZGradientViewType)type animated:(BOOL)animated {
-	void (^animation)(void) = ^{
-		AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-		layer.type = type;
-	};
-	
-	if (animated) {
-		[UIView animateWithDuration: 0.33 delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	} else {
-		[CATransaction begin];
-		[CATransaction setValue: (id)kCFBooleanTrue forKey: kCATransactionDisableActions];
-		animation();
-		[CATransaction commit];
-	}
+	[CATransaction begin];
+	[CATransaction setAnimationDuration: animated ? 0.33 : 0];
+	[CATransaction setAnimationTimingFunction: [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut]];
+	AZGradientLayer *layer = (AZGradientLayer *)self.layer;
+	layer.type = type;
+	[CATransaction commit];
 }
 
 - (CGFloat)angle {
@@ -158,19 +143,12 @@
 }
 
 - (void)setAngle:(CGFloat)angle animated:(BOOL)animated {
-	void (^animation)(void) = ^{
-		AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-		layer.angle = angle;
-	};
-	
-	if (animated) {
-		[UIView animateWithDuration: 0.33 delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	} else {
-		[CATransaction begin];
-		[CATransaction setValue: (id)kCFBooleanTrue forKey: kCATransactionDisableActions];
-		animation();
-		[CATransaction commit];
-	}
+	[CATransaction begin];
+	[CATransaction setAnimationDuration: animated ? 0.33 : 0];
+	[CATransaction setAnimationTimingFunction: [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut]];
+	AZGradientLayer *layer = (AZGradientLayer *)self.layer;
+	layer.angle = angle;
+	[CATransaction commit];
 }
 
 - (CGPoint)relativeCenterPosition {
@@ -183,19 +161,12 @@
 }
 
 - (void)setRelativeCenterPosition:(CGPoint)relativeCenterPosition animated:(BOOL)animated {
-	void (^animation)(void) = ^{
-		AZGradientLayer *layer = (AZGradientLayer *)self.layer;
-		layer.relativeCenterPosition = relativeCenterPosition;
-	};
-	
-	if (animated) {
-		[UIView animateWithDuration: 0.33 delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	} else {
-		[CATransaction begin];
-		[CATransaction setValue: (id)kCFBooleanTrue forKey: kCATransactionDisableActions];
-		animation();
-		[CATransaction commit];
-	}
+	[CATransaction begin];
+	[CATransaction setAnimationDuration: animated ? 0.33 : 0];
+	[CATransaction setAnimationTimingFunction: [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseInEaseOut]];
+	AZGradientLayer *layer = (AZGradientLayer *)self.layer;
+	layer.relativeCenterPosition = relativeCenterPosition;
+	[CATransaction commit];
 }
 
 @end
