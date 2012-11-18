@@ -10,7 +10,7 @@
 #import "AZTabBar.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AZGradient.h"
-#import "AZDrawingFunctions.h"
+#import "UIBezierPath+AZAppearanceKit.h"
 
 @implementation AZTabBar
 
@@ -47,15 +47,17 @@
 
 - (void) layoutSubviews {
 	[super layoutSubviews];
-	
-    CGPathRef path = CGPathCreateWithRect(self.bounds, NULL);
-	self.layer.shadowPath = path;
-    CGPathRelease(path);
+	self.layer.shadowPath = [[UIBezierPath bezierPathWithRect: self.bounds] CGPath];
 }
 
 - (void) drawRect:(CGRect)rect {
 	[self.gradient drawInRect: rect direction: AZGradientDirectionVertical];
-	UIRectStrokeWithColor(rect, CGRectMinYEdge, 2.5f, self.separatorLineColor);
+
+	UIBezierPath *path = [UIBezierPath bezierPathWithRect: rect];
+	path.lineWidth = 2.5f;
+
+	[self.separatorLineColor setStroke];
+	[path strokeEdge: CGRectMinYEdge];
 }
 
 @end

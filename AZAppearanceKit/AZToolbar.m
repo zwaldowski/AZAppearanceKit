@@ -11,7 +11,7 @@
 #import "AZToolbar.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AZGradient.h"
-#import "AZDrawingFunctions.h"
+#import "UIBezierPath+AZAppearanceKit.h"
 
 @implementation AZToolbar
 
@@ -58,8 +58,15 @@
 
 - (void) drawRect:(CGRect)rect {
 	[self.gradient drawInRect: rect direction: AZGradientDirectionVertical];
-	UIRectStrokeWithColor(rect, CGRectMinYEdge, 1.5f, self.topLineColor);
-	UIRectStrokeWithColor(rect, CGRectMaxYEdge, 1.5f, self.bottomLineColor);
+
+	UIBezierPath *path = [UIBezierPath bezierPathWithRect: rect];
+	path.lineWidth = 1.5f;
+
+	[self.topLineColor setStroke];
+	[path strokeEdge: CGRectMinYEdge];
+
+	[self.bottomLineColor setStroke];
+	[path strokeEdge: CGRectMaxYEdge];
 }
 
 @end

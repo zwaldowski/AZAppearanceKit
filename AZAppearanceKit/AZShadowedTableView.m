@@ -8,7 +8,8 @@
 //
 
 #import "AZShadowedTableView.h"
-#import "AZDrawingFunctions.h"
+#import "AZShadow.h"
+#import "UIBezierPath+AZAppearanceKit.h"
 
 @interface AZShadowedTableShadowView : UIView
 
@@ -32,13 +33,17 @@
     rect.size.height += 5;
     if (!_top)
         rect.origin.y -= 5;
-    
-    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-        CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 20, [[UIColor colorWithWhite: 0.0 alpha: 1.0] CGColor]);
-        CGContextSetStrokeColorWithColor(ctx, [[UIColor whiteColor] CGColor]);
-        CGContextSetLineWidth(ctx, 5);
-        CGContextStrokeRectEdge(ctx, rect, _top ? CGRectMaxYEdge : CGRectMinYEdge);
-    });
+
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	CGContextSaveGState(ctx);
+	{
+		UIBezierPath *path = [UIBezierPath bezierPathWithRect: rect];
+		[[AZShadow shadowWithOffset: CGSizeZero blurRadius: 20 color: [UIColor colorWithWhite: 0.0 alpha: 1.0]] set];
+		[[UIColor whiteColor] setStroke];
+		path.lineWidth = 5;
+		[path strokeEdge: _top ? CGRectMaxYEdge : CGRectMinYEdge];
+	}
+	CGContextRestoreGState(ctx);
 }
 
 @end

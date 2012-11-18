@@ -15,7 +15,6 @@
 #import <CoreText/CoreText.h>
 #import "AZLabel.h"
 #import "AZGradient.h"
-#import "AZDrawingFunctions.h"
 
 @interface AZLabel ()
 
@@ -268,8 +267,10 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 		self.gradient = [[AZGradient alloc] initWithColorsAtLocations: self.gradientDict];
 		self.gradientDict = nil;
 	}
-    
-    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	CGContextSaveGState(ctx);
+	{
         CGContextTranslateCTM(ctx, 0, rect.size.height);
         CGContextScaleCTM(ctx, 1, -1);
         
@@ -296,8 +297,9 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 		UIBezierPath *textNegativePath = [UIBezierPath bezierPathWithRect: textBorderRect];
 		[textNegativePath appendPath: self.textPath];
 		textNegativePath.usesEvenOddFillRule = YES;
-        
-        UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+
+		CGContextSaveGState(ctx);
+		{
 			CGFloat xOffset = self.innerShadowOffsetForCurrentState.width + round(textBorderRect.size.width);
 			CGFloat yOffset = self.innerShadowOffsetForCurrentState.height;
 			CGContextSetShadowWithColor(ctx, CGSizeMake(xOffset + copysign(0.1, xOffset), yOffset + copysign(0.1, yOffset)), self.innerShadowBlurForCurrentState, self.innerShadowColorForCurrentState.CGColor);
@@ -309,8 +311,10 @@ static inline CTLineBreakMode CTLineBreakModeForUILineBreakMode(UILineBreakMode 
 			
 			[[UIColor grayColor] setFill];
 			[textNegativePath fill];
-        });
-    });
+        }
+		CGContextRestoreGState(ctx);
+    }
+	CGContextRestoreGState(ctx);
 }
 
 - (CGSize) sizeThatFits: (CGSize) size

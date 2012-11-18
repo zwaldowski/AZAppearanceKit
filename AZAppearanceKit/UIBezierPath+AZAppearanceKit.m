@@ -9,7 +9,6 @@
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
 #import "UIBezierPath+AZAppearanceKit.h"
-#import "AZDrawingFunctions.h"
 
 @implementation UIBezierPath (AZAppearanceKit)
 
@@ -60,7 +59,38 @@
 		free(lengths);
 	}
 
-	CGContextStrokeRectEdge(ctx, self.bounds, edge);
+	CGRect rect = self.bounds;
+	CGFloat minX, maxX, minY, maxY;
+	switch (edge) {
+		case CGRectMinXEdge:
+			minX = CGRectGetMinX(rect);
+			minY = CGRectGetMinY(rect);
+			maxX = CGRectGetMinX(rect);
+			maxY = CGRectGetMaxY(rect);
+			break;
+		case CGRectMinYEdge:
+			minX = CGRectGetMinX(rect);
+			minY = CGRectGetMinY(rect);
+			maxX = CGRectGetMaxX(rect);
+			maxY = CGRectGetMinY(rect);
+			break;
+		case CGRectMaxXEdge:
+			minX = CGRectGetMaxX(rect);
+			minY = CGRectGetMinY(rect);
+			maxX = CGRectGetMaxX(rect);
+			maxY = CGRectGetMaxY(rect);
+			break;
+		case CGRectMaxYEdge:
+			minX = CGRectGetMinX(rect);
+			minY = CGRectGetMaxY(rect);
+			maxX = CGRectGetMaxX(rect);
+			maxY = CGRectGetMaxY(rect);
+			break;
+	}
+
+    CGContextMoveToPoint(ctx, minX, minY);
+    CGContextAddLineToPoint(ctx, maxX, maxY);
+	CGContextStrokePath(ctx);
 
 	CGContextRestoreGState(ctx);
 }

@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6C1DF33C164D772300C73CAE /* UIImage+AZAppearanceKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C1DF33B164D772300C73CAE /* UIImage+AZAppearanceKit.m */; };
 		6C272F28159B723B00C97FC7 /* AZShadowedTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C272F27159B723B00C97FC7 /* AZShadowedTableView.m */; };
 		6C272F34159B75AB00C97FC7 /* AZShadowedTableDemoViewController.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C272F32159B75AB00C97FC7 /* AZShadowedTableDemoViewController.png */; };
 		6C272F35159B75AB00C97FC7 /* AZShadowedTableDemoViewController@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C272F33159B75AB00C97FC7 /* AZShadowedTableDemoViewController@2x.png */; };
 		6C272F90159D8AC900C97FC7 /* AZTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C272F8F159D8AC900C97FC7 /* AZTableViewCell.m */; };
-		6C272F98159D8B2F00C97FC7 /* AZDrawingFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C272F97159D8B2F00C97FC7 /* AZDrawingFunctions.m */; };
 		6C2E304115B458A7000889AC /* AZBarDemoViewController.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C2E303F15B458A7000889AC /* AZBarDemoViewController.png */; };
 		6C2E304215B458A7000889AC /* AZBarDemoViewController@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C2E304015B458A7000889AC /* AZBarDemoViewController@2x.png */; };
 		6C41F20B15B46FED00572729 /* AZNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C41F20615B46FED00572729 /* AZNavigationBar.m */; };
@@ -44,14 +44,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6C1DF33A164D772300C73CAE /* UIImage+AZAppearanceKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+AZAppearanceKit.h"; sourceTree = "<group>"; };
+		6C1DF33B164D772300C73CAE /* UIImage+AZAppearanceKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+AZAppearanceKit.m"; sourceTree = "<group>"; };
 		6C272F26159B723B00C97FC7 /* AZShadowedTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZShadowedTableView.h; sourceTree = "<group>"; };
 		6C272F27159B723B00C97FC7 /* AZShadowedTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZShadowedTableView.m; sourceTree = "<group>"; };
 		6C272F32159B75AB00C97FC7 /* AZShadowedTableDemoViewController.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZShadowedTableDemoViewController.png; sourceTree = "<group>"; };
 		6C272F33159B75AB00C97FC7 /* AZShadowedTableDemoViewController@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZShadowedTableDemoViewController@2x.png"; sourceTree = "<group>"; };
 		6C272F8E159D8AC900C97FC7 /* AZTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZTableViewCell.h; sourceTree = "<group>"; };
 		6C272F8F159D8AC900C97FC7 /* AZTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZTableViewCell.m; sourceTree = "<group>"; };
-		6C272F96159D8B2F00C97FC7 /* AZDrawingFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZDrawingFunctions.h; sourceTree = "<group>"; };
-		6C272F97159D8B2F00C97FC7 /* AZDrawingFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZDrawingFunctions.m; sourceTree = "<group>"; };
 		6C2E303F15B458A7000889AC /* AZBarDemoViewController.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZBarDemoViewController.png; sourceTree = "<group>"; };
 		6C2E304015B458A7000889AC /* AZBarDemoViewController@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZBarDemoViewController@2x.png"; sourceTree = "<group>"; };
 		6C41F20615B46FED00572729 /* AZNavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZNavigationBar.m; sourceTree = "<group>"; };
@@ -202,12 +202,12 @@
 				6C41F20815B46FED00572729 /* AZTabBar.m */,
 				6C41F20915B46FED00572729 /* AZToolbar.h */,
 				6C41F20A15B46FED00572729 /* AZToolbar.m */,
-				6C272F96159D8B2F00C97FC7 /* AZDrawingFunctions.h */,
-				6C272F97159D8B2F00C97FC7 /* AZDrawingFunctions.m */,
 				6C931B42163F309400542F72 /* AZShadow.h */,
 				6C931B43163F309400542F72 /* AZShadow.m */,
 				6C6C02F1163F5A0A00CAAB0E /* UIBezierPath+AZAppearanceKit.h */,
 				6C6C02F2163F5A0A00CAAB0E /* UIBezierPath+AZAppearanceKit.m */,
+				6C1DF33A164D772300C73CAE /* UIImage+AZAppearanceKit.h */,
+				6C1DF33B164D772300C73CAE /* UIImage+AZAppearanceKit.m */,
 			);
 			path = AZAppearanceKit;
 			sourceTree = "<group>";
@@ -293,7 +293,6 @@
 				6CCEB1EB159171F6001266F3 /* AZLabel.m in Sources */,
 				6C272F28159B723B00C97FC7 /* AZShadowedTableView.m in Sources */,
 				6C272F90159D8AC900C97FC7 /* AZTableViewCell.m in Sources */,
-				6C272F98159D8B2F00C97FC7 /* AZDrawingFunctions.m in Sources */,
 				6CD291DD159DF33200736631 /* AZShadowedTableDemoViewController.m in Sources */,
 				6CD291E9159E1B6F00736631 /* AZGradientView.m in Sources */,
 				6CD291F5159E233800736631 /* AZGradientDemoViewController.m in Sources */,
@@ -303,6 +302,7 @@
 				6C859435163B86F000DAB469 /* AZCellTableViewControllerDemo.m in Sources */,
 				6C931B44163F309500542F72 /* AZShadow.m in Sources */,
 				6C6C02F3163F5A0A00CAAB0E /* UIBezierPath+AZAppearanceKit.m in Sources */,
+				6C1DF33C164D772300C73CAE /* UIImage+AZAppearanceKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

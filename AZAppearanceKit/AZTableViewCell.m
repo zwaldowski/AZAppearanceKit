@@ -10,9 +10,9 @@
 #import "AZTableViewCell.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AZGradient.h"
-#import "AZDrawingFunctions.h"
 #import "AZGradientView.h"
 #import "UIBezierPath+AZAppearanceKit.h"
+#import "UIImage+AZAppearanceKit.h"
 
 typedef NS_ENUM(NSUInteger, AZTableViewCellSectionLocation)  {
     AZTableViewCellSectionLocationNone,
@@ -268,7 +268,7 @@ static NSCache *_az_imageCache;
 
 		CGSize size = CGSizeMake(insets.left + insets.right + 1, insets.top + insets.bottom + 1);
 
-		UIImage *image = AZGraphicsCreateImageUsingBlock(size, NO, ^{
+		UIImage *image = [UIImage az_imageWithSize: size opaque: NO usingBlock:^{
 			CGRect rect = { CGPointZero, size };
 
 			CGRect clippingRect = rect;
@@ -308,15 +308,18 @@ static NSCache *_az_imageCache;
 			[backgroundColor setFill];
 
 			// stroke the primary shadow
-			UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+			CGContextRef ctx = UIGraphicsGetCurrentContext();
+			CGContextSaveGState(ctx);
+			{
 				if (!isSelected) [shadow set];
 				shadowPath.lineWidth = shadow ? 0.5 : 1;
 				[shadowPath stroke];
-			});
+			}
+			CGContextRestoreGState(ctx);
 
 			// draw the cell background
 			[path fill];
-		});
+		}];
 
 		ret = [image resizableImageWithCapInsets: insets resizingMode: UIImageResizingModeStretch];
 		[_az_imageCache setObject: ret forKey: key];
