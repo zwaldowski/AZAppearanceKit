@@ -8,7 +8,7 @@
 
 #import "AZGradient.h"
 
-extern NSNumber *AZGradientGetKeyForKVC(NSString *key) {
+NSNumber *AZGradientGetKeyForKVC(NSString *key) {
 	NSScanner *keyScanner = [[NSScanner alloc] initWithString: key];
 	[keyScanner scanUpToString: @"gradient." intoString: NULL];
 	[keyScanner scanString: @"gradient." intoString: NULL];
@@ -18,13 +18,19 @@ extern NSNumber *AZGradientGetKeyForKVC(NSString *key) {
 	};
 
 	CGFloat position;
-	if (checkFor(@"topColor") || checkFor(@"leftColor") || checkFor(@"startingColor") || checkFor(@"startColor") || checkFor(@"firstColor")) {
+	if (checkFor(@"topColor") || checkFor(@"leftColor") || checkFor(@"startingColor") || checkFor(@"startColor") || checkFor(@"firstColor"))
+	{
 		position = 0.0;
-	} else if (checkFor(@"bottomColor") || checkFor(@"rightColor") || checkFor(@"endingColor") || checkFor(@"endColor") || checkFor(@"lastColor")) {
+	}
+	else if (checkFor(@"bottomColor") || checkFor(@"rightColor") || checkFor(@"endingColor") || checkFor(@"endColor") || checkFor(@"lastColor"))
+	{
 		position = 1.0;
-	} else {
+	}
+	else
+	{
 		[keyScanner scanUpToString: @"(" intoString: NULL];
 		[keyScanner scanString: @"(" intoString: NULL];
+		
 		NSString *outStr = NULL;
 		[keyScanner scanUpToString: @")" intoString: &outStr];
 		position = [outStr doubleValue];
@@ -51,6 +57,7 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
     CGContextRef context = CGBitmapContextCreate(&resultingPixel, 1, 1, 8, 4, rgbColorSpace, kCGImageAlphaNoneSkipLast);
     CGContextSetFillColorWithColor(context, opaqueColor);
     CGColorRelease(opaqueColor);
+	
     CGContextFillRect(context, CGRectMake(0.f, 0.f, 1.f, 1.f));
     CGContextRelease(context);
     CGColorSpaceRelease(rgbColorSpace);
@@ -59,48 +66,41 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
     green = resultingPixel[1] / 255.0f;
     blue = resultingPixel[2] / 255.0f;
 	
-    return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
+    return [UIColor colorWithRed: red green: green blue: blue alpha: alpha];
 }
 
-@implementation AZGradient {
+@implementation AZGradient
+{
 	NSDictionary *_colors;
 	CGColorSpaceRef _colorSpace;
 }
 
-@synthesize gradient = _gradient;
-@synthesize numberOfColorStops = _numberOfColorStops;
-
 #pragma mark - Initializers
 
-- (id)initWithStartingColor:(UIColor *)startingColor endingColor:(UIColor *)endingColor {
-	CGColorSpaceRef colorSpace = CGColorGetColorSpace(startingColor.CGColor);
-	NSArray *colors = @[ (__bridge id)startingColor.CGColor, (__bridge id)endingColor.CGColor ];
-	const CGFloat locations[2] = { 0.0, 1.0 };
-	return [self initWithColors: colors atLocations: locations colorSpace: colorSpace];
-}
-
-- (id)initWithColors:(NSArray *)colorArray {
+- (id) initWithColors: (NSArray *) colorArray
+{
 	NSUInteger count = colorArray.count;
 	
 	CGFloat *locations = calloc(count, sizeof(CGFloat));
-	for (NSUInteger i = 0; i < count; i++) {
+	for (NSUInteger i = 0; i < count; i++)
 		locations[i] = i ? (CGFloat)i/(CGFloat)(count-1) : 0.0f;
-	}
+	
 	CGColorSpaceRef colorSpace = CGColorGetColorSpace([colorArray.lastObject CGColor]);
 	
 	self = [self initWithColors: colorArray atLocations: locations colorSpace: colorSpace];
-	
 	free(locations);
 	
 	return self;
 }
-
-- (id)initWithColorsAndLocations:(UIColor *)firstColor, ... {
+- (id) initWithColorsAndLocations: (UIColor *) firstColor, ...
+{
 	NSMutableArray *newColors = [NSMutableArray array];
 	NSMutableArray *newLocations = [NSMutableArray array];
+	
 	va_list arguments;
 	va_start(arguments, firstColor);
-	for (UIColor *color = firstColor; color; color = va_arg(arguments, UIColor *)) {
+	for (UIColor *color = firstColor; color; color = va_arg(arguments, UIColor *))
+	{
 		[newColors addObject:color];
 		[newLocations addObject: @(va_arg(arguments, double))];
 	}
@@ -109,29 +109,27 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 	NSDictionary *dict = [NSDictionary dictionaryWithObjects: newColors forKeys: newLocations];
 	return [self initWithColorsAtLocations: dict];
 }
-
-- (id)initWithColorsAtLocations:(NSDictionary *)colorsWithLocations {
+- (id) initWithColorsAtLocations: (NSDictionary *) colorsWithLocations
+{
 	NSParameterAssert(colorsWithLocations);
-
+	
 	NSArray *locationArray = [colorsWithLocations.allKeys sortedArrayUsingSelector: @selector(compare:)];
 	NSArray *colorArray = [colorsWithLocations objectsForKeys: locationArray notFoundMarker: [NSNull null]];
-
+	
 	CGFloat *locations = calloc(locationArray.count, sizeof(CGFloat));
 	[locationArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
 		locations[idx] = [obj doubleValue];
 	}];
-
+	
 	CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-
 	self = [self initWithColors: colorArray atLocations: locations colorSpace: colorSpace];
-
 	free(locations);
 	CGColorSpaceRelease(colorSpace);
 	
 	return self;
 }
-
-- (id)initWithColors:(NSArray *)colorArray atLocations:(const CGFloat *)locations colorSpace:(CGColorSpaceRef)colorSpace {
+- (id) initWithColors: (NSArray *) colorArray atLocations: (const CGFloat *) locations colorSpace: (CGColorSpaceRef) colorSpace
+{
 	NSParameterAssert(colorArray);
 	NSParameterAssert(locations);
 	NSParameterAssert(colorSpace);
@@ -143,8 +141,8 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 		CFTypeID colorID = CGColorGetTypeID();
 		[colorArray enumerateObjectsUsingBlock:^(id color, NSUInteger idx, BOOL *stop) {
 			if ([color isKindOfClass: [UIColor class]]) {
-				[convertedColorArray addObject: (__bridge id)[color CGColor]];
-			} else if (CFGetTypeID((__bridge CFTypeRef)color) == colorID) {
+				[convertedColorArray addObject: (__bridge id) [color CGColor]];
+			} else if (CFGetTypeID((__bridge CFTypeRef) color) == colorID) {
 				[convertedColorArray addObject: color];
 			} else {
 				[NSException raise: NSInvalidArgumentException format: @"Colors must be of type UIColor or CGColorRef. An object of class %@ was passed.", [color class]];
@@ -158,39 +156,64 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 		_gradient = CGGradientCreateWithColors(_colorSpace, (__bridge CFArrayRef)convertedColorArray, locations);
 		_numberOfColorStops = _colors.count;
 	}
+	
 	return self;
 }
+- (id) initWithStartingColor: (UIColor *) startingColor endingColor: (UIColor *) endingColor
+{
+	CGColorSpaceRef colorSpace = CGColorGetColorSpace(startingColor.CGColor);
+	NSArray *colors = @[ (__bridge id) startingColor.CGColor, (__bridge id) endingColor.CGColor ];
+	const CGFloat locations[2] = { 0.0, 1.0 };
+	return [self initWithColors: colors atLocations: locations colorSpace: colorSpace];
+}
 
-- (void)dealloc {
+- (void) dealloc
+{
     CGGradientRelease(_gradient);
 	CGColorSpaceRelease(_colorSpace);
 }
 
 #pragma mark - NSCoding
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (id) initWithCoder: (NSCoder *) aDecoder
+{
 	return [self initWithColorsAtLocations: [aDecoder decodeObject]];
 }
-
-- (void)encodeWithCoder:(NSCoder *)aCoder {
+- (void) encodeWithCoder: (NSCoder *) aCoder
+{
 	[aCoder encodeObject: _colors];
 }
 
 #pragma mark - NSCopying
 
-- (id)copyWithZone:(NSZone *)zone {
+- (id) copyWithZone: (NSZone *) zone
+{
 	return [[[self class] allocWithZone: zone] initWithColorsAtLocations: _colors];
 }
 
 #pragma mark - Drawing
 
-- (void)drawFromPoint:(CGPoint)startingPoint toPoint:(CGPoint)endingPoint options:(CGGradientDrawingOptions)options {
+- (void) drawFromCenter: (CGPoint) startCenter radius: (CGFloat) startRadius toCenter: (CGPoint) endCenter radius: (CGFloat) endRadius options: (CGGradientDrawingOptions) options
+{
+    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+        CGContextDrawRadialGradient(ctx, _gradient, startCenter, startRadius, endCenter, endRadius, options);
+    });
+}
+- (void) drawFromPoint: (CGPoint) startingPoint toPoint: (CGPoint) endingPoint options: (CGGradientDrawingOptions) options
+{
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
         CGContextDrawLinearGradient(ctx, _gradient, startingPoint, endingPoint, options);
     });
 }
-
-- (void)drawInRect:(CGRect)rect angle:(CGFloat)degrees {	
+- (void) drawInBezierPath: (UIBezierPath *) path angle: (CGFloat) angle
+{
+    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
+        [path addClip];
+        [self drawInRect: path.bounds angle: angle];
+    });
+}
+- (void) drawInRect: (CGRect) rect angle: (CGFloat) degrees
+{
 	CGPoint start, end;
 	CGSize tan;
 	CGFloat radians = (M_PI * (degrees) / 180.0);
@@ -199,56 +222,51 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 	if (degrees < 0)
 		degrees = 360 - degrees;
 	
-	if (degrees < 90) {
+	if (degrees < 90)
+	{
 		start.x = CGRectGetMinX(rect);
 		start.y = CGRectGetMinY(rect);
 		tan.width = CGRectGetWidth(rect);
 		tan.height = CGRectGetHeight(rect);
-	} else if (degrees < 180) {
+	}
+	else if (degrees < 180)
+	{
 		start.x = CGRectGetMaxX(rect);
 		start.y = CGRectGetMinY(rect);
 		tan.width = -CGRectGetWidth(rect);
 		tan.height = CGRectGetHeight(rect);
-	} else if (degrees < 270) {
+	}
+	else if (degrees < 270)
+	{
 		start.x = CGRectGetMaxX(rect);
 		start.y = CGRectGetMaxY(rect);
 		tan.width = -CGRectGetWidth(rect);
 		tan.height = -CGRectGetHeight(rect);
-	} else {
+	}
+	else
+	{
 		start.x = CGRectGetMinX(rect);
 		start.y = CGRectGetMaxY(rect);
 		tan.width = CGRectGetWidth(rect);
 		tan.height = -CGRectGetHeight(rect);
 	}
+	
 	CGFloat distanceToEnd = cos(atan2(tan.height,tan.width) - radians) * hypot(CGRectGetWidth(rect), CGRectGetHeight(rect));
 	end.x = cos(radians) * distanceToEnd + start.x;
 	end.y = sin(radians) * distanceToEnd + start.y;
     
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
         CGContextClipToRect(ctx, rect);
-        CGContextDrawLinearGradient(ctx, _gradient, start, end, kCGGradientDrawsAfterEndLocation|kCGGradientDrawsBeforeStartLocation);
+        CGContextDrawLinearGradient(ctx, _gradient, start, end, kCGGradientDrawsAfterEndLocation | kCGGradientDrawsBeforeStartLocation);
     });
 }
-
-- (void)drawInBezierPath:(UIBezierPath *)path angle:(CGFloat)angle {
-    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-        [path addClip];
-        [self drawInRect: path.bounds angle: angle];
-    });
-}
-
-- (void)drawFromCenter:(CGPoint)startCenter radius:(CGFloat)startRadius toCenter:(CGPoint)endCenter radius:(CGFloat)endRadius options:(CGGradientDrawingOptions)options {
-    UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-        CGContextDrawRadialGradient(ctx, _gradient, startCenter, startRadius, endCenter, endRadius, options);
-    });
-}
-
-- (void)drawInRect:(CGRect)rect relativeCenterPosition:(CGPoint)relativeCenterPosition {
+- (void) drawInRect: (CGRect) rect relativeCenterPosition: (CGPoint) relativeCenterPosition
+{
 	CGFloat width = CGRectGetWidth(rect);
 	CGFloat height = CGRectGetHeight(rect);
-	CGFloat radius = sqrtf(powf(width/2, 2)+powf(height/2, 2));
-	CGPoint startCenter = CGPointMake(width/2+(width*relativeCenterPosition.x)/2, height/2+(height*relativeCenterPosition.y)/2);
-	CGPoint endCenter = CGPointMake(width/2, height/2);
+	CGFloat radius = hypotf(width / 2, height / 2);
+	CGPoint startCenter = CGPointMake(0.5 * relativeCenterPosition.x * (width + 1), 0.5 * relativeCenterPosition.y * (height + 1));
+	CGPoint endCenter = CGPointMake(width / 2, height / 2);
 
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
         CGContextClipToRect(ctx, rect);
@@ -335,12 +353,14 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 
 @implementation AZGradient (AZGradientFeatures)
 
-- (id)gradientByReversingGradient {
+- (id) gradientByReversingGradient
+{
     NSInteger stops = self.numberOfColorStops;
     NSMutableArray *colors = [NSMutableArray arrayWithCapacity: stops];
     CGFloat *locations = calloc(stops, sizeof(CGFloat));
     
-    for (NSInteger i = 0; i < stops; i++) {
+    for (NSInteger i = 0; i < stops; i++)
+	{
         id color = nil;
         CGFloat location = 0.0f;
         [self getColor:&color location:&location atIndex:stops - i - 1];
@@ -349,17 +369,17 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
     }
     
     AZGradient *ret = [[AZGradient alloc] initWithColors: colors atLocations: locations colorSpace: self.colorSpace];
-    
     free(locations);
     
     return ret;
 }
 
-- (void)drawInRect:(CGRect)rect direction:(AZGradientDirection)direction {
+- (void) drawInRect: (CGRect) rect direction: (AZGradientDirection) direction
+{
 	[self drawInRect: rect angle: direction == AZGradientDirectionVertical ? 90 : 0];
 }
-
-- (void)drawInBezierPath:(id)path direction:(AZGradientDirection)direction {
+- (void) drawInBezierPath: (id) path direction: (AZGradientDirection) direction
+{
 	[self drawInBezierPath: path angle: direction == AZGradientDirectionVertical ? 90 : 0];
 }
 

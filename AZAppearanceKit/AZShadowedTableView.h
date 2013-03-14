@@ -19,6 +19,6 @@
 @interface AZShadowedTableView : UITableView
 
 @property (nonatomic) BOOL hidesShadows;
-- (void)setHidesShadows:(BOOL)hidesShadows animated:(BOOL)animated;
+- (void) setHidesShadows: (BOOL) hidesShadows animated: (BOOL) animated;
 
 @end

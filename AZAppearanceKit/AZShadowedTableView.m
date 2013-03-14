@@ -7,35 +7,38 @@
 //  Copyright (c) 2011-2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
-#import "AZShadowedTableView.h"
 #import "AZDrawingFunctions.h"
+#import "AZShadowedTableView.h"
 
 @interface AZShadowedTableShadowView : UIView
-
-@end
-
-@implementation AZShadowedTableShadowView {
+{
 	BOOL _top;
 }
 
-- (id)initWithFrame:(CGRect)frame top:(BOOL)top {
-    if ((self = [super initWithFrame:frame])) {
+@end
+
+@implementation AZShadowedTableShadowView
+
+- (id) initWithFrame: (CGRect) frame top: (BOOL) top
+{
+    if ((self = [super initWithFrame:frame]))
+	{
         self.contentMode = UIViewContentModeRedraw;
         self.backgroundColor = [UIColor clearColor];
 		_top = top;
     }
+	
     return self;
 }
 
-- (void)drawRect:(CGRect)rect
+- (void) drawRect: (CGRect) rect
 {
     rect.size.height += 5;
-    if (!_top)
-        rect.origin.y -= 5;
+    if (!_top) rect.origin.y -= 5;
     
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
-        CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 20, [[UIColor colorWithWhite: 0.0 alpha: 1.0] CGColor]);
-        CGContextSetStrokeColorWithColor(ctx, [[UIColor whiteColor] CGColor]);
+        CGContextSetShadowWithColor(ctx, CGSizeZero, 20, [UIColor blackColor].CGColor);
+        CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
         CGContextSetLineWidth(ctx, 5);
         CGContextStrokeRectEdge(ctx, rect, _top ? CGRectMaxYEdge : CGRectMinYEdge);
     });
@@ -45,28 +48,28 @@
 
 @interface AZShadowedTableView ()
 
-@property (nonatomic, weak) UIView *topShadow;
 @property (nonatomic, weak) UIView *bottomShadow;
 @property (nonatomic, weak) UIView *originShadow;
 @property (nonatomic, weak) UIView *maximumShadow;
+@property (nonatomic, weak) UIView *topShadow;
 
 @end
 
 @implementation AZShadowedTableView
 
-@synthesize topShadow = _topShadow, bottomShadow = _bottomShadow, originShadow = _originShadow, maximumShadow = _maximumShadow;
-
-- (void)layoutSubviews
+- (void) layoutSubviews
 {
 	[super layoutSubviews];
 	
-	if (!self.tableFooterView) {
+	if (!self.tableFooterView)
+	{
 		UIView *v = [[UIView alloc] initWithFrame: CGRectZero];
 		v.backgroundColor = [UIColor clearColor];
 		self.tableFooterView = v;
 	}
 		
-	if (!self.originShadow) {
+	if (!self.originShadow)
+	{
 		AZShadowedTableShadowView *top = [[AZShadowedTableShadowView alloc] initWithFrame: CGRectMake(self.contentOffset.x, self.contentOffset.y, self.frame.size.width, 25) top: NO];
 		top.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		if (self.backgroundView)
@@ -74,9 +77,13 @@
 		else
 			[self insertSubview: top atIndex: 0];
 		self.originShadow = top;
-	} else if (self.backgroundView) {
+	}
+	else if (self.backgroundView)
+	{
 		[self insertSubview: self.originShadow aboveSubview: self.backgroundView];
-	} else if ([self.subviews indexOfObjectIdenticalTo: self.originShadow] != 0) {
+	}
+	else if ([self.subviews indexOfObjectIdenticalTo: self.originShadow] != 0)
+	{
 		[self insertSubview: self.originShadow atIndex: 0];
 	}
 	
@@ -84,7 +91,8 @@
 	originShadowFrame.origin.y = self.contentOffset.y;
 	self.originShadow.frame = originShadowFrame;
 	
-	if (!self.maximumShadow) {
+	if (!self.maximumShadow)
+	{
 		AZShadowedTableShadowView *top = [[AZShadowedTableShadowView alloc] initWithFrame: CGRectMake(self.contentOffset.x, self.contentOffset.y + self.frame.size.height - 25, self.frame.size.width, 25) top: YES];
 		top.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		if (self.backgroundView)
@@ -92,9 +100,13 @@
 		else
 			[self insertSubview: top atIndex: 0];
 		self.maximumShadow = top;
-	} else if (self.backgroundView) {
+	}
+	else if (self.backgroundView)
+	{
 		[self insertSubview: self.maximumShadow aboveSubview: self.backgroundView];
-	} else if ([self.subviews indexOfObjectIdenticalTo: self.originShadow] != 0) {
+	}
+	else if ([self.subviews indexOfObjectIdenticalTo: self.originShadow] != 0)
+	{
 		[self insertSubview: self.maximumShadow atIndex: 0];
 	}
 	
@@ -103,9 +115,11 @@
 	self.maximumShadow.frame = maximumShadowFrame;
 	
 	NSArray *indexPathsForVisibleRows = self.indexPathsForVisibleRows;
-	if (indexPathsForVisibleRows.count) {
+	if (indexPathsForVisibleRows.count)
+	{
 		NSIndexPath *firstCell = indexPathsForVisibleRows[0];
-		if (firstCell.section == 0 && firstCell.row == 0) {
+		if (firstCell.section == 0 && firstCell.row == 0)
+		{
 			UIView *cell = [self cellForRowAtIndexPath: firstCell];
 			
 			if (!self.topShadow) {
@@ -121,20 +135,26 @@
 			shadowFrame.origin.y = -shadowFrame.size.height;
 			shadowFrame.size.width = cell.bounds.size.width;
 			self.topShadow.frame = shadowFrame;
-		} else {
+		}
+		else
+		{
 			[self.topShadow removeFromSuperview];
 		}
 		
 		NSIndexPath *lastCell = [indexPathsForVisibleRows lastObject];
-		if (lastCell.section == self.numberOfSections - 1 && lastCell.row == [self numberOfRowsInSection: lastCell.section] - 1) {
+		if (lastCell.section == self.numberOfSections - 1 && lastCell.row == [self numberOfRowsInSection: lastCell.section] - 1)
+		{
 			UIView *cell = [self cellForRowAtIndexPath: lastCell];
 			
-			if (!self.bottomShadow) {
+			if (!self.bottomShadow)
+			{
 				AZShadowedTableShadowView *bottom = [[AZShadowedTableShadowView alloc] initWithFrame: CGRectMake(0, 0, 0, 25) top: NO];
 				bottom.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
 				[cell insertSubview: bottom atIndex: 0];
 				self.bottomShadow = bottom;
-			} else if ([cell.subviews indexOfObjectIdenticalTo: self.bottomShadow] != 0) {
+			}
+			else if ([cell.subviews indexOfObjectIdenticalTo: self.bottomShadow] != 0)
+			{
 				[cell insertSubview: self.bottomShadow atIndex: 0];
 			}
 			
@@ -142,24 +162,27 @@
 			shadowFrame.origin.y = cell.bounds.size.height;
 			shadowFrame.size.width = cell.bounds.size.width;
 			self.bottomShadow.frame = shadowFrame;
-		} else {
+		}
+		else
+		{
 			[self.bottomShadow removeFromSuperview];
 		}
-	} else {
+	}
+	else
+	{
 		[self.topShadow removeFromSuperview];
 		[self.bottomShadow removeFromSuperview];
 	}
 
 	self.topShadow.hidden = self.bottomShadow.hidden = self.originShadow.hidden = self.maximumShadow.hidden = self.hidesShadows;
 	self.topShadow.alpha = self.bottomShadow.alpha = self.originShadow.alpha = self.maximumShadow.alpha = self.hidesShadows ? 0.0f : 1.0f;
-
 }
-
-- (void)setHidesShadows:(BOOL)hidesShadows {
+- (void) setHidesShadows: (BOOL) hidesShadows
+{
 	[self setHidesShadows: hidesShadows animated: NO];
 }
-
-- (void)setHidesShadows:(BOOL)hidesShadows animated:(BOOL)animated {
+- (void) setHidesShadows: (BOOL) hidesShadows animated: (BOOL) animated
+{
 	_hidesShadows = hidesShadows;
 
 	self.topShadow.hidden = self.bottomShadow.hidden = self.originShadow.hidden = self.maximumShadow.hidden = !hidesShadows;
