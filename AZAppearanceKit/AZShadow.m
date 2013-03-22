@@ -13,10 +13,14 @@
 #define NSUINT_BIT (CHAR_BIT * sizeof(NSUInteger))
 #define NSUINTROTATE(val, howmuch) ((((NSUInteger)val) << howmuch) | (((NSUInteger)val) >> (NSUINT_BIT - howmuch)))
 
-static NSString *const AZShadowColorKey = @"NSShadowColor";
+NSString *const AZShadowOffsetKey = @"shadowOffset";
+NSString *const AZShadowBlurRadiusKey = @"shadowBlurRadius";
+NSString *const AZShadowColorKey = @"shadowColor";
+
+static NSString *const AZShadowColorCodingKey = @"NSShadowColor";
 static NSString *const AZShadowHorizKey = @"NSShadowHoriz";
 static NSString *const AZShadowVertKey = @"NSShadowVert";
-static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
+static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 
 @implementation AZShadow
 
@@ -56,6 +60,27 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 	ret.shadowBlurRadius = shadowBlurRadius;
 	ret.shadowColor = shadowColor;
 	
+	return ret;
+}
+
++ (id <AZShadow>) shadowWithDictionary:(NSDictionary *)dictionary
+{
+	id <AZShadow> ret = NSClassFromString(@"NSShadow") ? [NSClassFromString(@"NSShadow") new] : [AZShadow new];
+    
+    if (dictionary[@"shadowBlurRadius"])
+        ret.shadowBlurRadius = [dictionary[@"shadowBlurRadius"] floatValue];
+    else
+        ret.shadowBlurRadius = 0;
+    
+    if (dictionary[@"shadowColor"])
+        ret.shadowColor = dictionary[@"shadowColor"];
+    else
+        ret.shadowColor = nil;
+    if (dictionary[@"shadowOffset"])
+        ret.shadowOffset = [dictionary[@"shadowOffset"] CGSizeValue];
+    else
+        ret.shadowOffset = CGSizeZero;
+    
 	return ret;
 }
 
@@ -102,17 +127,17 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 #if CGFLOAT_IS_DOUBLE
 		size.width = [aDecoder decodeDoubleForKey: AZShadowHorizKey];
 		size.height = [aDecoder decodeDoubleForKey: AZShadowVertKey];
-		self.shadowBlurRadius = [aDecoder decodeDoubleForKey: AZShadowBlurRadiusKey];
+		self.shadowBlurRadius = [aDecoder decodeDoubleForKey: AZShadowBlurRadiusCodingKey];
 #else
 		size.width = [aDecoder decodeFloatForKey: AZShadowHorizKey];
 		size.height = [aDecoder decodeFloatForKey: AZShadowVertKey];
-		self.shadowBlurRadius = [aDecoder decodeFloatForKey: AZShadowBlurRadiusKey];
+		self.shadowBlurRadius = [aDecoder decodeFloatForKey: AZShadowBlurRadiusCodingKey];
 #endif
 		self.shadowOffset = size;
 		
-		if ([aDecoder containsValueForKey: AZShadowColorKey])
+		if ([aDecoder containsValueForKey: AZShadowColorCodingKey])
 		{
-			self.shadowColor = [aDecoder decodeObjectForKey: AZShadowColorKey];
+			self.shadowColor = [aDecoder decodeObjectForKey: AZShadowColorCodingKey];
 		}
 	}
 	return self;
@@ -123,16 +148,16 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 #if CGFLOAT_IS_DOUBLE
 	[aCoder encodeDouble: self.shadowOffset.width forKey: AZShadowHorizKey];
 	[aCoder encodeDouble: self.shadowOffset.height forKey: AZShadowVertKey];
-	[aCoder encodeDouble: self.shadowBlurRadius forKey: AZShadowBlurRadiusKey];
+	[aCoder encodeDouble: self.shadowBlurRadius forKey: AZShadowBlurRadiusCodingKey];
 #else
 	[aCoder encodeFloat: self.shadowOffset.width forKey: AZShadowHorizKey];
 	[aCoder encodeFloat: self.shadowOffset.height forKey: AZShadowVertKey];
-	[aCoder encodeFloat: self.shadowBlurRadius forKey: AZShadowBlurRadiusKey];
+	[aCoder encodeFloat: self.shadowBlurRadius forKey: AZShadowBlurRadiusCodingKey];
 #endif
 	
 	if (self.shadowColor)
 	{
-		[aCoder encodeObject: self.shadowColor forKey: AZShadowColorKey];
+		[aCoder encodeObject: self.shadowColor forKey: AZShadowColorCodingKey];
 	}
 }
 
@@ -164,6 +189,26 @@ static NSString *const AZShadowBlurRadiusKey = @"NSShadowBlurRadius";
 	ret.shadowBlurRadius = shadowBlurRadius;
 	if (shadowColor) // Setting to `nil` will cause a flag to be set
 		ret.shadowColor = shadowColor;
+	return ret;
+}
++ (id <AZShadow>) shadowWithDictionary:(NSDictionary *)dictionary
+{
+    id <AZShadow> ret = [[[self class] alloc] init];
+    
+    if (dictionary[@"shadowBlurRadius"])
+        ret.shadowBlurRadius = [dictionary[@"shadowBlurRadius"] floatValue];
+    else
+        ret.shadowBlurRadius = 0;
+    
+    if (dictionary[@"shadowColor"])
+        ret.shadowColor = dictionary[@"shadowColor"];
+    else
+        ret.shadowColor = nil;
+    if (dictionary[@"shadowOffset"])
+        ret.shadowOffset = [dictionary[@"shadowOffset"] CGSizeValue];
+    else
+        ret.shadowOffset = CGSizeZero;
+
 	return ret;
 }
 

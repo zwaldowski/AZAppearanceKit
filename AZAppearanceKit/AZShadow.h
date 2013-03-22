@@ -6,6 +6,10 @@
 //  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
+extern NSString *const AZShadowOffsetKey;
+extern NSString *const AZShadowBlurRadiusKey;
+extern NSString *const AZShadowColorKey;
+
 @protocol AZShadow <NSCopying, NSCoding, NSObject>
 
 @property (nonatomic) CGSize shadowOffset;
@@ -14,6 +18,7 @@
 
 + (id <AZShadow>) shadowWithOffset: (CGSize) shadowOffset blurRadius: (CGFloat) shadowBlurRadius;
 + (id <AZShadow>) shadowWithOffset: (CGSize) shadowOffset blurRadius: (CGFloat) shadowBlurRadius color: (id) shadowColor;
++ (id <AZShadow>) shadowWithDictionary: (NSDictionary *)dictionary;
 
 + (void) clear;
 - (void) set;
