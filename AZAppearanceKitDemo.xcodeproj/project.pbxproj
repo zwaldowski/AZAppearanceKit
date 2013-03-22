@@ -31,7 +31,6 @@
 		6CCEB1C415916BCA001266F3 /* AZLabelDemoViewController@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6CCEB1C315916BCA001266F3 /* AZLabelDemoViewController@2x.png */; };
 		6CCEB1E015917128001266F3 /* AZGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCEB1DD15917128001266F3 /* AZGradient.m */; };
 		6CCEB1E415917137001266F3 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CCEB1E315917137001266F3 /* CoreText.framework */; };
-		6CCEB1EB159171F6001266F3 /* AZLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CCEB1EA159171F6001266F3 /* AZLabel.m */; };
 		6CD291D3159DF2E700736631 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CD291D2159DF2E700736631 /* QuartzCore.framework */; };
 		6CD291DD159DF33200736631 /* AZShadowedTableDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CD291DB159DF33100736631 /* AZShadowedTableDemoViewController.m */; };
 		6CD291E5159DFC7100736631 /* AZTableViewCellDemoViewController@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6CD291E3159DFC7100736631 /* AZTableViewCellDemoViewController@2x.png */; };
@@ -40,6 +39,8 @@
 		6CD291F5159E233800736631 /* AZGradientDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CD291F3159E233700736631 /* AZGradientDemoViewController.m */; };
 		6CD291FA159E249100736631 /* AZGradientDemoViewController.png in Resources */ = {isa = PBXBuildFile; fileRef = 6CD291F8159E249000736631 /* AZGradientDemoViewController.png */; };
 		6CD291FB159E249100736631 /* AZGradientDemoViewController@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6CD291F9159E249100736631 /* AZGradientDemoViewController@2x.png */; };
+		DB57978516F7AA050044B176 /* AZLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = DB57978416F7AA050044B176 /* AZLabel.m */; };
+		DB57978816F7AEFB0044B176 /* AZLabelDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB57978716F7AEFB0044B176 /* AZLabelDemoViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,9 +80,7 @@
 		6CCEB1C315916BCA001266F3 /* AZLabelDemoViewController@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZLabelDemoViewController@2x.png"; sourceTree = "<group>"; };
 		6CCEB1DC15917128001266F3 /* AZGradient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZGradient.h; sourceTree = "<group>"; };
 		6CCEB1DD15917128001266F3 /* AZGradient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZGradient.m; sourceTree = "<group>"; };
-		6CCEB1DE15917128001266F3 /* AZLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = AZLabel.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		6CCEB1E315917137001266F3 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		6CCEB1EA159171F6001266F3 /* AZLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AZLabel.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		6CD291D2159DF2E700736631 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		6CD291DA159DF33100736631 /* AZShadowedTableDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZShadowedTableDemoViewController.h; sourceTree = "<group>"; };
 		6CD291DB159DF33100736631 /* AZShadowedTableDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZShadowedTableDemoViewController.m; sourceTree = "<group>"; };
@@ -93,6 +92,10 @@
 		6CD291F3159E233700736631 /* AZGradientDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZGradientDemoViewController.m; sourceTree = "<group>"; };
 		6CD291F8159E249000736631 /* AZGradientDemoViewController.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AZGradientDemoViewController.png; sourceTree = "<group>"; };
 		6CD291F9159E249100736631 /* AZGradientDemoViewController@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AZGradientDemoViewController@2x.png"; sourceTree = "<group>"; };
+		DB57978316F7AA050044B176 /* AZLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZLabel.h; sourceTree = "<group>"; };
+		DB57978416F7AA050044B176 /* AZLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZLabel.m; sourceTree = "<group>"; usesTabs = 1; };
+		DB57978616F7AEFB0044B176 /* AZLabelDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AZLabelDemoViewController.h; sourceTree = "<group>"; };
+		DB57978716F7AEFB0044B176 /* AZLabelDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AZLabelDemoViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +150,8 @@
 				6CCEB1BB15916BCA001266F3 /* AZAppearanceKitDemoAppDelegate.h */,
 				6CCEB1BC15916BCA001266F3 /* AZAppearanceKitDemoAppDelegate.m */,
 				6C4D4702160F9CAE00DC08C7 /* AZAppearanceKitDemo.storyboard */,
+				DB57978616F7AEFB0044B176 /* AZLabelDemoViewController.h */,
+				DB57978716F7AEFB0044B176 /* AZLabelDemoViewController.m */,
 				6CD291F2159E233700736631 /* AZGradientDemoViewController.h */,
 				6CD291F3159E233700736631 /* AZGradientDemoViewController.m */,
 				6CD291DA159DF33100736631 /* AZShadowedTableDemoViewController.h */,
@@ -189,8 +194,8 @@
 				6CCEB1DD15917128001266F3 /* AZGradient.m */,
 				6CD291E7159E1B6F00736631 /* AZGradientView.h */,
 				6CD291E8159E1B6F00736631 /* AZGradientView.m */,
-				6CCEB1DE15917128001266F3 /* AZLabel.h */,
-				6CCEB1EA159171F6001266F3 /* AZLabel.m */,
+				DB57978316F7AA050044B176 /* AZLabel.h */,
+				DB57978416F7AA050044B176 /* AZLabel.m */,
 				6C41F20F15B4701100572729 /* AZNavigationBar.h */,
 				6C41F20615B46FED00572729 /* AZNavigationBar.m */,
 				6C931B42163F309400542F72 /* AZShadow.h */,
@@ -285,7 +290,6 @@
 				6CCEB1B915916BCA001266F3 /* main.m in Sources */,
 				6CCEB1BD15916BCA001266F3 /* AZAppearanceKitDemoAppDelegate.m in Sources */,
 				6CCEB1E015917128001266F3 /* AZGradient.m in Sources */,
-				6CCEB1EB159171F6001266F3 /* AZLabel.m in Sources */,
 				6C272F28159B723B00C97FC7 /* AZShadowedTableView.m in Sources */,
 				6C272F90159D8AC900C97FC7 /* AZTableViewCell.m in Sources */,
 				6C272F98159D8B2F00C97FC7 /* AZDrawingFunctions.m in Sources */,
@@ -297,6 +301,8 @@
 				6C41F20D15B46FED00572729 /* AZToolbar.m in Sources */,
 				6C859435163B86F000DAB469 /* AZCellTableViewControllerDemo.m in Sources */,
 				6C931B44163F309500542F72 /* AZShadow.m in Sources */,
+				DB57978516F7AA050044B176 /* AZLabel.m in Sources */,
+				DB57978816F7AEFB0044B176 /* AZLabelDemoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,6 +373,7 @@
 				INFOPLIST_FILE = "AZAppearanceKitDemo/AZAppearanceKitDemo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -379,6 +386,7 @@
 				INFOPLIST_FILE = "AZAppearanceKitDemo/AZAppearanceKitDemo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2844" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Me2-CO-Mf2">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12D78" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="Me2-CO-Mf2">
     <dependencies>
         <deployment version="1280" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1930"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
         <!--Gradient Demo View Controller - Gradient View-->
@@ -541,16 +541,16 @@
             </objects>
             <point key="canvasLocation" x="-1093" y="-1428"/>
         </scene>
-        <!--View Controller - Labels-->
+        <!--Label Demo View Controller - Labels-->
         <scene sceneID="cPt-Om-dll">
             <objects>
-                <viewController id="yD8-rQ-g8o" sceneMemberID="viewController">
+                <viewController id="yD8-rQ-g8o" customClass="AZLabelDemoViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gbi-la-VY5">
                         <rect key="frame" x="0.0" y="64" width="320" height="367"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Manager" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2Sx-IW-R7F" customClass="AZLabel">
-                                <rect key="frame" x="59" y="112" width="203" height="68"/>
+                                <rect key="frame" x="59" y="150" width="203" height="68"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="40"/>
                                 <color key="textColor" red="0.8980392157" green="0.49803921569999998" blue="0.8980392157" alpha="1" colorSpace="deviceRGB"/>
@@ -582,7 +582,7 @@
                                 </userDefinedRuntimeAttributes>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Manager" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qeB-dA-3ws" customClass="AZLabel">
-                                <rect key="frame" x="59" y="188" width="203" height="68"/>
+                                <rect key="frame" x="59" y="226" width="203" height="68"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
@@ -591,9 +591,6 @@
                                 <color key="shadowColor" white="1" alpha="0.75" colorSpace="calibratedWhite"/>
                                 <size key="shadowOffset" width="0.0" height="1"/>
                                 <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="shadow.shadowBlurRadius">
-                                        <integer key="value" value="0"/>
-                                    </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="size" keyPath="innerShadow.shadowOffset">
                                         <size key="value" width="0.0" height="1"/>
                                     </userDefinedRuntimeAttribute>
@@ -614,10 +611,22 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="nfv-IR-pRF" customClass="AZLabel">
+                                <rect key="frame" x="70" y="74" width="181" height="68"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <size key="shadowOffset" width="0.0" height="1"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.81568627449999997" green="0.82352941180000006" blue="0.85490196080000003" alpha="1" colorSpace="deviceRGB"/>
                     </view>
                     <navigationItem key="navigationItem" title="Labels" id="ZNd-PQ-ahh"/>
+                    <connections>
+                        <outlet property="attributedLabel" destination="nfv-IR-pRF" id="lAR-Bo-5Mx"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FeO-Hx-jJC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -687,8 +696,14 @@
         <class className="AZGradientView" superclassName="UIView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/AZGradientView.h"/>
         </class>
-        <class className="AZLabel" superclassName="UIControl">
+        <class className="AZLabel" superclassName="UILabel">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/AZLabel.h"/>
+        </class>
+        <class className="AZLabelDemoViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AZLabelDemoViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="attributedLabel" candidateClass="AZLabel"/>
+            </relationships>
         </class>
         <class className="AZNavigationBar" superclassName="UINavigationBar">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/AZNavigationBar.h"/>

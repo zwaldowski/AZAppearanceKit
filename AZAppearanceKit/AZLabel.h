@@ -2,8 +2,8 @@
 //  AZLabel.h
 //  AZAppearanceKit
 //
-//  Created by Zachary Waldowski on 3/17/12.
-//  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
+//  Created by Zach Waldowski on 3/18/13.
+//  Copyright (c) 2013 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -11,10 +11,44 @@
 #import "AZGradient.h"
 #import "AZShadow.h"
 
-/** AZLabel is a styled drop-in replacement for text-only unattributed UILabel.
+/** An attributed string attribute name; a gradient to color
+ the attributed text with.
+ 
+ Used in lieu of the foreground color attribute.
+ 
+ The value of this attribute is an AZGradient object.
+ */
+extern NSString *const AZLabelGradientForegroundAttributeName;
+
+/** An attributed string attribute name; the cardinal direction
+ used for drawing a gradient.
+ 
+ The value of this attribute is a boxed AZGradientDirection value.
+*/
+extern NSString *const AZLabelGradientForegroundDirectionAttributeName;
+
+/** An attributed string attribute name; the inner shadow used
+ for the attributed text.
+ 
+ The value of this attribute is an NSShadow object (if available),
+ or if used with AZLabel, an AZShadow could be used as well.
+*/
+extern NSString *const AZLabelInnerShadowAttributeName;
+
+/** An attributed string attribute name; the drop shadow used for
+ the attributed text.
+ 
+ Equivalent to the `NSShadowAttributeName` property.
+ 
+ The value of this attribute is an NSShadow object (if available),
+ or if used with AZLabel, an AZShadow could be used as well.
+*/
+extern NSString *const AZLabelShadowAttributeName;
+
+/** AZLabel is a drop-in subclass of UILabel with extra styles.
  
  Labels can be be created in Interface Builder using the UILabel template and
- then changing the class to AZLabel. Use user-defined attributes for the other
+ then changing the class to AZLabel. Use user-defined attributes for extra
  AZLabel properties.
  
  A gradient can be initialized from Interface Builder using a keypath beginning
@@ -32,29 +66,7 @@
  Includes code by [Sam King](http://www.codeproject.com/Articles/109729/Low-level-text-rendering).
  Licensed under [CPOL](http://www.codeproject.com/info/cpol10.aspx). Copyright (c) 2010 Sam King. All rights reserved.
  */
-@interface AZLabel : UIControl <UIAppearance>
-
-/** The text displayed by the label.
- 
- This string is nil by default.
-*/
-@property (nonatomic, copy) NSString *text;
-
-/** The font of the text.
- 
- The default value for this property is the system font at a size of 17 points
- (using the `systemFontOfSize:` class method of `UIFont`). The value for the
- property can only be set to a non-nil value; setting this property to nil
- raises an exception.
- */
-@property (nonatomic, strong) UIFont *font;
-
-/** The technique to use for wrapping and truncating the label’s text.
- 
- This property is set to UILineBreakModeTailTruncation by default.
- 
- */
-@property (nonatomic) UILineBreakMode lineBreakMode;
+@interface AZLabel : UILabel
 
 /** The inset or outset margins for the rectangle surrounding all of the label's
  text content.
@@ -65,138 +77,157 @@
  insets, that edge, thereby moving it loser to the center of the button. A
  negative value expands that edge. Use UIEdgeInsetsMake to construct a value for
  this property. The default value is UIEdgeInsetsZero.
+ 
+ Modifying this value causes an immediate redraw.
  */
 @property (nonatomic) UIEdgeInsets textEdgeInsets;
 
-/** Returns the text color used for the default control state.
+/** An amount of points designating the length of the shadow. Default is 0.0.
  
- The default value for this property is a black color.
+ The value of this property, like the standard UILabel `shadowColor` and `shadowOffset`
+ properties, is overriden by the `shadow` property, and will be ignored if that property
+ has a non-nil value.
  
- This property is ignored if a gradient is not nil.
+ Modifying this value, if the content of the label isn't attributed and if `shadow` is
+ not nil, will trigger a recalculation of the string and an immediate redraw.
  
- @see gradient;
+ @see shadow
+ @see shadowColor
+ @see shadowOffset
  */
-@property (nonatomic, strong) UIColor *textColor;
+@property (nonatomic) CGFloat shadowBlurRadius;
 
-/** Sets the color of the text to use for a specified control state.
+/** The shadow for the text.
  
- In general, if a property is not specified for a state, the default is to use
- the UIControlStateNormal value. If the UIControlStateNormal value is not set,
- then the property defaults to a system value. Therefore, at a minimum, you
- should set the value for the normal state.
+ An alternative to setting `shadowColor`, `shadowOffset`, and `shadowBlurRadius`.
  
- @param color The color of the text to use for the specified state.
- @param state The state that uses the specified color.
- The possible values are described in UIControlState.
+ Setting this property to a non-nil value causes the primitive shadow properties
+ to be ignored.
+ 
+ Like the primitive shadow properties, this property is ignored if the content
+ of the label is attributed. For targetting iOS 5 and above, see the
+ `AZLabelShadowAttributeName` attribute. For iOS 6 and above, see
+ `NSShadowAttributeName`.
+ 
+ Modifying this property will trigger an immediate redraw for plaintext content.
  
  */
-- (void) setTextColor: (UIColor *) color forState: (UIControlState) state;
-
-/** Returns the text color used for a state.
- 
- @param state The state that uses the text color. The possible values are
- described in UIControlState.
- @return The color of the text for the specified state.
-
- */
-- (UIColor *) textColorForState: (UIControlState) state;
-
-/** The shadow for the text used for the default control state. */
 @property (nonatomic, strong) id <AZShadow> shadow;
 
-/** Sets the shadow to use on the text in a specified control state.
+/** The shadow used for the text in a highlighted state.
  
- @param shadow The shadow for the text to use for the specified state.
- @param state The state that uses the specified offset.
+ Unlike its related `shadow` property, this property is not ignored if the
+ content of the label is attributed.
+ 
+ Modifying this property will trigger an immediate redraw if the label
+ is highlighted.
+ 
+ @see shadow
  */
-- (void) setShadow: (id <AZShadow>) shadow forState: (UIControlState) controlState;
+@property (nonatomic, strong) id <AZShadow> highlightedShadow;
 
-/** Returns the shadow used for a state.
+/** The inner shadow for the text.
  
- @param state The state that uses the shadow offset.
- @return The shadow of the text for the specified state.
+ This property is ignored if the content of the label is an attributed
+ string. For attributed strings used in AZLabel, see
+ `AZLabelInnerShadowAttributeName`.
+ 
+ Modifying this property will trigger an immediate redraw for plaintext
+ content.
+ 
+ @see shadow
  */
-- (id <AZShadow>) shadowForState: (UIControlState) controlState;
+@property (nonatomic, strong) id <AZShadow> innerShadow;
 
-/** The inner shadow for the text used for the default control state. */
-@property (nonatomic, strong) id <AZShadow>innerShadow;
-
-/** Sets the inner shadow to use on the text in a specified control state.
+/** The inner shadow used for the text in a highlighted state.
  
- @param innerShadow The inner shadow for the text to use for the specified
- state.
- @param state The state that uses the specified offset.
+ Unlike its related `innerShadow` property, this property is not ignored if
+ the content of the label is attributed.
+ 
+ Modifying this property will trigger an immediate redraw if the label
+ is highlighted.
+ 
+ @see shadow
  */
-- (void)setInnerShadow:(id <AZShadow>) innerShadow forState: (UIControlState) controlState;
+@property (nonatomic, strong) id <AZShadow> highlightedInnerShadow;
 
-/** Returns the inner shadow offset used for a state.
+/** The gradient used to color in the text.
  
- @param state The state that uses the inner shadow offset.
- @return The inner shadow offset of the text for the specified state.
- */
-- (id <AZShadow>) innerShadowForState: (UIControlState) controlState;
-
-/** The gradient used to color in the text for the default control state.
- 
- The default value for this property is nil, which means textColor is used
+ The default value for this property is nil, which means `textColor` is used
  instead.
-
+ 
  A gradient can be initialized from Interface Builder using a keypath beginning
  with "gradient" and ending as a representation of a position: `@(0.5)`,
  `(0.5)`, `topColor`, `bottomColor`, `leftColor`, `rightColor`, `startColor`,
  or `endColor`.
+ 
+ Setting this property to a non-nil value causes the `textColor` property
+ to be ignored.
+ 
+ This property is ignored if the content of the label is an attributed
+ string. For attributed strings used in AZLabel, see
+ `AZLabelGradientForegroundAttributeName`.
+ 
+ Modifying this property will trigger an immediate redraw for plaintext content.
  
  @see textColor;
  @see gradientDirection;
  */
 @property (nonatomic, strong) AZGradient *gradient;
 
-/** Sets the gradient to use to fill the text in a specified control state.
- 
- @param gradient The gradient for the text to use for the specified state.
- @param state The state that uses the specified gradient.
- 
- */
-- (void) setGradient: (AZGradient *) gradient forState: (UIControlState) controlState;
-
-/** Returns the gradient used to fill the text for a state.
- 
- @param state The state that uses the gradient.
- @return The gradient used to fill the text for the specified state.
- 
- */
-- (AZGradient *) gradientForState: (UIControlState) controlState;
-
-/** The gradient direction used to color in the text for the default control
- state.
+/** The gradient direction used to color in the text.
  
  The default value for this property is AZGradientDirectionVertical, which means
  the gradient will be draw from the top of the text to the bottom of the text.
+ 
+ This property is ignored if the content of the label is an attributed
+ string. For attributed strings used in AZLabel, see
+ `AZLabelGradientForegroundDirectionAttributeName`. Similarly, if the
+ appropriate attribute is not set on an attributed string, the gradient will
+ be drawn from top to bottom.
+ 
+ Modifying this property will trigger an immediate redraw for plaintext content.
  
  @see gradient;
  */
 @property (nonatomic) AZGradientDirection gradientDirection;
 
-/** Sets the direction for the gradient used to fill the text in a specified
- control state.
+/** The gradient used to color in the text in a highlighted state.
  
- @param gradient The gradient direction for the text to use for the specified
- state.
- @param state The state that uses the specified direction.
- */
-- (void) setGradientDirection: (AZGradientDirection) gradientDirection forState: (UIControlState) controlState;
-
-/** Returns the gradient direction used to fill the text for a state.
+ The default value for this property is nil, which means `highlightedTextColor`
+ is used instead.
  
- @param state The state that uses the gradient direction.
- @return The direction used for the gradient that fills the text for the
- specified state.
+ A gradient can be initialized from Interface Builder using a keypath beginning
+ with "gradient" and ending as a representation of a position: `@(0.5)`,
+ `(0.5)`, `topColor`, `bottomColor`, `leftColor`, `rightColor`, `startColor`,
+ or `endColor`.
+ 
+ Unlike the related `gradient` property, this property is not ignored if
+ the content of the label is attributed.
+ 
+ Modifying this property will trigger an immediate redraw if the label
+ is highlighted.
+ 
+ @see gradient
+ @see highlightedTextColor;
+ @see highlightedGradientDirection;
  */
-- (AZGradientDirection) gradientDirectionForState: (UIControlState) controlState;
+@property (nonatomic, strong) AZGradient *highlightedGradient;
 
-/** Returns a bezier path calculated with respect to the text, size, line break
- mode, and alignment properties of the label. It is recalculated whenever these
- properties or the frame of the label changes. */
-@property (nonatomic, strong, readonly) UIBezierPath *textPath;
+/** The gradient direction used to color in the text for the highlighted state.
+ 
+ The default value for this property is AZGradientDirectionVertical, which means
+ the gradient will be draw from the top of the text to the bottom of the text.
+ 
+ Unlike the related `gradientDirection` property, this property is not ignored if
+ the content of the label is attributed.
+ 
+ Modifying this property will trigger an immediate redraw if the label
+ is highlighted.
+ 
+ @see highlightedGradient;
+ @see gradientDirection;
+ */
+@property (nonatomic) AZGradientDirection highlightedGradientDirection;
 
 @end
