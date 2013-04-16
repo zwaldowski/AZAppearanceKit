@@ -57,3 +57,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 All of the code included in BlocksKit is licensed either under BSD or MIT, or is otherwise in the public domain. You can use BlocksKit in any project, public or private, with or without attribution.
 
 
+Screenshots
+-----------
+
+![screenshot1.png](screenshot1.md)
+![screenshot2.png](screenshot2.md)
+![screenshot3.png](screenshot3.md)
+![screenshot4.png](screenshot4.md)
+![screenshot5.png](screenshot5.md)
