@@ -60,8 +60,8 @@ All of the code included in BlocksKit is licensed either under BSD or MIT, or is
 Screenshots
 -----------
 
-![screenshot1.png](screenshot1.md)
-![screenshot2.png](screenshot2.md)
-![screenshot3.png](screenshot3.md)
-![screenshot4.png](screenshot4.md)
-![screenshot5.png](screenshot5.md)
+![screenshot1.png](screenshot1.png)
+![screenshot2.png](screenshot2.png)
+![screenshot3.png](screenshot3.png)
+![screenshot4.png](screenshot4.png)
+![screenshot5.png](screenshot5.png)
