@@ -11,13 +11,15 @@ Components
 
 ### AZLabel
 
-`AZLabel` is a subclass of `UIControl` dolled up to look and act like `UILabel`. It has advanced drawing properties for text color, outer shadows, inner shadows, text gradients, text insets, and horizontal and vertical alignments. Drawing properties can be changed per control state (like highlighted or selected) just like `UIButton`.
+`AZLabel` is a subclass of `UILabel` with enhanced features. It has advanced drawing properties for text color, outer shadows, inner shadows, text gradients, text insets, and horizontal and vertical alignment. Drawing properties can be changed per control state (like highlighted or selected) just like `UIButton`.
 
-Currently, `AZLabel` does not support advanced string features like `UILabel`'s `numberOfLines` property, nor can it adjust text to fit to a specific width at this time. These are planned features.
+`AZLabel` supports all native features of UILabel, including `numberOfLines`, text truncation, and attributed strings on iOS 6 or above.
 
-`AZLabel` is tuned for performance, and designed to be used in many places at once for single-line, decorated text. It is particularly suited for table view cells, navigation bar title views, and so on.
+Currently, `AZLabel`'s method of calculating how to draw gradients and shadows is intensive and slower than native. Under ideal conditions - no frame changes, no property changes - this calculation only has to happen once and drawing is otherwise faster than native. We are currently investigating making the drawing closer to native specifications.
 
-`AZLabel` does not currently draw attributed strings or detect URLs.
+`AZLabel` is designed to be used in many places at once for single-line, decorated text. It is particularly suited for table view cells (as long as the frame of the label is considered), navigation bar title views, and so on.
+
+`AZLabel` does not detect URLs or create links.
 
 Use of `AZLabel` in a project requires linking against Core Text.
 
