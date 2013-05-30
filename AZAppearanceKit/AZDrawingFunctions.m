@@ -130,7 +130,7 @@ UIImage *UIImageCreateUsingBlock(CGSize size, BOOL opaque, void(^drawingBlock)(v
 		UIGraphicsPushContext(context);
 	}
 	
-	drawingBlock();
+	if (drawingBlock) drawingBlock();
 	
     UIImage *retImage = nil;
 	
