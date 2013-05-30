@@ -265,7 +265,7 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 	CGFloat width = CGRectGetWidth(rect);
 	CGFloat height = CGRectGetHeight(rect);
 	CGFloat radius = hypotf(width / 2, height / 2);
-	CGPoint startCenter = CGPointMake(0.5 * relativeCenterPosition.x * (width + 1), 0.5 * relativeCenterPosition.y * (height + 1));
+	CGPoint startCenter = CGPointMake(width/2+((width/2)*relativeCenterPosition.x), height/2+((height/2)*relativeCenterPosition.y));
 	CGPoint endCenter = CGPointMake(width / 2, height / 2);
 
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
@@ -278,7 +278,7 @@ static UIColor *AZGradientColorToRGBA(UIColor *colorToConvert)
 	CGFloat width = CGRectGetWidth(path.bounds);
 	CGFloat height = CGRectGetHeight(path.bounds);
 	CGFloat radius = sqrtf(powf(width/2, 2)+powf(height/2, 2));
-	CGPoint startCenter = CGPointMake(width/2+(width*relativeCenterPosition.x)/2, height/2+(height*relativeCenterPosition.y)/2);
+	CGPoint startCenter = CGPointMake(width/2+((width/2)*relativeCenterPosition.x), height/2+((height/2)*relativeCenterPosition.y));
 	CGPoint endCenter = CGPointMake(width/2, height/2);
     
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
