@@ -117,9 +117,8 @@
 
 - (void) az_sharedInit
 {
-	self.contentMode = UIViewContentModeRedraw;
-	self.layer.contentsScale = [[UIScreen mainScreen] scale];
-	[self.layer setNeedsDisplay];
+	self.layer.shouldRasterize = YES;
+	self.layer.rasterizationScale = self.layer.contentsScale = [[UIScreen mainScreen] scale];
 }
 
 #pragma mark - Gradient Accessors
@@ -134,21 +133,11 @@
 	[self setGradient: gradient animated: NO];
 }
 - (void) setGradient: (AZGradient *) gradient animated: (BOOL) animated {
-	void (^animation)(void) = ^{
-		self.gradientLayer.gradient = gradient;
-	};
-	
-	if (animated)
-	{
-		[UIView animateWithDuration: (1./3.) delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	}
-	else
-	{
-		[CATransaction begin];
-		[CATransaction setValue: @YES forKey: kCATransactionDisableActions];
-		animation();
-		[CATransaction commit];
-	}
+	[CATransaction begin];
+	[CATransaction setAnimationDuration:animated ? (1./3.) : 0];
+	[CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+	self.gradientLayer.gradient = gradient;
+	[CATransaction commit];
 }
 
 #pragma mark - Gradient Type Accessors
@@ -164,21 +153,11 @@
 }
 - (void) setType: (AZGradientViewType) type animated: (BOOL) animated
 {
-	void (^animation)(void) = ^{
-		self.gradientLayer.type = type;
-	};
-	
-	if (animated)
-	{
-		[UIView animateWithDuration: (1./3.) delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	}
-	else
-	{
-		[CATransaction begin];
-		[CATransaction setValue: @YES forKey: kCATransactionDisableActions];
-		animation();
-		[CATransaction commit];
-	}
+	[CATransaction begin];
+	[CATransaction setAnimationDuration:animated ? (1./3.) : 0];
+	[CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+	self.gradientLayer.type = type;
+	[CATransaction commit];
 }
 
 #pragma mark - Angle Accessors
@@ -193,21 +172,11 @@
 	[self setAngle: angle animated: NO];
 }
 - (void) setAngle: (CGFloat) angle animated: (BOOL) animated {
-	void (^animation)(void) = ^{
-		self.gradientLayer.angle = angle;
-	};
-	
-	if (animated)
-	{
-		[UIView animateWithDuration: (1./3.) delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	}
-	else
-	{
-		[CATransaction begin];
-		[CATransaction setValue: @YES forKey: kCATransactionDisableActions];
-		animation();
-		[CATransaction commit];
-	}
+	[CATransaction begin];
+	[CATransaction setAnimationDuration:animated ? (1./3.) : 0];
+	[CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+	self.gradientLayer.angle = angle;
+	[CATransaction commit];
 }
 
 #pragma mark - Relative Center Position Accessors
@@ -223,21 +192,11 @@
 }
 - (void) setRelativeCenterPosition: (CGPoint) relativeCenterPosition animated: (BOOL) animated
 {
-	void (^animation)(void) = ^{
-		self.gradientLayer.relativeCenterPosition = relativeCenterPosition;
-	};
-	
-	if (animated)
-	{
-		[UIView animateWithDuration: (1./3.) delay: 0.0 options: UIViewAnimationCurveEaseInOut | UIViewAnimationOptionAllowAnimatedContent | UIViewAnimationOptionBeginFromCurrentState animations: animation completion: NULL];
-	}
-	else
-	{
-		[CATransaction begin];
-		[CATransaction setValue: @YES forKey: kCATransactionDisableActions];
-		animation();
-		[CATransaction commit];
-	}
+	[CATransaction begin];
+	[CATransaction setAnimationDuration:animated ? (1./3.) : 0];
+	[CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+	self.gradientLayer.relativeCenterPosition = relativeCenterPosition;
+	[CATransaction commit];
 }
 
 @end
