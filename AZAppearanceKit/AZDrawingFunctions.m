@@ -87,6 +87,13 @@ void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor 
         CGContextStrokeRectEdge(ctx, rect, edge);
     });
 }
+UIImage *UIGraphicsContextCreateImage(CGSize size, void (^block)(CGContextRef)) {
+	UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
+	UIGraphicsContextPerformBlock(block);
+	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	return image;
+}
 
 #else
 

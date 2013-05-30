@@ -19,6 +19,8 @@ extern void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge ed
 extern void UIGraphicsContextPerformBlock(void (^)(CGContextRef ctx));
 extern void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color);
 
+extern UIImage *UIGraphicsContextCreateImage(CGSize size, void (^block)(CGContextRef));
+
 #else
 
 extern void NSGraphicsContextPerformBlock(void (^)(CGContextRef ctx));
