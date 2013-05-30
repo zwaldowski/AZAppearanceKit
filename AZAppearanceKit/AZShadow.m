@@ -13,10 +13,6 @@
 #define NSUINT_BIT (CHAR_BIT * sizeof(NSUInteger))
 #define NSUINTROTATE(val, howmuch) ((((NSUInteger)val) << howmuch) | (((NSUInteger)val) >> (NSUINT_BIT - howmuch)))
 
-NSString *const AZShadowOffsetKey = @"shadowOffset";
-NSString *const AZShadowBlurRadiusKey = @"shadowBlurRadius";
-NSString *const AZShadowColorKey = @"shadowColor";
-
 static NSString *const AZShadowColorCodingKey = @"NSShadowColor";
 static NSString *const AZShadowHorizKey = @"NSShadowHoriz";
 static NSString *const AZShadowVertKey = @"NSShadowVert";

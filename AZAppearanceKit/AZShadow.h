@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
-extern NSString *const AZShadowOffsetKey;
-extern NSString *const AZShadowBlurRadiusKey;
-extern NSString *const AZShadowColorKey;
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+
+#import <UIKit/UIKit.h>
 
 @protocol AZShadow <NSCopying, NSCoding, NSObject>
 
@@ -24,10 +24,6 @@ extern NSString *const AZShadowColorKey;
 - (void) set;
 
 @end
-
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-
-#import <UIKit/UIKit.h>
 
 @interface AZShadow : NSObject <AZShadow>
 
