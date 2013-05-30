@@ -27,7 +27,8 @@
 	
 	if (!top) rect.origin.y -= 5;
 	
-	return UIGraphicsContextCreateImage(size, ^(CGContextRef ctx) {
+	return UIImageCreateUsingBlock(size, NO, ^{
+		CGContextRef ctx = UIGraphicsGetCurrentContext();
 		CGContextSetShadowWithColor(ctx, CGSizeZero, 20, [UIColor blackColor].CGColor);
 		CGContextSetStrokeColorWithColor(ctx, [UIColor whiteColor].CGColor);
 		CGContextSetLineWidth(ctx, 5);

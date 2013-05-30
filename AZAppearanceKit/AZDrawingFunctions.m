@@ -87,12 +87,65 @@ void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor 
         CGContextStrokeRectEdge(ctx, rect, edge);
     });
 }
-UIImage *UIGraphicsContextCreateImage(CGSize size, void (^block)(CGContextRef)) {
-	UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
-	UIGraphicsContextPerformBlock(block);
-	UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsEndImageContext();
-	return image;
+
+static inline size_t aligned_size(size_t size, size_t alignment) {
+	size_t r = size + --alignment + 2;
+	return (r + 2 + alignment) & ~alignment;
+}
+
+UIImage *UIImageCreateUsingBlock(CGSize size, BOOL opaque, void(^drawingBlock)(void)) {
+	BOOL isMain = [NSThread isMainThread];
+	CGContextRef context = NULL;
+	CGFloat scale;
+	
+	if (isMain) {
+		UIGraphicsBeginImageContextWithOptions(size, opaque, 0.0);
+		context = UIGraphicsGetCurrentContext();
+	} else {
+		CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+		scale = [UIScreen mainScreen].scale;
+		CGImageAlphaInfo alphaInfo = 0;
+		if (opaque) {
+			alphaInfo |= kCGImageAlphaNoneSkipFirst;
+		} else {
+			alphaInfo |= kCGImageAlphaPremultipliedFirst;
+		}
+		
+		// RGB - 32 bpp - 8 bpc - available on both OS X and iOS
+		const size_t bitsPerPixel = 32;
+		const size_t bitsPerComponent = 8;
+		const size_t widthPixels = size.width * scale;
+		
+		// Quartz 2D Programming Guide
+		// "When you create a bitmap graphics context, you’ll get the best
+		// performance if you make sure the data and bytesPerRow are 16-byte aligned."
+		size_t bytesPerRow = widthPixels * bitsPerPixel;
+		size_t alignedBytesPerRow = aligned_size(bytesPerRow, 16);
+		
+		context = CGBitmapContextCreate(NULL, widthPixels, size.height * scale, bitsPerComponent, alignedBytesPerRow, colorSpace, alphaInfo);
+		CGColorSpaceRelease(colorSpace);
+		CGContextScaleCTM(context, scale, -1 * scale);
+		CGContextTranslateCTM(context, 0, -1 * size.height);
+		CGContextClipToRect(context, (CGRect){ CGPointZero, size });
+		UIGraphicsPushContext(context);
+	}
+	
+	drawingBlock();
+	
+    UIImage *retImage = nil;
+	
+	if (isMain) {
+		retImage = UIGraphicsGetImageFromCurrentImageContext();
+		UIGraphicsEndImageContext();
+	} else {
+		UIGraphicsPopContext();
+		CGImageRef cgImage = CGBitmapContextCreateImage(context);
+		retImage = [UIImage imageWithCGImage:cgImage scale:scale orientation:UIImageOrientationUp];
+		CGImageRelease(cgImage);
+		CGContextRelease(context);
+	}
+	
+	return retImage;
 }
 
 #else
