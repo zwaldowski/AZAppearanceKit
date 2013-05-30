@@ -106,19 +106,22 @@
 		}
 		
 		NSIndexPath *lastCell = [indexPathsForVisibleRows lastObject];
-		if (lastCell.section == self.numberOfSections - 1 && lastCell.row == [self numberOfRowsInSection: lastCell.section] - 1)
-		{
+		if (lastCell.section == self.numberOfSections - 1 && lastCell.row == [self numberOfRowsInSection: lastCell.section] - 1) {
 			UIView *cell = [self cellForRowAtIndexPath: lastCell];
 			
 			if (!self.bottomShadow)
 			{
-				UIImageView *bottom = [[UIImageView alloc] initWithFrame: (CGRect){ CGPointZero, kImageSize }];
+				UIImageView *bottom = [[UIImageView alloc] initWithFrame: (CGRect){ self.contentOffset, kImageSize }];
 				bottom.image = [[self class] shadowImageWithSize:kImageSize top:NO];
 				bottom.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
 				
 				[self insertSubview: bottom atIndex: 0];
 				
 				self.bottomShadow = bottom;
+			}
+			else if (self.backgroundView)
+			{
+				[self insertSubview: self.maximumShadow aboveSubview: self.backgroundView];
 			}
 			else if ([cell.subviews indexOfObjectIdenticalTo: self.bottomShadow] != 0)
 			{
@@ -127,12 +130,11 @@
 			
 			CGRect shadowFrame = self.bottomShadow.frame;
 			shadowFrame.origin.y = CGRectGetMaxY(cell.frame);
-			shadowFrame.size.width = cell.bounds.size.width;
 			self.bottomShadow.frame = shadowFrame;
 			
 			if (!self.maximumShadow)
 			{
-				UIImageView *top = [[UIImageView alloc] initWithFrame:(CGRect){ { self.contentOffset.x, self.contentOffset.y + self.frame.size.height - kShadowHeight }, kImageSize }];
+				UIImageView *top = [[UIImageView alloc] initWithFrame:(CGRect){ self.contentOffset, kImageSize }];
 				top.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 				top.image = [[self class] shadowImageWithSize:kImageSize top:YES];
 				
