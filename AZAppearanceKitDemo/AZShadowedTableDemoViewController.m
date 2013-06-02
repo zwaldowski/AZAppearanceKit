@@ -3,7 +3,7 @@
 //  AZAppearanceKitDemo
 //
 //  Created by Zachary Waldowski on 6/27/12.
-//  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
+//  Copyright (c) 2012-2013 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
 #import "AZShadowedTableDemoViewController.h"
@@ -41,11 +41,13 @@
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"MainCell"];
 	
-	cell.contentView.backgroundColor = [UIColor whiteColor];
     cell.textLabel.text = [NSString stringWithFormat:@"Cell %i", indexPath.row];
-    cell.textLabel.backgroundColor = [UIColor clearColor];
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+	cell.backgroundColor = [UIColor whiteColor];
 }
 
 - (IBAction)switchToggled:(id)sender {
