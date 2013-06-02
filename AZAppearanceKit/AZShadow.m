@@ -100,17 +100,24 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 	return ret;
 }
 
++ (void) clearInContext:(CGContextRef)ctx
+{
+	CGContextSetShadowWithColor(ctx, CGSizeZero, 0, NULL);
+}
 + (void) clear
 {
-	CGContextSetShadowWithColor(UIGraphicsGetCurrentContext(), CGSizeZero, 0, NULL);
+	[self clearInContext:UIGraphicsGetCurrentContext()];
 }
-- (void) set
+- (void) setInContext:(CGContextRef)ctx
 {
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
 	if (self.shadowColor)
 		CGContextSetShadowWithColor(ctx, self.shadowOffset, self.shadowBlurRadius, [self.shadowColor CGColor]);
 	else
 		CGContextSetShadow(ctx, self.shadowOffset, self.shadowBlurRadius);
+}
+- (void) set
+{
+	[self setInContext:UIGraphicsGetCurrentContext()];
 }
 
 #pragma mark - Coding
@@ -208,21 +215,33 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 	return ret;
 }
 
++ (void) clearInContext:(CGContextRef)ctx {
+	CGContextSetShadowWithColor(ctx, CGSizeZero, 0, NULL);
+}
 + (void) clear {
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
 #else
 	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
 #endif
-	CGContextSetShadowWithColor(ctx, CGSizeZero, 0, NULL);
+	[self clearInContext:ctx];
 }
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-- (void) set {
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
+
+- (void) setInContext:(CGContextRef)ctx {
 	if (self.shadowColor)
 		CGContextSetShadowWithColor(ctx, self.shadowOffset, self.shadowBlurRadius, [self.shadowColor CGColor]);
 	else
 		CGContextSetShadow(ctx, self.shadowOffset, self.shadowBlurRadius);
+}
+- (void) set {
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+#else
+	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
+#endif
+	[self setInContext:ctx];
+	
 }
 #endif
 

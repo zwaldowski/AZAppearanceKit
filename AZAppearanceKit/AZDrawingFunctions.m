@@ -72,13 +72,18 @@ void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge) {
 	CGContextStrokePath(ctx);
 }
 
+void CGContextPerformBlock(CGContextRef ctx, void (^block)(CGContextRef ctx)) {
+	if (!block) return;
+	CGContextSaveGState(ctx);
+	block(ctx);
+	CGContextRestoreGState(ctx);
+}
+
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
 void UIGraphicsContextPerformBlock(void (^block)(CGContextRef)) {
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	CGContextSaveGState(ctx);
-	block(ctx);
-	CGContextRestoreGState(ctx);
+	CGContextPerformBlock(ctx, block);
 }
 void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color) {
     UIGraphicsContextPerformBlock(^(CGContextRef ctx) {
@@ -93,7 +98,7 @@ static inline size_t aligned_size(size_t size, size_t alignment) {
 	return (r + 2 + alignment) & ~alignment;
 }
 
-UIImage *UIImageCreateUsingBlock(CGSize size, BOOL opaque, void(^drawingBlock)(void)) {
+UIImage *UIImageCreateUsingBlock(CGSize size, BOOL opaque, void(^drawingBlock)(CGContextRef ctx)) {
 	BOOL isMain = [NSThread isMainThread];
 	CGContextRef context = NULL;
 	CGFloat scale;
@@ -130,7 +135,7 @@ UIImage *UIImageCreateUsingBlock(CGSize size, BOOL opaque, void(^drawingBlock)(v
 		UIGraphicsPushContext(context);
 	}
 	
-	if (drawingBlock) drawingBlock();
+	if (drawingBlock) drawingBlock(context);
 	
     UIImage *retImage = nil;
 	

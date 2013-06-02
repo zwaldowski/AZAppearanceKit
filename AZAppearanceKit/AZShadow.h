@@ -6,10 +6,6 @@
 //  Copyright (c) 2012 Alexsander Akers & Zachary Waldowski. All rights reserved.
 //
 
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-
-#import <UIKit/UIKit.h>
-
 @protocol AZShadow <NSCopying, NSCoding, NSObject>
 
 @property (nonatomic) CGSize shadowOffset;
@@ -20,10 +16,16 @@
 + (id <AZShadow>) shadowWithOffset: (CGSize) shadowOffset blurRadius: (CGFloat) shadowBlurRadius color: (id) shadowColor;
 + (id <AZShadow>) shadowWithDictionary: (NSDictionary *)dictionary;
 
-+ (void) clear;
-- (void) set;
++ (void)clear;
++ (void)clearInContext:(CGContextRef)ctx;
+- (void)set;
+- (void)setInContext:(CGContextRef)ctx;
 
 @end
+
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+
+#import <UIKit/UIKit.h>
 
 @interface AZShadow : NSObject <AZShadow>
 

@@ -14,12 +14,14 @@ extern CGPathRef CGPathCreateByRoundingCornersInRect(CGRect rect, CGFloat topLef
 
 extern void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge);
 
+extern void CGContextPerformBlock(CGContextRef ctx, void (^)(CGContextRef ctx));
+
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
 extern void UIGraphicsContextPerformBlock(void (^)(CGContextRef ctx));
 extern void UIRectStrokeWithColor(CGRect rect, CGRectEdge edge, CGFloat width, UIColor *color);
 
-extern UIImage *UIImageCreateUsingBlock(CGSize size, BOOL opaque, void(^drawingBlock)(void));
+extern UIImage *UIImageCreateUsingBlock(CGSize size, BOOL opaque, void(^drawingBlock)(CGContextRef ctx));
 
 #else
 
