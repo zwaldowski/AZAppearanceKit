@@ -8,6 +8,7 @@
 
 #import "AZShadowedTableDemoViewController.h"
 #import "AZShadowedTableView.h"
+#import "AZTableViewCell.h"
 
 @implementation AZShadowedTableDemoViewController
 
@@ -39,15 +40,12 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"MainCell"];
+    AZTableViewCell *cell = (AZTableViewCell *)[tableView dequeueReusableCellWithIdentifier: @"MainCell"];
 	
     cell.textLabel.text = [NSString stringWithFormat:@"Cell %i", indexPath.row];
-    
-    return cell;
-}
+	cell.fillColor = [UIColor whiteColor];
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-	cell.backgroundColor = [UIColor whiteColor];
+    return cell;
 }
 
 - (IBAction)switchToggled:(id)sender {

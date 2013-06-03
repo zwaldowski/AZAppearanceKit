@@ -47,6 +47,7 @@ static NSString *NSStringFromTableViewCellSectionLocation(AZTableViewCellSection
 
 @property (nonatomic) AZTableViewCellSectionLocation sectionLocation;
 @property (nonatomic) CGFloat cornerRadius;
+@property (nonatomic, getter = isGrouped) BOOL grouped;
 @property (nonatomic, getter = isSelected) BOOL selected;
 @property (nonatomic, strong) id <AZShadow> shadow;
 @property (nonatomic, strong) UIColor *backgroundColor;
@@ -102,9 +103,16 @@ static void AZTableViewCellGetMetrics(AZTableViewCellBackgroundContentsKey *key,
 
 	BOOL outsetsOriginY = (location == AZTableViewCellSectionLocationMiddle || location == AZTableViewCellSectionLocationBottom);
 
+	imageSize.width = fmaxf(1, imageSize.width);
+	imageSize.height = fmaxf(1, imageSize.height);
+	minimumDrawSize.height = fmaxf(1, minimumDrawSize.height);
+
 	CGRect outerRect = {{ 0, outsetsOriginY ? -shadowMargin.height : 0 }, minimumDrawSize };
-	__block CGRect rect = CGRectInset(outerRect, shadowMargin.width, shadowMargin.height);
-	rect.size.height = fmaxf(1, rect.size.height);
+	CGRect rect = CGRectInset(outerRect, shadowMargin.width, shadowMargin.height);
+
+	if (CGRectIsEmpty(rect)) {
+		rect = outerRect;
+	}
 
 	if (outImageSize) *outImageSize = imageSize;
 	if (outImageEdgeInsets) *outImageEdgeInsets = insets;
@@ -114,6 +122,7 @@ static void AZTableViewCellGetMetrics(AZTableViewCellBackgroundContentsKey *key,
 
 static void AZTableViewCellDrawInContext(CGContextRef ctx, CGRect outerRect, CGRect innerRect, AZTableViewCellBackgroundContentsKey *key) {
 	const BOOL isSelected = key.selected;
+	const BOOL grouped = key.grouped;
 	const id <AZShadow> shadow = key.shadow;
 	const UIColor *outerColor = key.backgroundColor;
 	const UIColor *fillColor = key.fillColor;
@@ -136,9 +145,9 @@ static void AZTableViewCellDrawInContext(CGContextRef ctx, CGRect outerRect, CGR
 		default: break;
 	}
 
-	BOOL offsetsShadow = (shadow && (location == AZTableViewCellSectionLocationMiddle || location == AZTableViewCellSectionLocationBottom));
+	BOOL offsetsShadow = grouped && (shadow && (location == AZTableViewCellSectionLocationMiddle || location == AZTableViewCellSectionLocationBottom));
 
-	if (location == AZTableViewCellSectionLocationTop && topRadius == 0) {
+	if (grouped && location == AZTableViewCellSectionLocationTop && topRadius == 0) {
 		innerRect = CGRectInset(innerRect, 0, -1);
 	}
 
@@ -211,6 +220,7 @@ static void AZTableViewCellDrawInContext(CGContextRef ctx, CGRect outerRect, CGR
 		copy.fillColor = self.fillColor;
 		copy.borderColor = self.borderColor;
 		copy.selected = self.selected;
+		copy.grouped = self.grouped;
 	}
 	return copy;
 }
@@ -220,7 +230,7 @@ static void AZTableViewCellDrawInContext(CGContextRef ctx, CGRect outerRect, CGR
 }
 
 - (NSString *)description {
-	return [NSString stringWithFormat:@"<%@: {Location: %i, Corner Radius: %f, Shadow: %@, Background: %@, Fill: %@, Border: %@, Selected: %i}>", NSStringFromClass(self.class), self.sectionLocation, self.cornerRadius, self.shadow, self.backgroundColor, self.fillColor, self.borderColor, self.selected];
+	return [NSString stringWithFormat:@"<%@: {Location: %i, Corner Radius: %f, Shadow: %@, Background: %@, Fill: %@, Border: %@, Selected: %i, Grouped: %i}>", NSStringFromClass(self.class), self.sectionLocation, self.cornerRadius, self.shadow, self.backgroundColor, self.fillColor, self.borderColor, self.selected, self.grouped];
 }
 
 - (BOOL)isEqual:(AZTableViewCellBackgroundContentsKey *)object {
@@ -228,6 +238,7 @@ static void AZTableViewCellDrawInContext(CGContextRef ctx, CGRect outerRect, CGR
 	if (object.sectionLocation != self.sectionLocation) return NO;
 	if (object.cornerRadius != self.cornerRadius) return NO;
 	if (object.selected != self.selected) return NO;
+	if (object.grouped != self.grouped) return NO;
 	if (![object.shadow isEqual: self.shadow]) return NO;
 	if (![object.backgroundColor isEqual: self.backgroundColor]) return NO;
 	if (![object.fillColor isEqual: self.fillColor]) return NO;
@@ -240,8 +251,6 @@ static void AZTableViewCellDrawInContext(CGContextRef ctx, CGRect outerRect, CGR
 @implementation AZTableViewCellBackgroundFillView
 
 - (void)drawLayer:(CALayer *)layer inContext:(CGContextRef)ctx {
-	UIGraphicsPushContext(ctx);
-
 	AZTableViewCellBackground *background = (id)[self superview];
 	AZTableViewCell *cell = background.cell;
 
@@ -270,8 +279,6 @@ static void AZTableViewCellDrawInContext(CGContextRef ctx, CGRect outerRect, CGR
 	CGPathRelease(path);
 
 	[super drawLayer:layer inContext:ctx];
-
-	UIGraphicsPopContext();
 }
 
 @end
@@ -323,6 +330,7 @@ static NSCache *_az_imageCache;
 	BOOL isOther = (context == &regularPropertyObservationContextKey);
 
 	if (isFrame || isShadow || isOther) {
+		
 		if (isShadow) {
 			self.shadowMargin = AZTableViewCellShadowMargin(self.cell.shadow);
 		}
@@ -351,8 +359,7 @@ static NSCache *_az_imageCache;
 		[_cell addObserver: self forKeyPath: @"backgroundColor" options: 0 context: &regularPropertyObservationContextKey];
 		[_cell addObserver: self forKeyPath: @"tableViewBackgroundColor" options: 0 context: &regularPropertyObservationContextKey];
 		[_cell addObserver: self forKeyPath: @"borderColor" options: 0 context: &regularPropertyObservationContextKey];
-		[_cell addObserver: self forKeyPath: @"tableViewIsGrouped" options: 0 context: &frameAffectingPropertyObservationContextKey];
-		[_cell addObserver: self forKeyPath: @"tableViewSeparatorStyle" options: 0 context: &regularPropertyObservationContextKey];
+		[_cell addObserver: self forKeyPath: @"fillColor" options: 0 context: &regularPropertyObservationContextKey];
 		_selected = ![[(UITableViewCell *)newSuperview backgroundView] isEqual: self];
 		if (_selected) {
 			[_cell addObserver: self forKeyPath: @"selectionGradient" options: 0 context: NULL];
@@ -361,38 +368,38 @@ static NSCache *_az_imageCache;
 			[_cell addObserver: self forKeyPath: @"gradient" options: 0 context: NULL];
 			self.fillView.gradient = self.cell.gradient;
 		}
-
-		[self redrawablePropertyChange];
 	}
 }
 
-- (void)willMoveToWindow:(UIWindow *)newWindow {
-	[super willMoveToWindow: newWindow];
-	if (newWindow) {
-		[self redrawablePropertyChange];
-	}
+- (void)didMoveToSuperview {
+	[self redrawablePropertyChange];
+	[self setNeedsLayout];
 }
 
 - (void)layoutSubviews {
 	[self updateSeparatorViews];
 
-	CGSize shadowMargin = self.shadowMargin;
-	CGRect outsetBounds = CGRectInset(self.bounds, -shadowMargin.width, -shadowMargin.height);
-	switch (self.sectionLocation) {
-		case AZTableViewCellSectionLocationTop:
-			outsetBounds.size.height -= shadowMargin.height;
-			break;
-		case AZTableViewCellSectionLocationMiddle:
-			outsetBounds.origin.y += shadowMargin.height;
-			outsetBounds.size.height -= 2 * shadowMargin.height;
-			break;
-		case AZTableViewCellSectionLocationBottom:
-			outsetBounds.origin.y += shadowMargin.height;
-			outsetBounds.size.height -= shadowMargin.height;
-			break;
-		default: break;
+	if (self.cell.tableViewIsGrouped) {
+		CGSize shadowMargin = self.shadowMargin;
+		CGRect outsetBounds = CGRectInset(self.bounds, -shadowMargin.width, -shadowMargin.height);
+		switch (self.sectionLocation) {
+			case AZTableViewCellSectionLocationTop:
+				outsetBounds.size.height -= shadowMargin.height;
+				break;
+			case AZTableViewCellSectionLocationMiddle:
+				outsetBounds.origin.y += shadowMargin.height;
+				outsetBounds.size.height -= 2 * shadowMargin.height;
+				break;
+			case AZTableViewCellSectionLocationBottom:
+				outsetBounds.origin.y += shadowMargin.height;
+				outsetBounds.size.height -= shadowMargin.height;
+				break;
+			default: break;
+		}
+		self.contentsView.frame = outsetBounds;
+	} else {
+		self.contentsView.frame = self.bounds;
 	}
-	self.contentsView.frame = outsetBounds;
 }
 
 #pragma mark -
@@ -426,24 +433,31 @@ static NSCache *_az_imageCache;
 - (void)redrawablePropertyChange {
 	if (self.cell) {
 		AZTableViewCellBackgroundContentsKey *key = [AZTableViewCellBackgroundContentsKey new];
-		key.cornerRadius = self.cell.cornerRadius;
-		key.shadow = self.cell.shadow;
-		key.backgroundColor = self.cell.tableViewBackgroundColor;
+		if (self.cell.tableViewIsGrouped) {
+			key.cornerRadius = self.cell.cornerRadius;
+			key.shadow = self.cell.shadow;
+			key.backgroundColor = self.cell.tableViewBackgroundColor;
+		}
 		key.sectionLocation = self.sectionLocation;
 		key.selected = self.selected;
-		key.fillColor = self.cell.backgroundColor;
+		key.grouped = self.cell.tableViewIsGrouped;
+		key.fillColor = self.cell.fillColor ?: self.cell.backgroundColor ?: [UIColor whiteColor];
 		key.borderColor = self.cell.borderColor;
 
 		self.fillView.gradient = self.selected ? self.cell.selectionGradient : self.cell.gradient;
 
 		UIImage *image = nil;
-		if (!key.isEmpty) {
+		if (!key.isEmpty && self.superview) {
 			image = [_az_imageCache objectForKey: key];
 			if (!image) {
 				CGSize imageSize; UIEdgeInsets insets; CGRect outerRect, rect;
 				AZTableViewCellGetMetrics(key, self.shadowMargin, &imageSize, &insets, &outerRect, &rect);
 
-				BOOL opaque = self.cell.tableViewIsGrouped ?(key.shadow ? (key.backgroundColor != nil) : NO) : YES;
+				const BOOL opaque = self.cell.tableViewIsGrouped ? (key.shadow ? (key.backgroundColor != nil) : NO) : YES;
+
+				if (imageSize.width == 0 || imageSize.height == 0) {
+					NSLog(@"Fuck");
+				}
 
 				UIImage *unstretched = UIImageCreateUsingBlock(imageSize, opaque, ^(CGContextRef ctx) {
 					AZTableViewCellDrawInContext(ctx, outerRect, rect, key);
@@ -490,8 +504,7 @@ static NSCache *_az_imageCache;
 		[_cell removeObserver: self forKeyPath: @"backgroundColor"];
 		[_cell removeObserver: self forKeyPath: @"tableViewBackgroundColor"];
 		[_cell removeObserver: self forKeyPath: @"borderColor"];
-		[_cell removeObserver: self forKeyPath: @"tableViewIsGrouped"];
-		[_cell removeObserver: self forKeyPath: @"tableViewSeparatorStyle"];
+		[_cell removeObserver: self forKeyPath: @"fillColor"];
 		if (_selected)
 			[_cell removeObserver: self forKeyPath: @"selectionGradient"];
 		else
@@ -555,13 +568,13 @@ static NSCache *_az_imageCache;
 	if (newSuperview) {
 		self.tableViewIsGrouped = (((UITableView *)newSuperview).style == UITableViewStyleGrouped);
 		self.tableViewSeparatorStyle = ((UITableView *)newSuperview).separatorStyle;
+
+		AZTableViewCellBackground *bg = self.selected ? (id)[super selectedBackgroundView] : (id)[super backgroundView];
+		[bg redrawablePropertyChange];
 	} else {
 		self.tableViewIsGrouped = NO;
 		self.tableViewSeparatorStyle = UITableViewCellSeparatorStyleNone;
 	}
-
-	AZTableViewCellBackground *bg = self.selected ? (id)[super selectedBackgroundView] : (id)[super backgroundView];
-	[bg redrawablePropertyChange];
 }
 
 

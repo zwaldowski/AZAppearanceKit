@@ -46,7 +46,7 @@
 
  - cell's drop shadow color (border will be disabled when set).
  - cell's opaque background color (for when a shadow is used).
- - cell's fill color (using `backgroundColor`) or gradient.
+ - cell's fill color or gradient.
  - cell's border color (ignored when the shadow color is set).
  - cell's corner radius.
  - cell's separator color.
@@ -56,7 +56,7 @@
 
  You can change the cell's appearance as follows:
 
- - cell's fill color (using `backgroundColor`) or gradient.
+ - cell's fill color or gradient.
  - cell's separator.
  - cell's selection gradient.
  */
@@ -72,13 +72,6 @@
  */
 @property (nonatomic, strong) id <AZShadow> shadow;
 
-/** Specifies the gradient used when the cell is not selected.
-
- By default, this is `nil`, yielding a white background.
-
- */
-@property (nonatomic, strong) AZGradient *gradient;
-
 /** Specifies the color for the shadowed extremities of the cell.
  This should match the background color of the table view the
  cell is contained in.
@@ -89,6 +82,22 @@
 
  */
 @property (nonatomic, strong) UIColor *tableViewBackgroundColor;
+
+/** An alternative to `backgroundColor`.
+
+ By default, this is `nil`, leading to a white or off-white color
+ depending on the table view style.
+
+ */
+
+@property (nonatomic, strong) UIColor *fillColor;
+
+/** Specifies the gradient used when the cell is not selected.
+
+ By default, this is `nil`, yielding a white background.
+
+ */
+@property (nonatomic, strong) AZGradient *gradient;
 
 /** Specifies the gradient used when the cell is selected.
 
