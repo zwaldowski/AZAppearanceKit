@@ -237,14 +237,12 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 	else
 		CGContextSetShadow(ctx, self.shadowOffset, self.shadowBlurRadius);
 }
-- (void) set {
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
-	CGContextRef ctx = UIGraphicsGetCurrentContext();
-#else
-	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
-#endif
-	[self setInContext:ctx];
 
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
+- (void) set {
+	CGContextRef ctx = UIGraphicsGetCurrentContext();
+	[self setInContext:ctx];
 }
+#endif
 
 @end
