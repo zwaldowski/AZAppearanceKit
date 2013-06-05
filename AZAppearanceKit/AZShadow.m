@@ -41,7 +41,7 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 		self = [[NSClassFromString(@"NSShadow") alloc] init];
 		return self;
 	}
-	
+
 	self = [super init];
 	return self;
 }
@@ -55,19 +55,19 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 	ret.shadowOffset = shadowOffset;
 	ret.shadowBlurRadius = shadowBlurRadius;
 	ret.shadowColor = shadowColor;
-	
+
 	return ret;
 }
 
 + (id <AZShadow>) shadowWithDictionary:(NSDictionary *)dictionary
 {
 	id <AZShadow> ret = NSClassFromString(@"NSShadow") ? [NSClassFromString(@"NSShadow") new] : [AZShadow new];
-    
+
     if (dictionary[@"shadowBlurRadius"])
         ret.shadowBlurRadius = [dictionary[@"shadowBlurRadius"] floatValue];
     else
         ret.shadowBlurRadius = 0;
-    
+
     if (dictionary[@"shadowColor"])
         ret.shadowColor = dictionary[@"shadowColor"];
     else
@@ -76,7 +76,7 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
         ret.shadowOffset = [dictionary[@"shadowOffset"] CGSizeValue];
     else
         ret.shadowOffset = CGSizeZero;
-    
+
 	return ret;
 }
 
@@ -85,7 +85,7 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 	NSUInteger hash = [self.shadowColor hash];
 	hash ^= [@(self.shadowBlurRadius) hash];
 	hash ^= [[NSValue valueWithCGSize: self.shadowOffset] hash];
-	
+
 	return hash;
 }
 
@@ -137,7 +137,7 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 		self.shadowBlurRadius = [aDecoder decodeFloatForKey: AZShadowBlurRadiusCodingKey];
 #endif
 		self.shadowOffset = size;
-		
+
 		if ([aDecoder containsValueForKey: AZShadowColorCodingKey])
 		{
 			self.shadowColor = [aDecoder decodeObjectForKey: AZShadowColorCodingKey];
@@ -157,7 +157,7 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 	[aCoder encodeFloat: self.shadowOffset.height forKey: AZShadowVertKey];
 	[aCoder encodeFloat: self.shadowBlurRadius forKey: AZShadowBlurRadiusCodingKey];
 #endif
-	
+
 	if (self.shadowColor)
 	{
 		[aCoder encodeObject: self.shadowColor forKey: AZShadowColorCodingKey];
@@ -197,18 +197,22 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 + (id <AZShadow>) shadowWithDictionary:(NSDictionary *)dictionary
 {
     id <AZShadow> ret = [[[self class] alloc] init];
-    
+
     if (dictionary[@"shadowBlurRadius"])
         ret.shadowBlurRadius = [dictionary[@"shadowBlurRadius"] floatValue];
     else
         ret.shadowBlurRadius = 0;
-    
+
     if (dictionary[@"shadowColor"])
         ret.shadowColor = dictionary[@"shadowColor"];
     else
         ret.shadowColor = nil;
     if (dictionary[@"shadowOffset"])
+#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
         ret.shadowOffset = [dictionary[@"shadowOffset"] CGSizeValue];
+#else
+        ret.shadowOffset = [dictionary[@"shadowOffset"] sizeValue];
+#endif
     else
         ret.shadowOffset = CGSizeZero;
 
@@ -226,7 +230,6 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 #endif
 	[self clearInContext:ctx];
 }
-#ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
 
 - (void) setInContext:(CGContextRef)ctx {
 	if (self.shadowColor)
@@ -241,8 +244,7 @@ static NSString *const AZShadowBlurRadiusCodingKey = @"NSShadowBlurRadius";
 	CGContextRef ctx = [[NSGraphicsContext currentContext] graphicsPort];
 #endif
 	[self setInContext:ctx];
-	
+
 }
-#endif
 
 @end
