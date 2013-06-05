@@ -1,12 +1,12 @@
 Pod::Spec.new do |s|
   s.name                  = 'AZAppearanceKit'
-  s.version               = '0.6.4'
+  s.version               = '0.7.0'
   s.summary               = 'A series of UI and drawing-related Objective-C components.'
   s.homepage              = 'https://github.com/zwaldowski/AZAppearanceKit'
   s.license               = 'MIT'
   s.authors               = { 'Zachary Waldowski' => 'zwaldowski@gmail.com',
                               'Alexsander Akers' => 'a2@pandamonia.us' }
-  s.source                = { :git => 'https://github.com/zwaldowski/AZAppearanceKit.git', :tag => '0.6.4' }
+  s.source                = { :git => 'https://github.com/zwaldowski/AZAppearanceKit.git', :tag => '0.7.0' }
   s.requires_arc          = true
   s.ios.deployment_target = '5.0'
   s.osx.deployment_target = '10.7'
@@ -28,10 +28,9 @@ Pod::Spec.new do |s|
   s.subspec 'AZGradientView' do |ss|
     ss.platform     = :ios
     ss.source_files = 'AZAppearanceKit/AZGradientView.{h,m}'
-    ss.dependency     'AZAppearanceKit/AZDrawingFunctions'
     ss.dependency     'AZAppearanceKit/AZGradient'
   end
-  
+
   s.subspec 'AZLabel' do |ss|
     ss.platform     = :ios
     ss.frameworks   = 'CoreGraphics', 'CoreText'
@@ -40,16 +39,43 @@ Pod::Spec.new do |s|
     ss.dependency     'AZAppearanceKit/AZGradient'
     ss.dependency     'AZAppearanceKit/AZShadow'
   end
-  
+
   s.subspec 'AZShadowedTableView' do |ss|
     ss.platform     = :ios
     ss.source_files = 'AZAppearanceKit/AZShadowedTableView.{h,m}'
     ss.dependency     'AZAppearanceKit/AZDrawingFunctions'
   end
-  
+
   s.subspec 'AZTableViewCell' do |ss|
     ss.platform     = :ios
+    ss.frameworks   = 'QuartzCore'
     ss.source_files = 'AZAppearanceKit/AZTableViewCell.{h,m}'
+    ss.dependency     'AZAppearanceKit/AZDrawingFunctions'
+    ss.dependency     'AZAppearanceKit/AZGradientView'
+    ss.dependency     'AZAppearanceKit/AZGradient'
+    ss.dependency     'AZAppearanceKit/AZShadow'
+  end
+
+  s.subspec 'AZToolbar' do |ss|
+    ss.platform     = :ios
+    ss.frameworks   = 'QuartzCore'
+    ss.source_files = 'AZAppearanceKit/AZToolbar.{h,m}'
+    ss.dependency     'AZAppearanceKit/AZDrawingFunctions'
+    ss.dependency     'AZAppearanceKit/AZGradient'
+  end
+
+  s.subspec 'AZNavigationBar' do |ss|
+    ss.platform     = :ios
+    ss.frameworks   = 'QuartzCore'
+    ss.source_files = 'AZAppearanceKit/AZNavigationBar.{h,m}'
+    ss.dependency     'AZAppearanceKit/AZDrawingFunctions'
+    ss.dependency     'AZAppearanceKit/AZGradient'
+  end
+
+  s.subspec 'AZTabBar' do |ss|
+    ss.platform     = :ios
+    ss.frameworks   = 'QuartzCore'
+    ss.source_files = 'AZAppearanceKit/AZTabBar.{h,m}'
     ss.dependency     'AZAppearanceKit/AZDrawingFunctions'
     ss.dependency     'AZAppearanceKit/AZGradient'
   end
