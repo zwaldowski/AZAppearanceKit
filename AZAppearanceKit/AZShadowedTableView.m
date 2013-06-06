@@ -74,6 +74,32 @@
 	CGRect originShadowFrame = self.originShadow.frame;
 	originShadowFrame.origin.y = self.contentOffset.y;
 	self.originShadow.frame = originShadowFrame;
+
+	if (!self.maximumShadow)
+	{
+		UIImageView *top = [[UIImageView alloc] initWithFrame:(CGRect){ self.contentOffset, kImageSize }];
+		top.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		top.image = [[self class] shadowImageWithSize:kImageSize top:YES];
+
+		if (self.backgroundView)
+			[self insertSubview: top aboveSubview: self.backgroundView];
+		else
+			[self insertSubview: top atIndex: 0];
+
+		self.maximumShadow = top;
+	}
+	else if (self.backgroundView)
+	{
+		[self insertSubview: self.maximumShadow aboveSubview: self.backgroundView];
+	}
+	else if ([self.subviews indexOfObjectIdenticalTo: self.originShadow] != 0)
+	{
+		[self insertSubview: self.maximumShadow atIndex: 0];
+	}
+
+	CGRect maximumShadowFrame = self.maximumShadow.frame;
+	maximumShadowFrame.origin.y = self.contentOffset.y + self.frame.size.height - maximumShadowFrame.size.height;
+	self.maximumShadow.frame = maximumShadowFrame;
 	
 	NSArray *indexPathsForVisibleRows = self.indexPathsForVisibleRows;
 	if (indexPathsForVisibleRows.count)
@@ -121,7 +147,7 @@
 			}
 			else if (self.backgroundView)
 			{
-				[self insertSubview: self.maximumShadow aboveSubview: self.backgroundView];
+				[self insertSubview: self.bottomShadow aboveSubview: self.backgroundView];
 			}
 			else if ([cell.subviews indexOfObjectIdenticalTo: self.bottomShadow] != 0)
 			{
@@ -131,37 +157,10 @@
 			CGRect shadowFrame = self.bottomShadow.frame;
 			shadowFrame.origin.y = CGRectGetMaxY(cell.frame);
 			self.bottomShadow.frame = shadowFrame;
-			
-			if (!self.maximumShadow)
-			{
-				UIImageView *top = [[UIImageView alloc] initWithFrame:(CGRect){ self.contentOffset, kImageSize }];
-				top.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-				top.image = [[self class] shadowImageWithSize:kImageSize top:YES];
-				
-				if (self.backgroundView)
-					[self insertSubview: top aboveSubview: self.backgroundView];
-				else
-					[self insertSubview: top atIndex: 0];
-				
-				self.maximumShadow = top;
-			}
-			else if (self.backgroundView)
-			{
-				[self insertSubview: self.maximumShadow aboveSubview: self.backgroundView];
-			}
-			else if ([self.subviews indexOfObjectIdenticalTo: self.originShadow] != 0)
-			{
-				[self insertSubview: self.maximumShadow atIndex: 0];
-			}
-			
-			CGRect maximumShadowFrame = self.maximumShadow.frame;
-			maximumShadowFrame.origin.y = self.contentOffset.y + self.frame.size.height - maximumShadowFrame.size.height;
-			self.maximumShadow.frame = maximumShadowFrame;
 		}
 		else
 		{
 			[self.bottomShadow removeFromSuperview];
-			[self.maximumShadow removeFromSuperview];
 		}
 	}
 	else
@@ -184,7 +183,7 @@
 	self.topShadow.hidden = self.bottomShadow.hidden = self.originShadow.hidden = self.maximumShadow.hidden = !hidesShadows;
 	self.topShadow.alpha = self.bottomShadow.alpha = self.originShadow.alpha = self.maximumShadow.alpha = hidesShadows ? 1.0f : 0.0f;
 
-	[UIView animateWithDuration: (1./3.) delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent animations: ^{
+	[UIView animateWithDuration: animated ? (1./3.) : 0 delay: 0.0 options: UIViewAnimationOptionCurveEaseInOut | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowAnimatedContent animations: ^{
 		self.topShadow.alpha = self.bottomShadow.alpha = self.originShadow.alpha = self.maximumShadow.alpha = hidesShadows ? 0.0f : 1.0f;
 	} completion:^(BOOL finished) {
 		self.topShadow.hidden = self.bottomShadow.hidden = self.originShadow.hidden = self.maximumShadow.hidden = hidesShadows;
