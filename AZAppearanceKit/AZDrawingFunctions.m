@@ -43,10 +43,6 @@ void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge) {
 	CGContextStrokePath(ctx);
 }
 
-extern CGPathRef CGPathCreateWithRoundedRect(CGRect rect, CGFloat cornerRadius) {
-    return CGPathCreateByRoundingCornersInRect(rect, cornerRadius, cornerRadius, cornerRadius, cornerRadius);
-}
-
 extern CGPathRef CGPathCreateByRoundingCornersInRect(CGRect rect, CGFloat topLeftRadius, CGFloat topRightRadius, CGFloat bottomLeftRadius, CGFloat bottomRightRadius) {
 	const CGPoint topLeft = rect.origin;
     const CGPoint topRight = CGPointMake(CGRectGetMaxX(rect), CGRectGetMinY(rect));

@@ -11,7 +11,6 @@
 
 extern void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge);
 
-extern CGPathRef CGPathCreateWithRoundedRect(CGRect rect, CGFloat cornerRadius);
 extern CGPathRef CGPathCreateByRoundingCornersInRect(CGRect rect, CGFloat topLeftRadius, CGFloat topRightRadius, CGFloat bottomLeftRadius, CGFloat bottomRightRadius);
 
 #ifdef __IPHONE_OS_VERSION_MIN_REQUIRED
