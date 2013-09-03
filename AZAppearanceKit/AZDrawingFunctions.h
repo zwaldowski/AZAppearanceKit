@@ -9,7 +9,6 @@
 
 #import <CoreGraphics/CoreGraphics.h>
 
-extern CGPathRef CGPathCreateWithRoundedRect(CGRect rect, CGFloat cornerRadius);
 extern CGPathRef CGPathCreateByRoundingCornersInRect(CGRect rect, CGFloat topLeftRadius, CGFloat topRightRadius, CGFloat bottomLeftRadius, CGFloat bottomRightRadius);
 
 extern void CGContextStrokeRectEdge(CGContextRef ctx, CGRect rect, CGRectEdge edge);

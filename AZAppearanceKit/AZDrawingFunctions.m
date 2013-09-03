@@ -9,9 +9,6 @@
 
 #import "AZDrawingFunctions.h"
 
-CGPathRef CGPathCreateWithRoundedRect(CGRect rect, CGFloat cornerRadius) {
-    return CGPathCreateByRoundingCornersInRect(rect, cornerRadius, cornerRadius, cornerRadius, cornerRadius);
-}
 CGPathRef CGPathCreateByRoundingCornersInRect(CGRect rect, CGFloat topLeftRadius, CGFloat topRightRadius, CGFloat bottomLeftRadius, CGFloat bottomRightRadius) {
 	const CGPoint topLeft = rect.origin;
     const CGPoint topRight = CGPointMake(CGRectGetMaxX(rect), CGRectGetMinY(rect));
